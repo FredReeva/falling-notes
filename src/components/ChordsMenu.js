@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { IoCloseCircle } from 'react-icons/io5';
 
 import Chords from './Chords';
-import song from './song';
+// import song from './song';
 import AddChordSection from './AddChordSection';
 
 const BlurredPage = styled.div`
@@ -30,7 +30,7 @@ const StyledChordsMenu = styled.div`
     position: relative;
     width: 90vw;
 
-    overflow: hidden;
+    overflow: visible;
 
     background: rgba(255, 255, 255, 0.4);
     box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.37);

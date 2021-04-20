@@ -36,6 +36,21 @@ const StyledChord = styled.div`
     cursor: grab;
 `;
 
+const Hidden = styled.div`
+    transition: 0.2s;
+    font-size: 0.7rem;
+
+    margin: auto;
+
+    padding-top: 35px;
+
+    opacity: 0;
+    &:hover {
+        transition: 0.8s;
+        opacity: 1;
+    }
+`;
+
 const DeleteChord = styled(IoRemoveCircle)`
     transition: 0.2s;
     position: absolute;
@@ -76,8 +91,11 @@ const Chords = (props) => {
                                         >
                                             <h3>
                                                 {chord.tonic}
-                                                {chord.color}
+                                                {chord.quality}
                                             </h3>
+                                            <Hidden>
+                                                octave: {chord.octave}
+                                            </Hidden>
                                             <DeleteChord
                                                 onClick={() => {
                                                     props.onDelete(chord.id);
