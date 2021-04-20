@@ -16,7 +16,7 @@ const song = [
     {
         id: '3',
         octave: 2,
-        tonic: 'G',
+        tonic: 'F',
         color: 'min7',
         duration: 2 / 4,
     },

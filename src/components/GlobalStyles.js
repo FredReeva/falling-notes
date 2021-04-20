@@ -12,6 +12,8 @@ export const GlobalStyles = createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     user-select: none;
+    border: none;
+    outline: none;
 
   }
 
@@ -22,6 +24,23 @@ export const GlobalStyles = createGlobalStyle`
     align-items: center;
     font-size: 200%;
 
+  }
+
+  .CloseBtn{
+    transition: 0.3s;  
+    justify-content: center;
+    align-items: center;
+    font-size: 150%;
+    
+    cursor: pointer;
+    outline: none;
+
+    color: rgba(255,0,0, 0.3);
+
+    &:hover {
+        transition: 0.5s;  
+        color: rgba(255,0,0, 0.8);
+    }
   }
 
   h2 {
@@ -47,4 +66,9 @@ export const GlobalStyles = createGlobalStyle`
     transform: translate(-50%, -50%);
 
   }
+
+input{
+  width: 50px;
+}
+
   `;

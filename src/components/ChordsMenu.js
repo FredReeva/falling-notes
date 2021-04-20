@@ -3,55 +3,41 @@ import { useSpring, animated } from 'react-spring';
 
 import styled from 'styled-components';
 
-import Button from './Button';
+import { IoCloseCircle } from 'react-icons/io5';
+
 import Chords from './Chords';
 import song from './song';
+import AddChordSection from './AddChordSection';
 
-/* prettier-ignore*/
 const BlurredPage = styled.div`
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.2);
+
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    backdrop-filter: blur(8.5px);
+    -webkit-backdrop-filter: blur(8.5px);
 `;
 
 const StyledChordsMenu = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     position: relative;
     width: 90vw;
 
     overflow: hidden;
 
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.4);
     box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.37);
 
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-
     padding: 10px;
-`;
-
-const CloseButton = styled(Button)`
-    transition: 0.5s;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-
-    &:hover {
-        transition: 0.5s;
-        width: 18px;
-        height: 18px;
-        background: rgba(255, 100, 100, 0.5);
-        border-color: rgba(255, 80, 80, 0.5);
-    }
 `;
 
 const HeaderMenu = styled.div`
@@ -64,13 +50,25 @@ const HeaderMenu = styled.div`
 `;
 
 const ChordsMenu = (props) => {
-    const [chords, updateChords] = useState(song);
+    const [chords, updateChords] = useState('');
+
+    const deleteChord = (id) => {
+        // console.log('delete', id);
+        updateChords(chords.filter((chord) => chord.id !== id));
+    };
+
+    const addChord = (chord) => {
+        // console.log('added', chord);
+        const id = Math.floor(Math.random() * 10000 + 1).toString();
+        const newChord = { id, ...chord };
+        updateChords([...chords, newChord]);
+    };
+
     const animation = useSpring({
         config: {
             duration: 250,
         },
         opacity: props.showMenu ? 1 : 0,
-        // transform: props.showMenu ? `translateY(0%)` : `translateY(100%)`,
     });
 
     function handleOnDragEnd(result) {
@@ -80,6 +78,7 @@ const ChordsMenu = (props) => {
         items.splice(result.destination.index, 0, reorderedItem);
 
         updateChords(items);
+        // console.log(items);
     }
     return props.showMenu ? (
         <BlurredPage>
@@ -87,12 +86,18 @@ const ChordsMenu = (props) => {
                 <StyledChordsMenu className={props.className}>
                     <HeaderMenu>
                         <h2>Chords Lab</h2>
-                        <CloseButton btnAction={props.toggleMenu} />
+                        <IoCloseCircle
+                            className="CloseBtn"
+                            onClick={props.toggleMenu}
+                        />
                     </HeaderMenu>
 
-                    <Chords chords={chords} handleOnDragEnd={handleOnDragEnd} />
-
-                    {/* <AddChord></AddChord> */}
+                    <Chords
+                        chords={chords}
+                        handleOnDragEnd={handleOnDragEnd}
+                        onDelete={deleteChord}
+                    />
+                    <AddChordSection onAdd={addChord} />
                 </StyledChordsMenu>
             </animated.div>
         </BlurredPage>

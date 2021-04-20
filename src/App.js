@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './components/GlobalStyles';
-
 import MainMenu from './components/MainMenu';
 import ChordsMenu from './components/ChordsMenu';
+import { IoHelpCircle } from 'react-icons/io5';
 
 const theme1 = {
-    primary: 'rgb(74, 255, 246)',
+    primary: 'rgb(74, 198, 255)',
 };
 
 const theme2 = {
@@ -28,9 +28,17 @@ function App() {
     };
 
     return (
-        <ThemeProvider theme={theme2}>
+        <ThemeProvider theme={theme1}>
             <GlobalStyles />
             <Background>
+                <IoHelpCircle
+                    className="Icon"
+                    style={{
+                        position: 'fixed',
+                        top: '20px',
+                        right: '20px',
+                    }}
+                />
                 <MainMenu btnAction={toggleMenu} />
                 <ChordsMenu showMenu={showMenu} toggleMenu={toggleMenu} />
             </Background>
