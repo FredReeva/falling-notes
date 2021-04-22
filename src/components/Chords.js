@@ -8,6 +8,7 @@ const ChordsTimeline = styled.div`
     height: 100px;
     display: flex;
     flex-direction: row;
+    margin-top: 10px;
     /* flex-wrap: wrap; */
     justify-content: flex-start;
     align-items: left;
@@ -17,16 +18,16 @@ const ChordsTimeline = styled.div`
 const StyledChord = styled.div`
     width: fit-content;
 
-    background: rgba(255, 255, 255, 0.4);
+    background: ${(props) => props.theme.buttonColor};
 
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: ${(props) => props.theme.border};
 
     margin: 5px;
     position: relative;
     height: 75px;
     min-width: ${(props) => {
-        return props.size * 300;
+        return props.size * 75;
     }}px;
     box-shadow: none;
     display: flex;
@@ -36,7 +37,7 @@ const StyledChord = styled.div`
     cursor: grab;
 `;
 
-const Hidden = styled.div`
+const HiddenInfo = styled.div`
     transition: 0.2s;
     font-size: 0.7rem;
 
@@ -56,12 +57,12 @@ const DeleteChord = styled(IoRemoveCircle)`
     position: absolute;
     top: 5px;
     right: 5px;
-    color: rgba(150, 150, 150, 0.3);
+    color: rgba(150, 150, 150, 0.7);
     cursor: pointer;
 
     &:hover {
         transition: 0.5s;
-        color: rgba(100, 100, 100, 0.7);
+        color: rgba(100, 100, 100, 1);
     }
 `;
 
@@ -93,9 +94,9 @@ const Chords = (props) => {
                                                 {chord.tonic}
                                                 {chord.quality}
                                             </h3>
-                                            <Hidden>
+                                            <HiddenInfo>
                                                 octave: {chord.octave}
-                                            </Hidden>
+                                            </HiddenInfo>
                                             <DeleteChord
                                                 onClick={() => {
                                                     props.onDelete(chord.id);

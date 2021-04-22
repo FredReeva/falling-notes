@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useSpring, animated } from 'react-spring';
 
 import styled from 'styled-components';
 
@@ -32,11 +31,11 @@ const StyledChordsMenu = styled.div`
 
     overflow: visible;
 
-    background: rgba(255, 255, 255, 0.4);
+    background: ${(props) => props.theme.panelColor};
     box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.37);
 
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: ${(props) => props.theme.border};
     padding: 10px;
 `;
 
@@ -64,13 +63,6 @@ const ChordsMenu = (props) => {
         updateChords([...chords, newChord]);
     };
 
-    const animation = useSpring({
-        config: {
-            duration: 250,
-        },
-        opacity: props.showMenu ? 1 : 0,
-    });
-
     function handleOnDragEnd(result) {
         if (!result.destination) return;
         const items = Array.from(chords);
@@ -82,24 +74,22 @@ const ChordsMenu = (props) => {
     }
     return props.showMenu ? (
         <BlurredPage>
-            <animated.div style={animation}>
-                <StyledChordsMenu className={props.className}>
-                    <HeaderMenu>
-                        <h2>Chords Lab</h2>
-                        <IoCloseCircle
-                            className="CloseBtn"
-                            onClick={props.toggleMenu}
-                        />
-                    </HeaderMenu>
-
-                    <Chords
-                        chords={chords}
-                        handleOnDragEnd={handleOnDragEnd}
-                        onDelete={deleteChord}
+            <StyledChordsMenu className={props.className}>
+                <HeaderMenu>
+                    <h2>Chords Lab</h2>
+                    <IoCloseCircle
+                        className="CloseBtn"
+                        onClick={props.toggleMenu}
                     />
-                    <AddChordSection onAdd={addChord} />
-                </StyledChordsMenu>
-            </animated.div>
+                </HeaderMenu>
+
+                <Chords
+                    chords={chords}
+                    handleOnDragEnd={handleOnDragEnd}
+                    onDelete={deleteChord}
+                />
+                <AddChordSection onAdd={addChord} />
+            </StyledChordsMenu>
         </BlurredPage>
     ) : null;
 };

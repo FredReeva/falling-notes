@@ -8,14 +8,14 @@ const StyledMainMenu = styled.div`
     align-items: center;
     width: fit-content;
 
-    background: rgba(255, 255, 255, 0.4);
+    background: ${(props) => props.theme.panelColor};
     box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.4);
 
     backdrop-filter: blur(8.5px);
     -webkit-backdrop-filter: blur(8.5px);
 
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: ${(props) => props.theme.border};
 
     margin: 1%;
     padding: 0.2%;
@@ -25,10 +25,10 @@ const MenuButton = styled.button`
     transition: 0.5s;
     width: 50px;
     height: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: ${(props) => props.theme.border};
     border-radius: 25%;
 
-    background: rgba(255, 255, 255, 0.4);
+    background: ${(props) => props.theme.buttonColor};
 
     margin: 5px;
     cursor: pointer;

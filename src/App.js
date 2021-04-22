@@ -5,19 +5,18 @@ import MainMenu from './components/MainMenu';
 import ChordsMenu from './components/ChordsMenu';
 import { IoHelpCircle } from 'react-icons/io5';
 
-const theme1 = {
-    primary: 'rgb(74, 198, 255)',
-};
-
-const theme2 = {
-    primary: 'rgb(255, 183, 74)',
+const theme = {
+    background: 'rgb(255, 183, 74)',
+    panelColor: 'rgba(255, 255, 255, 0.4)',
+    buttonColor: 'rgba(255, 255, 255, 0.6)',
+    border: '1px solid rgba(220, 220, 220, 0.2)',
 };
 
 const Background = styled.div`
     height: 100vh;
     width: 100vw;
     overflow: hidden;
-    background-color: ${(props) => props.theme.primary};
+    background-color: ${(props) => props.theme.background};
 `;
 
 function App() {
@@ -28,7 +27,7 @@ function App() {
     };
 
     return (
-        <ThemeProvider theme={theme1}>
+        <ThemeProvider theme={theme}>
             <GlobalStyles />
             <Background>
                 <IoHelpCircle

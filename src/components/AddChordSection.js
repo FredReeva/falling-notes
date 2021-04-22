@@ -7,20 +7,25 @@ import { IoAddCircle } from 'react-icons/io5';
 import DropMenu from './DropMenu';
 
 const StyledAddChord = styled.div`
+    position: relative;
     display: flex;
-    width: 50%;
+    min-width: 400px;
+
     align-self: center;
     align-items: center;
-    justify-content: flex-end;
-    border-radius: 100px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    height: 50px;
-    background: rgba(255, 255, 255, 0.4);
+    justify-content: space-around;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    border: ${(props) => props.theme.border};
+    height: 75px;
+    background: ${(props) => props.theme.panelColor};
 `;
 
 const AddButton = styled(IoAddCircle)`
+    display: flex;
     transition: 0.2s;
-    font-size: 250%;
+    font-size: 400%;
     opacity: 0.5;
 
     margin: 5px;
@@ -33,22 +38,24 @@ const AddButton = styled(IoAddCircle)`
 `;
 
 const Select = styled.div`
-    position: relative;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transition: 0.2s;
-    width: 50px;
-    height: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 100px;
+    min-width: 70px;
+    width: 20%;
+    height: 55px;
+    border: ${(props) => props.theme.border};
+    border-radius: 15px;
+    font-size: 0.8em;
+    background: ${(props) => props.theme.buttonColor};
 
-    background: rgba(255, 255, 255, 0.4);
-
-    margin: 5px;
+    margin-left: 10px;
     cursor: pointer;
-
+    overflow: hidden;
+    transition: 0.5s;
     &:hover {
-        transition: 0.5s;
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.9);
     }
 `;
 
@@ -70,10 +77,23 @@ function AddChord(props) {
         setShowMenu([false, false, false, false]);
     };
 
-    const tonics = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+    const tonics = [
+        'C',
+        'C#',
+        'D',
+        'D#',
+        'E',
+        'F',
+        'F#',
+        'G',
+        'G#',
+        'A',
+        'A#',
+        'B',
+    ];
     const qualities = ['M', 'm', 'Maj7', 'm7', '7', 'm7b5'];
-    const octaves = [-2, -1, 0, 1, 2];
-    const durations = [0.25, 0.5, 0.75, 1];
+    const octaves = ['-2', '-1', '0', '1', '2'];
+    const durations = ['1', '2', '3', '4'];
 
     const [showMenu, setShowMenu] = useState([false, false, false, false]);
     const toggleMenu = (i) => {
@@ -85,31 +105,78 @@ function AddChord(props) {
 
     return (
         <StyledAddChord>
-            <Select onClick={() => toggleMenu(0)}>
+            <Select
+                onClick={() => toggleMenu(0)}
+                style={{
+                    background: showMenu[0] ? 'rgba(255, 255, 255, 0.9)' : null,
+                }}
+            >
                 {tonic ? tonic : 'Tonic'}
                 {showMenu[0] ? (
-                    <DropMenu elements={tonics} setElements={setTonic} />
+                    <DropMenu
+                        keyboard="circle"
+                        elements={tonics}
+                        setElements={(e) => {
+                            setTonic(e);
+                            toggleMenu();
+                        }}
+                    />
                 ) : null}
             </Select>
 
-            <Select onClick={() => toggleMenu(1)}>
+            <Select
+                onClick={(e) => {
+                    toggleMenu(1);
+                }}
+                style={{
+                    background: showMenu[1] ? 'rgba(255, 255, 255, 0.9)' : null,
+                }}
+            >
                 {quality ? quality : 'Quality'}
                 {showMenu[1] ? (
-                    <DropMenu elements={qualities} setElements={setQuality} />
+                    <DropMenu
+                        elements={qualities}
+                        setElements={(e) => {
+                            setQuality(e);
+                            toggleMenu();
+                        }}
+                    />
                 ) : null}
             </Select>
 
-            <Select onClick={() => toggleMenu(2)}>
+            <Select
+                onClick={() => toggleMenu(2)}
+                style={{
+                    background: showMenu[2] ? 'rgba(255, 255, 255, 0.9)' : null,
+                }}
+            >
                 {octave ? octave : 'Octave'}
                 {showMenu[2] ? (
-                    <DropMenu elements={octaves} setElements={setOctave} />
+                    <DropMenu
+                        elements={octaves}
+                        setElements={(e) => {
+                            setOctave(e);
+                            toggleMenu();
+                        }}
+                    />
                 ) : null}
             </Select>
 
-            <Select onClick={() => toggleMenu(3)}>
+            <Select
+                onClick={() => toggleMenu(3)}
+                style={{
+                    background: showMenu[3] ? 'rgba(255, 255, 255, 0.9)' : null,
+                }}
+            >
                 {duration ? duration : 'Duration'}
                 {showMenu[3] ? (
-                    <DropMenu elements={durations} setElements={setDuration} />
+                    <DropMenu
+                        elements={durations}
+                        setElements={(e) => {
+                            setDuration(e);
+                            toggleMenu();
+                        }}
+                    />
                 ) : null}
             </Select>
 
@@ -118,8 +185,8 @@ function AddChord(props) {
                 style={{
                     color:
                         !tonic || !quality || !octave || !duration
-                            ? 'rgb(199, 199, 199)'
-                            : 'rgb(102, 255, 102)',
+                            ? 'rgb(210, 210, 210)'
+                            : 'rgb(0, 230, 0)',
                     pointerEvents:
                         !tonic || !quality || !octave || !duration
                             ? 'none'
