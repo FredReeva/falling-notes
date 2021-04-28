@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import styled from 'styled-components';
 
@@ -7,6 +7,8 @@ import { IoCloseCircle } from 'react-icons/io5';
 import Chords from './Chords';
 // import song from './song';
 import AddChordSection from './AddChordSection';
+
+import firebase from './firebase';
 
 const BlurredPage = styled.div`
     position: fixed;
@@ -28,7 +30,6 @@ const StyledChordsMenu = styled.div`
     justify-content: center;
     position: relative;
     width: 90vw;
-
     overflow: visible;
 
     background: ${(props) => props.theme.panelColor};
@@ -49,7 +50,53 @@ const HeaderMenu = styled.div`
 `;
 
 const ChordsMenu = (props) => {
-    const [chords, updateChords] = useState('');
+    // TODO: sistema gestione id?
+
+    // TODO: crea più documenti (song) e dai la possibilità di salvare preset
+    // TODO: indicatore di modifica stato non salvato su database
+    // TODO: modifica id accordi
+    const [chords, updateChords] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const ref = firebase.firestore().collection('songs');
+    const documentSong = '1';
+
+    function getSong(docName = documentSong) {
+        setLoading(true);
+
+        ref.doc(docName)
+            .get()
+            .then((doc) => {
+                if (doc.exists) {
+                    const items = doc.data();
+                    if (items) {
+                        for (const key in items) {
+                            updateChords((chords) => [...chords, items[key]]);
+                        }
+                    }
+                } else {
+                    // doc.data() will be undefined in this case
+                    console.log('No such document! Creating an empty one...');
+                    updateServer(docName);
+                }
+            })
+            .catch((error) => {
+                console.log('Error getting document:', error);
+            });
+
+        //console.log(items);
+        //updateChords(items[0]););
+
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        getSong();
+    }, []); // execute only at start or also when preset changed...
+
+    if (loading) {
+        return <h1>Loading...</h1>;
+    }
 
     const deleteChord = (id) => {
         // console.log('delete', id);
@@ -57,10 +104,18 @@ const ChordsMenu = (props) => {
     };
 
     const addChord = (chord) => {
-        // console.log('added', chord);
+        //console.log('added', chord);
         const id = Math.floor(Math.random() * 10000 + 1).toString();
+
         const newChord = { id, ...chord };
+
         updateChords([...chords, newChord]);
+    };
+
+    const updateServer = (docName = documentSong) => {
+        const newState = { ...chords };
+        ref.doc(docName).delete();
+        ref.doc(docName).set(newState);
     };
 
     function handleOnDragEnd(result) {
@@ -68,8 +123,8 @@ const ChordsMenu = (props) => {
         const items = Array.from(chords);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
-
         updateChords(items);
+        // ref.doc(items.id).update(result).set();
         // console.log(items);
     }
     return props.showMenu ? (
@@ -79,7 +134,10 @@ const ChordsMenu = (props) => {
                     <h2>Chords Lab</h2>
                     <IoCloseCircle
                         className="CloseBtn"
-                        onClick={props.toggleMenu}
+                        onClick={() => {
+                            updateServer();
+                            props.toggleMenu();
+                        }}
                     />
                 </HeaderMenu>
 

@@ -10,7 +10,7 @@ const StyledAddChord = styled.div`
     position: relative;
     display: flex;
     min-width: 400px;
-
+    /* width: 75%; */
     align-self: center;
     align-items: center;
     justify-content: space-around;
@@ -47,7 +47,7 @@ const Select = styled.div`
     height: 55px;
     border: ${(props) => props.theme.border};
     border-radius: 15px;
-    font-size: 0.8em;
+    font-size: 1em;
     background: ${(props) => props.theme.buttonColor};
 
     margin-left: 10px;
@@ -186,7 +186,7 @@ function AddChord(props) {
                     color:
                         !tonic || !quality || !octave || !duration
                             ? 'rgb(210, 210, 210)'
-                            : 'rgb(0, 230, 0)',
+                            : 'rgb(255, 180, 0)',
                     pointerEvents:
                         !tonic || !quality || !octave || !duration
                             ? 'none'

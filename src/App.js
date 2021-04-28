@@ -4,13 +4,7 @@ import { GlobalStyles } from './components/GlobalStyles';
 import MainMenu from './components/MainMenu';
 import ChordsMenu from './components/ChordsMenu';
 import { IoHelpCircle } from 'react-icons/io5';
-
-const theme = {
-    background: 'rgb(255, 183, 74)',
-    panelColor: 'rgba(255, 255, 255, 0.4)',
-    buttonColor: 'rgba(255, 255, 255, 0.6)',
-    border: '1px solid rgba(220, 220, 220, 0.2)',
-};
+import themes from './Themes';
 
 const Background = styled.div`
     height: 100vh;
@@ -27,7 +21,7 @@ function App() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={themes.orange}>
             <GlobalStyles />
             <Background>
                 <IoHelpCircle

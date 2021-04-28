@@ -46,7 +46,7 @@ export const GlobalStyles = createGlobalStyle`
   h2 {
     
     display: block;
-    font-size: 0.8em;
+    font-size: 1em;
     margin-top: 0;
     margin-bottom: 0;
     margin-left: 0;
