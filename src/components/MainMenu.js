@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
+import * as Tone from 'tone';
 import { IoMusicalNotes, IoColorPalette, IoPlayCircle } from 'react-icons/io5';
+import generateSounds from './Sound.js';
+
 const StyledMainMenu = styled.div`
     display: flex;
 
@@ -42,6 +44,33 @@ const MenuButton = styled.button`
 `;
 
 const MainMenu = (props) => {
+    const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        generateSounds();
+    }, [isPlaying]);
+
+    const startContext = async () => {
+        //Tone.setContext(new Tone.Context({ latencyHint: 1000 }));
+        console.log('ho cliccato play');
+        await Tone.start();
+
+        if (isPlaying) {
+            // Turn of our player if music is currently playing
+            setIsPlaying(false);
+
+            await Tone.Transport.stop();
+            console.log('stop');
+
+            return;
+        }
+
+        setIsPlaying(true);
+
+        await Tone.Transport.start();
+    };
+
+    // return pulsanti
     return (
         <StyledMainMenu className={props.className}>
             <MenuButton onClick={props.btnAction}>
@@ -52,7 +81,7 @@ const MainMenu = (props) => {
                 <IoColorPalette className="Icon" />
             </MenuButton>
 
-            <MenuButton>
+            <MenuButton onClick={() => startContext()}>
                 <IoPlayCircle className="Icon" />
             </MenuButton>
         </StyledMainMenu>

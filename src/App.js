@@ -19,6 +19,7 @@ function App() {
 
     const toggleMenu = () => {
         setMenu((prev) => !prev);
+        console.log('ho cliccato menu accordi');
     };
 
     return (
@@ -29,6 +30,7 @@ function App() {
                 <IoHelpCircle
                     className="Icon"
                     style={{
+                        color: 'white',
                         position: 'fixed',
                         top: '20px',
                         right: '20px',

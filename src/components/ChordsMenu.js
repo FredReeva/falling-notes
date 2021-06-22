@@ -50,16 +50,15 @@ const HeaderMenu = styled.div`
 `;
 
 const ChordsMenu = (props) => {
-    // TODO: sistema gestione id?
-
+    // TODO: sistema gestione id!
+    // TODO: accesso utente al proprio spazio e salvataggio canzoni
     // TODO: crea più documenti (song) e dai la possibilità di salvare preset
-    // TODO: indicatore di modifica stato non salvato su database
-    // TODO: modifica id accordi
+
     const [chords, updateChords] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const ref = firebase.firestore().collection('songs');
-    const documentSong = '1';
+    const documentSong = '2';
 
     function getSong(docName = documentSong) {
         setLoading(true);
