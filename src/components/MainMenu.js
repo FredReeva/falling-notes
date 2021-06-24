@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import * as Tone from 'tone';
 import { IoMusicalNotes, IoColorPalette, IoPlayCircle } from 'react-icons/io5';
 import generateSounds from './Sound.js';
+import {MelodyGen} from "../libraries/melodygen/main.js"
 
 const StyledMainMenu = styled.div`
     display: flex;
@@ -53,6 +54,43 @@ const MainMenu = (props) => {
     const startContext = async () => {
         //Tone.setContext(new Tone.Context({ latencyHint: 1000 }));
         console.log('ho cliccato play');
+
+
+
+        
+        //*******************
+
+        //ACCORDI ESEMPIO (Inserire accordi specificati dall'utente)
+        let chords = [
+            {
+                tonic: "C",
+                color: "Major",
+                duration: 2
+            },
+        
+            {
+                tonic: "G",
+                color: "Major",
+                duration: 3
+            },
+        
+            {
+                tonic: "F",
+                color: "Major",
+                duration: 2
+            },
+        ]
+        
+        let generator = new MelodyGen()
+        let melody = generator.generate(chords)
+
+        console.log(melody)
+        
+        //*******************
+
+
+
+
         await Tone.start();
 
         if (isPlaying) {

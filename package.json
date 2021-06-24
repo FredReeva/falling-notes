@@ -19,7 +19,9 @@
     "styled-components": "^5.2.3",
     "three": "^0.129.0",
     "tone": "^14.7.77",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "music-chord": "^1.2.1",
+    "music-scale": "^1.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
