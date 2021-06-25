@@ -60,7 +60,7 @@ const ChordsMenu = (props) => {
     const [loading, setLoading] = useState(false);
 
     const ref = firebase.firestore().collection('songs');
-    const documentSong = '2';
+    const documentSong = '3';
 
     function getSong(docName = documentSong) {
         setLoading(true);
