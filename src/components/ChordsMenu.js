@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
 import styled from 'styled-components';
-
 import { IoCloseCircle } from 'react-icons/io5';
-
 import Chords from './Chords';
-// import song from './song';
 import AddChordSection from './AddChordSection';
-
 import firebase from './firebase';
 import { MelodyGen } from '../libraries/melodygen/main.js';
-import { ToneWithContext } from 'tone/build/esm/core/context/ToneWithContext';
 
 const BlurredPage = styled.div`
     position: fixed;
@@ -52,7 +46,6 @@ const HeaderMenu = styled.div`
 `;
 
 const ChordsMenu = (props) => {
-    // TODO: sistema gestione id!
     // TODO: accesso utente al proprio spazio e salvataggio canzoni
     // TODO: crea più documenti (song) e dai la possibilità di salvare preset
 
@@ -85,15 +78,12 @@ const ChordsMenu = (props) => {
                 console.log('Error getting document:', error);
             });
 
-        //console.log(items);
-        //updateChords(items[0]););
-
         setLoading(false);
     }
 
     useEffect(() => {
         getSong();
-    }, []); // execute only at start or also when preset changed...
+    }, []); // execute only at start
 
     if (loading) {
         return <h1>Loading...</h1>;
@@ -105,9 +95,8 @@ const ChordsMenu = (props) => {
     };
 
     const addChord = (chord) => {
-        //console.log('added', chord);
-        const id = Math.floor(Math.random() * 10000 + 1).toString();
-
+        // generate id based on time (guaranteed to be unique for our application)
+        const id = Date.now().toString();
         const newChord = { id, ...chord };
 
         updateChords([...chords, newChord]);
