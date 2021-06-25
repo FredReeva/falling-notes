@@ -10,6 +10,7 @@ import AddChordSection from './AddChordSection';
 
 import firebase from './firebase';
 import { MelodyGen } from '../libraries/melodygen/main.js';
+import { ToneWithContext } from 'tone/build/esm/core/context/ToneWithContext';
 
 const BlurredPage = styled.div`
     position: fixed;
@@ -117,13 +118,7 @@ const ChordsMenu = (props) => {
         ref.doc(docName).delete();
         ref.doc(docName).set(newState);
 
-        // if (chords) {
-        //     //Istanzio l'oggetto generatore
-        //     let generator = new MelodyGen();
-        //     //Genero la linea melodica dando in input gli accordi dell'utente
-        //     let melody = generator.generate(chords);
-        //     console.log('New melody: ', melody);
-        // }
+        computeMelody(); // ogni volta che il server viene aggiornato calcolo la melodia
     };
 
     function handleOnDragEnd(result) {
@@ -132,9 +127,32 @@ const ChordsMenu = (props) => {
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
         updateChords(items);
-        // ref.doc(items.id).update(result).set();
-        // console.log(items);
     }
+
+    // dati gli accordi, li converte in modo che siano comprensibili al codice di antonio e calcola melodia
+    const computeMelody = () => {
+        // adapter dell'interfaccia
+        var chordList = [];
+        chords.forEach((element) => {
+            const tonic = element['tonic'];
+            const color = element['quality'];
+            const duration = parseInt(element['duration']);
+            var readChord = { tonic, color, duration };
+
+            chordList = [...chordList, readChord];
+        });
+        // console.log(chordList);
+
+        // genero melodia se ci sono accordi:
+        if (chordList.length > 0) {
+            //Istanzio l'oggetto generatore
+            let generator = new MelodyGen();
+            //Genero la linea melodica dando in input gli accordi dell'utente
+            let melody = generator.generate(chordList);
+            console.log('New melody: ', melody);
+        }
+    };
+
     return props.showMenu ? (
         <BlurredPage>
             <StyledChordsMenu className={props.className}>

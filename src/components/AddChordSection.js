@@ -91,7 +91,7 @@ function AddChord(props) {
         'A#',
         'B',
     ];
-    const qualities = ['M', 'm', 'Maj7', 'm7', '7', 'm7b5'];
+    const qualities = ['Major', 'minor', 'Maj7', 'minor7', '7', 'm7b5'];
     const octaves = ['-2', '-1', '0', '1', '2'];
     const durations = ['1', '2', '3', '4'];
 

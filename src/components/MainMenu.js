@@ -53,55 +53,20 @@ const MainMenu = (props) => {
 
     const startContext = async () => {
         //Tone.setContext(new Tone.Context({ latencyHint: 1000 }));
-        console.log('ho cliccato play');
-
-        //*******************
-
-        //ACCORDI ESEMPIO (Inserire accordi specificati dall'utente)
-        let chords = [
-            {
-                tonic: 'C',
-                color: 'Major',
-                duration: 2,
-            },
-
-            {
-                tonic: 'G',
-                color: 'Major',
-                duration: 3,
-            },
-
-            {
-                tonic: 'D',
-                color: 'Major',
-                duration: 2,
-            },
-        ];
-
-        //Istanzio l'oggetto generatore
-        let generator = new MelodyGen();
-
-        //Genero la linea melodica dando in input gli accordi dell'utente
-        let melody = generator.generate(chords);
-
-        console.log(melody);
-
-        //*******************
 
         await Tone.start();
 
         if (isPlaying) {
             // Turn of our player if music is currently playing
+            console.log('...stop');
             setIsPlaying(false);
-
             await Tone.Transport.stop();
-            console.log('stop');
 
             return;
         }
 
+        console.log('play...');
         setIsPlaying(true);
-
         await Tone.Transport.start();
     };
 
