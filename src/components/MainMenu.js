@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import * as Tone from 'tone';
 import { IoMusicalNotes, IoColorPalette, IoPlayCircle } from 'react-icons/io5';
 import generateSounds from './Sound.js';
-import {MelodyGen} from "../libraries/melodygen/main.js"
+import { MelodyGen } from '../libraries/melodygen/main.js';
 
 const StyledMainMenu = styled.div`
     display: flex;
@@ -55,44 +55,38 @@ const MainMenu = (props) => {
         //Tone.setContext(new Tone.Context({ latencyHint: 1000 }));
         console.log('ho cliccato play');
 
-
-
-        
         //*******************
 
         //ACCORDI ESEMPIO (Inserire accordi specificati dall'utente)
         let chords = [
             {
-                tonic: "C",
-                color: "Major",
-                duration: 2
+                tonic: 'C',
+                color: 'Major',
+                duration: 2,
             },
-        
+
             {
-                tonic: "G",
-                color: "Major",
-                duration: 3
+                tonic: 'G',
+                color: 'Major',
+                duration: 3,
             },
-        
+
             {
-                tonic: "D",
-                color: "Major",
-                duration: 2
+                tonic: 'D',
+                color: 'Major',
+                duration: 2,
             },
-        ]
-        
-        //Istanzio l'oggetto generatore 
-        let generator = new MelodyGen()
+        ];
+
+        //Istanzio l'oggetto generatore
+        let generator = new MelodyGen();
 
         //Genero la linea melodica dando in input gli accordi dell'utente
-        let melody = generator.generate(chords)
+        let melody = generator.generate(chords);
 
-        console.log(melody)
-        
+        console.log(melody);
+
         //*******************
-
-
-
 
         await Tone.start();
 

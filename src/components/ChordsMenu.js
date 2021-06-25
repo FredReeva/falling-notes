@@ -9,6 +9,7 @@ import Chords from './Chords';
 import AddChordSection from './AddChordSection';
 
 import firebase from './firebase';
+import { MelodyGen } from '../libraries/melodygen/main.js';
 
 const BlurredPage = styled.div`
     position: fixed;
@@ -115,6 +116,14 @@ const ChordsMenu = (props) => {
         const newState = { ...chords };
         ref.doc(docName).delete();
         ref.doc(docName).set(newState);
+
+        // if (chords) {
+        //     //Istanzio l'oggetto generatore
+        //     let generator = new MelodyGen();
+        //     //Genero la linea melodica dando in input gli accordi dell'utente
+        //     let melody = generator.generate(chords);
+        //     console.log('New melody: ', melody);
+        // }
     };
 
     function handleOnDragEnd(result) {
