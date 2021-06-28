@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import * as Tone from 'tone';
 import * as THREE from 'three';
+import StarrySkyShader from './StarrySkyShader';
 
 const World = styled.div`
     position: fixed;
@@ -31,9 +32,9 @@ const Background = () => {
         renderer.setPixelRatio(window.devicePixelRatio);
 
         //normal camera
-        camera.position.set(0, 5, -10);
-        var target = new THREE.Vector3(0, 0, 100);
-        //var target = new THREE.Vector3(0 , 0 , 30)
+        camera.position.set(0, 5, -5);
+        //var target = new THREE.Vector3(0, 0, 100);
+        var target = new THREE.Vector3(0 , 0 , 30)
         camera.lookAt(target);
 
         //controls
@@ -181,7 +182,7 @@ const Background = () => {
 
         const color = new THREE.Color(1, 1, 1);
         const pcIndexed = generatePointCloud(color, worldWidth, worldDepth);
-        pcIndexed.scale.set(100, 40, 200);
+        pcIndexed.scale.set(200, 40, 200);
         pcIndexed.position.set(0, -10, 100);
         scene.add(pcIndexed);
 
@@ -207,23 +208,66 @@ const Background = () => {
             );
         }
 
+        // SKY
+
+        var skyDomeRadius = 2000.01;
+        var sphereMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+            skyRadius: { value: skyDomeRadius },
+            env_c1: { value: new THREE.Color("#08060F") },
+            env_c2: { value: new THREE.Color("#231942") },
+            noiseOffset: { value: new THREE.Vector3(100.01, 100.01, 100.01) },
+            starSize: { value: 0.005 },
+            starDensity: { value: 0.12 },
+            clusterStrength: { value: 0.15 },
+            clusterSize: { value: 0.5 },
+        },
+        vertexShader: StarrySkyShader.vertexShader,
+        fragmentShader: StarrySkyShader.fragmentShader,
+        side: THREE.DoubleSide,
+        })
+        var sphereGeometry = new THREE.SphereGeometry(skyDomeRadius, 20, 20);
+        var skyDome = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        scene.add(skyDome);
+
         // animate
+
+        var rotWorldMatrix;
+        // Rotate an object around an arbitrary axis in world space       
+        function rotateAroundWorldAxis(object, axis, radians) {
+            rotWorldMatrix = new THREE.Matrix4();
+            rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+
+            // old code for Three.JS pre r54:
+            //  rotWorldMatrix.multiply(object.matrix);
+            // new code for Three.JS r55+:
+            rotWorldMatrix.multiply(object.matrix);                // pre-multiply
+
+            object.matrix = rotWorldMatrix;
+
+            // old code for Three.js pre r49:
+            // object.rotation.getRotationFromMatrix(object.matrix, object.scale);
+            // old code for Three.js pre r59:
+            // object.rotation.setEulerFromRotationMatrix(object.matrix);
+            // code for r59+:
+            object.rotation.setFromRotationMatrix(object.matrix);
+        }
+
 
         mount.current.appendChild(renderer.domElement);
         window.addEventListener('resize', handleResize);
 
         let i = 0;
 
+        var clock = new THREE.Clock()
+
         function animate() {
             audioCtx.resume();
-            target.x =
-                -mouseX * 30 * window.devicePixelRatio +
-                Math.sin((Math.PI * i) / 300) * 5;
-            target.y = (-mouseY + 1) * 30;
-            target.x = Math.sin((Math.PI * i) / 300) * 10;
+            // target.x = -mouseX * 30 * window.devicePixelRatio + Math.sin((Math.PI * i) / 300) * 5;
+            // target.y = (-mouseY + 1) * 30;
+            rotateAroundWorldAxis(skyDome, new THREE.Vector3(-mouseY, mouseX, mouseX-mouseY), clock.getElapsedTime()/(5*1000*60)*Math.PI*2);
             i++;
             camera.lookAt(target);
-            //controls.update();
             updateSpectrum(pcIndexed);
             pcIndexed.geometry.attributes.position.needsUpdate = true;
             pcIndexed.geometry.attributes.color.needsUpdate = true;

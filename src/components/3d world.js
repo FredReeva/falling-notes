@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import * as Tone from 'tone';
+import StarrySkyShader from './StarrySkyShader';
 
 // 3D
 const scene = new THREE.Scene();
@@ -180,17 +181,61 @@ function updateSpectrum(pointCloud) {
     updatePointCloud(pointCloud, color, worldWidth, worldDepth, spectrum);
 }
 
+// SKY
+
+var skyDomeRadius = 2000.01;
+var sphereMaterial = new THREE.ShaderMaterial({
+  uniforms: {
+    skyRadius: { value: skyDomeRadius },
+    env_c1: { value: new THREE.Color("#08060F") },
+    env_c2: { value: new THREE.Color("#231942") },
+    noiseOffset: { value: new THREE.Vector3(100.01, 100.01, 100.01) },
+    starSize: { value: 0.005 },
+    starDensity: { value: 0.12 },
+    clusterStrength: { value: 0.15 },
+    clusterSize: { value: 0.5 },
+  },
+  vertexShader: StarrySkyShader.vertexShader,
+  fragmentShader: StarrySkyShader.fragmentShader,
+  side: THREE.DoubleSide,
+})
+var sphereGeometry = new THREE.SphereGeometry(skyDomeRadius, 20, 20);
+var skyDome = new THREE.Mesh(sphereGeometry, sphereMaterial);
+scene.add(skyDome);
+
 // animate
+
+var rotWorldMatrix;
+// Rotate an object around an arbitrary axis in world space       
+function rotateAroundWorldAxis(object, axis, radians) {
+    rotWorldMatrix = new THREE.Matrix4();
+    rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
+
+    // old code for Three.JS pre r54:
+    //  rotWorldMatrix.multiply(object.matrix);
+    // new code for Three.JS r55+:
+    rotWorldMatrix.multiply(object.matrix);                // pre-multiply
+
+    object.matrix = rotWorldMatrix;
+
+    // old code for Three.js pre r49:
+    // object.rotation.getRotationFromMatrix(object.matrix, object.scale);
+    // old code for Three.js pre r59:
+    // object.rotation.setEulerFromRotationMatrix(object.matrix);
+    // code for r59+:
+    object.rotation.setFromRotationMatrix(object.matrix);
+}
 
 let i = 0;
 
+var clock = new THREE.Clock()
+
 function animate() {
     audioCtx.resume();
-    target.x =
-        -mouseX * 30 * window.devicePixelRatio +
-        Math.sin((Math.PI * i) / 300) * 2.5;
+    // target.x = -mouseX * 30 * window.devicePixelRatio + Math.sin((Math.PI * i) / 300) * 2.5;
     target.y = (-mouseY ) * 15;
     // target.x = Math.sin((Math.PI * i) / 300) * 10;
+    rotateAroundWorldAxis(skyDome, new THREE.Vector3(0.5,-1,0), clock.getElapsedTime()/(5*1000*60)*Math.PI*2);
     i++;
     camera.lookAt(target);
     //controls.update();
