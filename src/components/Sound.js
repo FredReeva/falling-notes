@@ -1,6 +1,8 @@
 import * as Tone from 'tone';
+import ChordsMenu from './ChordsMenu';
 
 let baseVolume = -15.0;
+const analyserBus = new Tone.Channel(0, 0);
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -12,8 +14,8 @@ function connectEffectsChain(chain) {
     for (let i = 0; i < chain.length - 1; i += 1) {
         chain[i].connect(chain[i + 1]);
     }
-
-    chain[chain.length - 1].connect(Tone.Master);
+    chain[chain.length - 1].connect(analyserBus)
+    analyserBus.connect(Tone.Master);
 }
 
 function createSynthParams(chain) {
@@ -40,18 +42,20 @@ function createSynthParams(chain) {
 
 function createLoop(instrument) {
     let loop = new Tone.Loop(function (time) {
-        let notes = instrument['notes'];
-        let note = notes[getRandomInt(0, notes.length)];
-        instrument['synth'].triggerAttackRelease(
-            note,
-            instrument['timeDelay'],
-            time
-        );
-    }, instrument['timeDelay']);
+        let sequence = ChordsMenu.melody;
+        for(let i=0; i<sequence.length; i++){
+            if (sequence.type == 'note') {
+                instrument['synth'].triggerAttackRelease(
+                    sequence.objects[i].pitch,
+                    sequence.objects[i].duration,
+                    sequence.objects[i].onsetTime
+                );
+              }
+        }
+    }, sequence.objects[i].duration + sequence.objects[i].onsetTime );
     loop.humanize = instrument['humanize'];
-    loop.probability = instrument['probability'];
+    // loop.probability = instrument['probability'];
     loop.start();
-    //Tone.Transport.start();
 }
 
 // instruments
@@ -82,7 +86,7 @@ function createSynthPad() {
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
 
-    let notes = ['E2', 'A2', 'C2', 'G2'];
+    let notes = ['E6', 'A6', 'C6', 'G6'];
     let timeDelay = '2m';
     let humanize = 0;
     let probability = 1;
@@ -98,6 +102,7 @@ function createSynthPad() {
 }
 
 export var context = Tone.getContext();
+export var bus = analyserBus;
 
 const generateSounds = () => {
     var pad = createSynthPad();

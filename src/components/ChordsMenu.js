@@ -118,6 +118,7 @@ const ChordsMenu = (props) => {
         updateChords(items);
     }
 
+
     // dati gli accordi, li converte in modo che siano comprensibili al codice di antonio e calcola melodia
     const computeMelody = () => {
         // adapter dell'interfaccia

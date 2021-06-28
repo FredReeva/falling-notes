@@ -1,7 +1,5 @@
 import * as THREE from 'three';
 import * as Tone from 'tone';
-/* import oc from 'three-orbit-controls'
-const OrbitControls = oc(THREE) */
 
 // 3D
 const scene = new THREE.Scene();
@@ -19,8 +17,8 @@ document.body.appendChild(renderer.domElement);
 
 //normal camera
 camera.position.set(0, 5, -10);
-var target = new THREE.Vector3(0, 0, 100);
-//var target = new THREE.Vector3(0 , 0 , 30)
+//var target = new THREE.Vector3(0, 0, 100);
+var target = new THREE.Vector3(0 , 0 , 30)
 camera.lookAt(target);
 
 //controls
@@ -46,37 +44,29 @@ window.addEventListener('resize', () => {
 
 var sound = require('./Sound.js');
 var audioCtx = sound.context;
-/* var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-var myAudio = document.querySelector("audio");
-var source = audioCtx.createMediaElementSource(myAudio); */
+var analyserBus = sound.bus;
+
 
 var analyserLeft = audioCtx.createAnalyser();
 var analyserRight = audioCtx.createAnalyser();
 var splitter = audioCtx.createChannelSplitter(2);
 
-//var merger  = audioCtx.createChannelMerger(2);
-//source.connect(splitter);
-
 analyserLeft.fftSize = 128;
 analyserLeft.smoothingTimeConstant = 0.6;
-analyserLeft.minDecibels = -110;
-analyserLeft.maxDecibels = -10;
+analyserLeft.minDecibels = -60;
+analyserLeft.maxDecibels = -15;
 
 analyserRight.fftSize = 128;
 analyserRight.smoothingTimeConstant = 0.6;
-analyserRight.minDecibels = -110;
-analyserRight.maxDecibels = -10;
+analyserRight.minDecibels = -60;
+analyserRight.maxDecibels = -15;
 
 var bufferLength = analyserLeft.frequencyBinCount;
 
-Tone.connect(Tone.Master, splitter);
+Tone.connect(analyserBus, splitter);
 
 splitter.connect(analyserLeft, 0);
 splitter.connect(analyserRight, 1);
-
-/* analyserLeft.connect(merger, 0, 0);
-analyserRight.connect(merger, 0 , 1);
-merger.connect(audioCtx.destination); */
 
 // build 3D world
 
@@ -106,7 +96,7 @@ function generatePointCloud(color, width, length) {
             positions[3 * k + 1] = y;
             positions[3 * k + 2] = z;
 
-            const intensity = (y + 0.001) * 10;
+            const intensity = (y + 0.001) * 6;
             colors[3 * k] = color.r * intensity;
             colors[3 * k + 1] = color.g * intensity;
             colors[3 * k + 2] = color.b * intensity;
@@ -168,9 +158,9 @@ function updatePointCloud(pointCloud, color, width, length, data) {
     }
 }
 
-const color = new THREE.Color(1, 1, 1);
+const color = new THREE.Color( 1, 1, 0);
 const pcIndexed = generatePointCloud(color, worldWidth, worldDepth);
-pcIndexed.scale.set(100, 40, 200);
+pcIndexed.scale.set(200, 10, 200);
 pcIndexed.position.set(0, -10, 100);
 scene.add(pcIndexed);
 
@@ -198,9 +188,9 @@ function animate() {
     audioCtx.resume();
     target.x =
         -mouseX * 30 * window.devicePixelRatio +
-        Math.sin((Math.PI * i) / 300) * 5;
-    target.y = (-mouseY + 1) * 30;
-    target.x = Math.sin((Math.PI * i) / 300) * 10;
+        Math.sin((Math.PI * i) / 300) * 2.5;
+    target.y = (-mouseY ) * 15;
+    // target.x = Math.sin((Math.PI * i) / 300) * 10;
     i++;
     camera.lookAt(target);
     //controls.update();

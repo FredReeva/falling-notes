@@ -3836,6 +3836,11 @@ chokidar@^3.4.1:
   optionalDependencies:
     fsevents "~2.3.1"
 
+chord-dictionary@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/chord-dictionary/-/chord-dictionary-1.0.0.tgz#198d7cfcd350b3dfa230c6f581a15e68c62c7970"
+  integrity sha1-GY18/NNQs9+iMMb1gaFeaMYseXA=
+
 chownr@^1.1.1:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-1.1.4.tgz#6fc9d7b42d32a583596337666e7d08084da2cc6b"
@@ -8237,6 +8242,36 @@ multicast-dns@^6.0.1:
     dns-packet "^1.3.1"
     thunky "^1.0.2"
 
+music-chord@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/music-chord/-/music-chord-1.2.1.tgz#a72b55381fd20542e2b55cf360e3e98847a32f5b"
+  integrity sha1-pytVOB/SBULitVzzYOPpiEejL1s=
+  dependencies:
+    chord-dictionary "^1.0.0"
+    music-notation "^1.0.1"
+    note-harmonizer "^1.0.0"
+
+music-gamut@^0.9.0, music-gamut@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/music-gamut/-/music-gamut-0.9.2.tgz#16053dd92f1e51f776d9e809c46f71625c810f9d"
+  integrity sha1-FgU92S8eUfd22egJxG9xYlyBD50=
+  dependencies:
+    music-notation "^1.0.1"
+
+music-notation@^1.0.0, music-notation@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/music-notation/-/music-notation-1.0.1.tgz#33e9034b69ff0279f84e9c7d2e2e3d1093b6aaf9"
+  integrity sha1-M+kDS2n/Ann4Tpx9Li49EJO2qvk=
+
+music-scale@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/music-scale/-/music-scale-1.2.0.tgz#527df560105be46166a8dfb083408d68761c91e4"
+  integrity sha1-Un31YBBb5GFmqN+wg0CNaHYckeQ=
+  dependencies:
+    note-harmonizer "^1.0.4"
+    pitch-set "^1.1.0"
+    scale-dictionary "^1.0.0"
+
 nan@^2.12.1:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
@@ -8411,6 +8446,30 @@ normalize-url@^3.0.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
+
+note-harmonizer@^1.0.0, note-harmonizer@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/note-harmonizer/-/note-harmonizer-1.0.4.tgz#d60003b23db8546799571d3346318449db6cf06e"
+  integrity sha1-1gADsj24VGeZVx0zRjGESdts8G4=
+  dependencies:
+    music-gamut "^0.9.0"
+    music-notation "^1.0.0"
+    note-interval "^1.0.2"
+    note-transposer "^1.0.2"
+
+note-interval@^1.0.2:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/note-interval/-/note-interval-1.0.3.tgz#1cc9e8e5fe9991d3df7c154584ff033b7656e93a"
+  integrity sha1-HMno5f6ZkdPffBVFhP8DO3ZW6To=
+  dependencies:
+    music-notation "^1.0.0"
+
+note-transposer@^1.0.2:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/note-transposer/-/note-transposer-1.0.4.tgz#878abd45ad6575dbf3e38db186896f9baf4a06a6"
+  integrity sha1-h4q9Ra1lddvz442xholvm69KBqY=
+  dependencies:
+    music-notation "^1.0.0"
 
 npm-run-path@^2.0.0:
   version "2.0.2"
@@ -8913,6 +8972,21 @@ pirates@^4.0.1:
   integrity sha512-WuNqLTbMI3tmfef2TKxlQmAiLHKtFhlsCZnPIpuv2Ow0RDVO8lfy1Opf4NUzlMXLjPl+Men7AuVdX6TA+s+uGA==
   dependencies:
     node-modules-regexp "^1.0.0"
+
+pitch-set@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/pitch-set/-/pitch-set-1.1.0.tgz#47d22b4d07b4522f44e9ea227fce7444192059c0"
+  integrity sha1-R9IrTQe0Ui9E6eoif850RBkgWcA=
+  dependencies:
+    music-gamut "^0.9.2"
+    pitch-sort "^1.0.1"
+
+pitch-sort@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/pitch-sort/-/pitch-sort-1.0.1.tgz#f8edc1565968dd96568b760a231a9106c22c0234"
+  integrity sha1-+O3BVllo3ZZWi3YKIxqRBsIsAjQ=
+  dependencies:
+    music-gamut "^0.9.2"
 
 pkg-dir@^2.0.0:
   version "2.0.0"
@@ -10653,6 +10727,11 @@ saxes@^5.0.0:
   integrity sha512-5LBh1Tls8c9xgGjw3QrMwETmTMVk0oFgvrFSvWx62llR2hcEInrKNZ2GZCCuuy2lvWrdl5jhbpeqc5hRYKFOcw==
   dependencies:
     xmlchars "^2.2.0"
+
+scale-dictionary@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/scale-dictionary/-/scale-dictionary-1.0.0.tgz#aacc32cb97af3d7f8dce89fc309ffdc19fbea138"
+  integrity sha1-qswyy5evPX+Nzon8MJ/9wZ++oTg=
 
 scheduler@^0.20.2:
   version "0.20.2"
