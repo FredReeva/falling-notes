@@ -14,7 +14,7 @@ function connectEffectsChain(chain) {
     for (let i = 0; i < chain.length - 1; i += 1) {
         chain[i].connect(chain[i + 1]);
     }
-    chain[chain.length - 1].connect(analyserBus)
+    chain[chain.length - 1].connect(analyserBus);
     analyserBus.connect(Tone.Master);
 }
 
@@ -42,17 +42,22 @@ function createSynthParams(chain) {
 
 function createLoop(instrument) {
     let loop = new Tone.Loop(function (time) {
-        let sequence = ChordsMenu.melody;
-        for(let i=0; i<sequence.length; i++){
+        // let sequence = ChordsMenu.melody;
+        let sequence = [
+            { type: 'pause', onsetTime: 0.25, duration: 0.125 },
+            { type: 'pause', onsetTime: 0.375, duration: 0.25 },
+            { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: 62 },
+        ];
+        for (let i = 0; i < sequence.length; i++) {
             if (sequence.type == 'note') {
                 instrument['synth'].triggerAttackRelease(
                     sequence.objects[i].pitch,
                     sequence.objects[i].duration,
                     sequence.objects[i].onsetTime
                 );
-              }
+            }
         }
-    }, sequence.objects[i].duration + sequence.objects[i].onsetTime );
+    }, sequence.objects[i].duration + sequence.objects[i].onsetTime);
     loop.humanize = instrument['humanize'];
     // loop.probability = instrument['probability'];
     loop.start();
