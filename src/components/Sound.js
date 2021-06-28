@@ -42,40 +42,43 @@ function createSynthParams(chain) {
         },
     };
 }
-/* 
+
+let sequence = [
+    { type: 'pause', onsetTime: 0.25, duration: 0.125 },
+    { type: 'pause', onsetTime: 0.375, duration: 0.25 },
+    { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: 62 },
+];
+
+let i=0;
+
 function createLoop(instrument) {
     let loop = new Tone.Loop(function (time) {
         // let sequence = ChordsMenu.melody;
-        let sequence = [
-            { type: 'pause', onsetTime: 0.25, duration: 0.125 },
-            { type: 'pause', onsetTime: 0.375, duration: 0.25 },
-            { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: 62 },
-        ];
         for (let i = 0; i < sequence.length; i++) {
-            if (sequence.type == 'note') {
+            if (sequence[i].type == 'note') {
                 instrument['synth'].triggerAttackRelease(
-                    sequence.objects[i].pitch,
-                    sequence.objects[i].duration,
-                    sequence.objects[i].onsetTime
+                    sequence[i].pitch,
+                    sequence[i].duration,
+                    sequence[i].onsetTime
                 );
             }
         }
-    }, time);
+    }, sequence[i].duration+sequence[i].onsetTime);
     loop.humanize = instrument['humanize'];
     // loop.probability = instrument['probability'];
     loop.start();
-} */
-
-function createLoop (instrument) {
-    let loop = new Tone.Loop(function(time) {
-        let notes = instrument["notes"];
-        let note = notes[getRandomInt(0, notes.length)];
-        instrument["synth"].triggerAttackRelease(note, instrument["timeDelay"], time);
-    }, instrument["timeDelay"]);
-    loop.humanize = instrument["humanize"];
-    loop.probability = instrument["probability"];
-    loop.start();
 }
+
+// function createLoop (instrument) {
+//     let loop = new Tone.Loop(function(time) {
+//         let notes = instrument["notes"];
+//         let note = notes[getRandomInt(0, notes.length)];
+//         instrument["synth"].triggerAttackRelease(note, instrument["timeDelay"], time);
+//     }, instrument["timeDelay"]);
+//     loop.humanize = instrument["humanize"];
+//     loop.probability = instrument["probability"];
+//     loop.start();
+// }
 
 // instruments
 
@@ -278,8 +281,8 @@ export var context = Tone.getContext();
 export var bus = analyserBus;
 
 const generateSounds = () => {
-    var pad = createSynthPad();
-    createLoop(pad);
+    // var pad = createSynthPad();
+    // createLoop(pad);
     // var fx = createSynthFX();
     // createLoop(fx);
     // var lead = createSynthLead();
