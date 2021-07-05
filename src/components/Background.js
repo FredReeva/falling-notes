@@ -11,14 +11,14 @@ let World = styled.div`
     left: 0;
 `;
 
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
 let Background = () => {
     let mount = useRef(null);
+    let mainColor = new THREE.Color(Math.random(),Math.random(),Math.random());
+    mainColor = mainColor.setHSL(mainColor.getHSL().h, 0.7, 0.5);
 
     useEffect(() => {
 
@@ -26,11 +26,11 @@ let Background = () => {
         let winWidth = mount.current.clientWidth;
         let winHeight = mount.current.clientHeight;
         let scene = new THREE.Scene();
-        // {
-        //     let color = 0x000000;
-        //     let density = 0.001;
-        //     scene.fog = new THREE.FogExp2(color, density);
-        //   }
+        {
+            let color = 0x000000;
+            let density = 0.01;
+            scene.fog = new THREE.FogExp2(color, density);
+          }
         let camera = new THREE.PerspectiveCamera(
             100,
             winWidth / winHeight,
@@ -44,7 +44,7 @@ let Background = () => {
         renderer.setPixelRatio(window.devicePixelRatio);
 
         camera.position.set(0, 5, -5);
-        //camera.position.set(0, 100, 100);
+        //camera.position.set(0, 100, -100);
         let target = new THREE.Vector3(0 , 0 , 30)
         camera.lookAt(target);
 
@@ -158,9 +158,9 @@ let Background = () => {
                     positions[3 * k + 1] = y;
 
                     let intensity = (y + 0.001) * 6;
-                    colors[3*k] = (color.r * intensity * (width - i)) / width;
-                    colors[3*k+1] = (color.g * intensity * (width - i)) / width;
-                    colors[3*k+2] = (color.b * intensity * (width - i)) / width;
+                    colors[3*k] = color.r * intensity;
+                    colors[3*k+1] = color.g * intensity;
+                    colors[3*k+2] = color.b * intensity;
 
                     k--;
                 }
@@ -180,8 +180,8 @@ let Background = () => {
         }
 
         let worldWidth = 50, worldDepth = bufferLength * 2;
-        let color = new THREE.Color(1,1,1);
-        let world = generateWorld(color, worldWidth, worldDepth);
+        let worldColor = mainColor;
+        let world = generateWorld(worldColor, worldWidth, worldDepth);
         world.scale.set(200, 40, 200);
         world.position.set(0, -10, 100);
         scene.add(world);
@@ -189,22 +189,37 @@ let Background = () => {
         // STAR FIELD
 
         let numField = 2000;
-        let starFieldradius = 200;
+        let starFieldradius = 400;
 
-        function generateStarField(num, radius) {
+        function generateStarField(num, radius, baseColor) {
             let starFieldGeom = new THREE.BufferGeometry();
 
             let starFieldpos = new Float32Array(3*num);
             let starFieldcol = new Float32Array(3*num);
     
-    
             for(let i=0; i<num; i++) {
-                starFieldpos[3*i] = radius*2*(Math.random()-0.5);
-                starFieldpos[3*i+1] = radius*2*(Math.random()-0.5);
-                starFieldpos[3*i+2] = radius*2*(Math.random()-0.5);
-                starFieldcol[3*i] = 1;
-                starFieldcol[3*i+1] = 1;
-                starFieldcol[3*i+2] = 1;
+                
+                let x = (Math.random()-0.5)*radius;
+                let y = (Math.random()-0.5)*radius;
+                let z = (Math.random()-0.5)*radius;
+                let r = Math.sqrt(Math.pow(x,2),Math.pow(y,2),Math.pow(z,2))
+
+                while (radius - r < 300) {
+                    x = (Math.random()-0.5)*radius;
+                    y = (Math.random()-0.5)*radius;
+                    z = (Math.random()-0.5)*radius;
+                    r = Math.sqrt(Math.pow(x,2),Math.pow(y,2),Math.pow(z,2));
+                }
+
+                starFieldpos[3*i] = x;
+                starFieldpos[3*i+1] = y;
+                starFieldpos[3*i+2] = z;
+                
+                let color = baseColor.offsetHSL((Math.random()-0.5)*0.02, (Math.random()-0.5)*0.05, 0);
+                color = color.setHSL(color.getHSL().h, color.getHSL().s, 0.5+Math.random()*0.2);
+                starFieldcol[3*i] = color.r;
+                starFieldcol[3*i+1] = color.g;
+                starFieldcol[3*i+2] = color.b;
             }
     
             starFieldGeom.setAttribute('position', new THREE.BufferAttribute( starFieldpos, 3 ).setUsage(THREE.DynamicDrawUsage));
@@ -212,29 +227,21 @@ let Background = () => {
             starFieldGeom.computeBoundingBox();
     
             let starFieldMaterial = new THREE.PointsMaterial({
-                size: 0.03,
+                size: 0.3,
                 vertexColors: true
             });
 
             return new THREE.Points(starFieldGeom, starFieldMaterial);
         }
 
-        let starField = generateStarField(numField, starFieldradius)
+        let starField = generateStarField(numField, starFieldradius, mainColor)
         scene.add(starField);
-
-        // let cubeGeo = new THREE.BoxGeometry( 1, 1, 1 );
-        // let cubeMat = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-        // let cube1 = new THREE.Mesh( cubeGeo, cubeMat );
-        // let cube2 = cube1.clone();
-        // scene.add(cube1);
-        // scene.add(cube2);
-        // cube2.translateZ(50);
 
         // FALLING STARS
 
         let starFallradius = 10;
 
-        function generateStar(radius) {
+        function generateStar(radius, baseColor) {
 
             let timer = new THREE.Clock();
 
@@ -269,15 +276,12 @@ let Background = () => {
             velocity[4] = directionY*0.02;
             velocity[5] = directionZ*0.02;
 
-            color[0] = 1;
-            color[1] = 1;
-            color[2] = 1;
-
             starGeom.setAttribute('position', new THREE.BufferAttribute( position, 3 ).setUsage(THREE.DynamicDrawUsage));
             starGeom.setAttribute('velocity', new THREE.BufferAttribute( velocity, 3 ).setUsage(THREE.DynamicDrawUsage));
             starGeom.computeBoundingBox();
 
-            let starMaterial = new THREE.LineBasicMaterial({color: 0xfffff});
+
+            let starMaterial = new THREE.LineBasicMaterial({color: 0xffffff});
 
             return [new THREE.Line(starGeom, starMaterial), timer];
         }
@@ -312,14 +316,12 @@ let Background = () => {
             velocity[4] = directionY*0.010;
             velocity[5] = directionZ*0.010;
 
-            star.material.color = new THREE.Color(0xFFFFFF);
+            star.material.color = new THREE.Color(0xffffff);
 
             timer.start();
-            
-
         }
 
-        function updateStar (star, timer, radius, num) {
+        function updateStar (star, timer, radius, baseColor) {
 
             let positions = star.geometry.attributes.position.array;
             let velocity = star.geometry.attributes.velocity.array;
@@ -335,30 +337,50 @@ let Background = () => {
                 positions[2] += velocity[2];
             }
             let tresh = 0.1;
-            if (progress > tresh) {
-                star.material.color = new THREE.Color(1, (1-progress)/(1-tresh), (1-progress)+0.2);
-            }
+            let color = baseColor.clone();
+            let deathColor = baseColor.clone();
+            deathColor = deathColor.setHSL(deathColor.getHSL().h, 1, 0.2);
+            color = color.lerpHSL(deathColor, progress);
+            star.material.color = color;
+
             // line end
             positions[3] += velocity[3];
             positions[4] += velocity[4];
             positions[5] += velocity[5];
 
             if (progress > 1) {
-                console.log(num, timer);
                 resetStar(star, timer, radius);
             }
 
         }
 
-        let starFall1 = generateStar(starFallradius);
+        let starFall1 = generateStar(starFallradius, mainColor);
         let star1 = starFall1[0];
         let timer1 = starFall1[1];
-        scene.add(star1);
 
-        // let starFall2 = generateStar(starFallradius);
-        // let star2 = starFall2[0];
-        // let timer2 = starFall2[1];
-        // scene.add(star2);
+        let starFall2 = generateStar(starFallradius, mainColor);
+        let star2 = starFall2[0];
+        let timer2 = starFall2[1];
+        
+        let starFall3 = generateStar(starFallradius, mainColor);
+        let star3 = starFall3[0];
+        let timer3 = starFall3[1];
+
+        async function starFall() {
+            timer1.start();
+            scene.add(star1);
+
+            await sleep(800);
+            timer2.start();
+            scene.add(star2);
+            
+            await sleep(1200);
+            timer3.start();
+            scene.add(star3);
+
+        }
+
+        starFall();
         
 
         // FLOOR
@@ -386,7 +408,7 @@ let Background = () => {
 
             updateWorld(
                 world,
-                color,
+                worldColor,
                 worldWidth,
                 worldDepth,
                 spectrum
@@ -398,19 +420,29 @@ let Background = () => {
         mount.current.appendChild(renderer.domElement);
         window.addEventListener('resize', handleResize);
 
-        var time = new THREE.Clock();
-
         function animate() {
             audioCtx.resume();
             camera.lookAt(target);
 
             updateSpectrum(world);
-            updateStar(star1, timer1, starFallradius);
-            // updateStar(star2, timer2, starFallradius);
+            updateStar(star1, timer1, starFallradius, mainColor);
+            updateStar(star2, timer2, starFallradius, mainColor);
+            updateStar(star3, timer3, starFallradius, mainColor);
 
-            starField.rotation.x = starField.rotation.x - mouseY*0.0005;
-            starField.rotation.y = starField.rotation.y + mouseX*0.0005;
-            starField.rotation.z = starField.rotation.z + (mouseX)*0.0005;
+            if (mouseY > 0) {
+                starField.rotation.x = starField.rotation.x - mouseY*0.0002 + 0.0001;
+            }
+            else {
+                starField.rotation.x = starField.rotation.x - mouseY*0.0002 - 0.0001;
+            }
+            if (mouseX > 0) {
+                starField.rotation.y = starField.rotation.y + mouseX*0.0002 + 0.0001;
+                starField.rotation.z = starField.rotation.z + mouseX*0.0002 + 0.0001;
+            }
+            else {
+                starField.rotation.y = starField.rotation.y + mouseX*0.0002 - 0.0001;
+                starField.rotation.z = starField.rotation.z + mouseX*0.0002 - 0.0001;
+            }
             
             world.geometry.attributes.position.needsUpdate = true;
             world.geometry.attributes.color.needsUpdate = true;
@@ -419,6 +451,14 @@ let Background = () => {
             star1.geometry.attributes.position.needsUpdate = true;
             star1.geometry.attributes.velocity.needsUpdate = true;
             star1.material.color.needsUpdate = true;
+
+            star2.geometry.attributes.position.needsUpdate = true;
+            star2.geometry.attributes.velocity.needsUpdate = true;
+            star2.material.color.needsUpdate = true;
+
+            star3.geometry.attributes.position.needsUpdate = true;
+            star3.geometry.attributes.velocity.needsUpdate = true;
+            star3.material.color.needsUpdate = true;
 
             requestAnimationFrame(animate);
             renderer.render(scene, camera);

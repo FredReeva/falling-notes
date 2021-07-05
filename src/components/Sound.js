@@ -1,7 +1,7 @@
 import * as Tone from 'tone';
 import ChordsMenu from './ChordsMenu';
 
-let baseVolume = -15.0;
+let baseVolume = -18.0;
 const analyserBus = new Tone.Channel(0, 0);
 
 function getRandomInt(min, max) {
@@ -14,13 +14,13 @@ function connectEffectsChain(chain) {
     for (let i = 0; i < chain.length - 1; i += 1) {
         chain[i].connect(chain[i + 1]);
     }
-    let pingPong = new Tone.PingPongDelay("8n", 0.7);
-    let verb = new Tone.Freeverb(0.80, 6000);
-    chain[chain.length - 1].connect(pingPong);
-    pingPong.connect(analyserBus);
-    analyserBus.connect(Tone.Master);
-    // chain[chain.length - 1].connect(analyserBus);
+    // let pingPong = new Tone.PingPongDelay("8n", 0.7);
+    // // let verb = new Tone.Freeverb(0.80, 6000);
+    // chain[chain.length - 1].connect(pingPong);
+    // pingPong.connect(analyserBus);
     // analyserBus.connect(Tone.Master);
+    chain[chain.length - 1].connect(analyserBus);
+    analyserBus.connect(Tone.Master);
 }
 
 function createSynthParams(chain) {
@@ -46,41 +46,42 @@ function createSynthParams(chain) {
 }
 
 let sequence = [
-    { type: 'pause', onsetTime: 0.25, duration: 0.125 },
-    { type: 'pause', onsetTime: 0.375, duration: 0.25 },
-    { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: 62 },
+    { type: 'note', onsetTime: 0.25, duration: 0.125, pitch: "C4"},
+    { type: 'note', onsetTime: 0.375, duration: 0.25, pitch: "E4"},
+    { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: "G4"},
 ];
 
 let i=0;
 
-// function createLoop(instrument) {
-//     let loop = new Tone.Loop(function (time) {
-//         // let sequence = ChordsMenu.melody;
-//         for (let i = 0; i < sequence.length; i++) {
-//             if (sequence[i].type == 'note') {
-//                 instrument['synth'].triggerAttackRelease(
-//                     sequence[i].pitch,
-//                     sequence[i].duration,
-//                     sequence[i].onsetTime
-//                 );
-//             }
-//         }
-//     }, sequence[i].duration+sequence[i].onsetTime);
-//     loop.humanize = instrument['humanize'];
-//     // loop.probability = instrument['probability'];
-//     loop.start();
-// }
-
-function createLoop (instrument) {
-    let loop = new Tone.Loop(function(time) {
-        let notes = instrument["notes"];
-        let note = notes[getRandomInt(0, notes.length)];
-        instrument["synth"].triggerAttackRelease(note, instrument["timeDelay"], time);
-    }, instrument["timeDelay"]);
-    loop.humanize = instrument["humanize"];
-    loop.probability = instrument["probability"];
+function createLoop(instrument) {
+    let loop = new Tone.Loop(function (time) {
+        // let sequence = ChordsMenu.melody;
+        for (let i = 0; i < sequence.length; i++) {
+            if (sequence[i].type == 'note') {
+                instrument['synth'].triggerAttackRelease(
+                    sequence[i].pitch,
+                    sequence[i].duration,
+                    sequence[i].onsetTime
+                );
+            }
+        }
+        console.log("loop");
+    }, 0.8);
+    loop.humanize = instrument['humanize'];
+    // loop.probability = instrument['probability'];
     loop.start();
 }
+
+// function createLoop (instrument) {
+//     let loop = new Tone.Loop(function(time) {
+//         let notes = instrument["notes"];
+//         let note = notes[getRandomInt(0, notes.length)];
+//         instrument["synth"].triggerAttackRelease(note, instrument["timeDelay"], time);
+//     }, instrument["timeDelay"]);
+//     loop.humanize = instrument["humanize"];
+//     loop.probability = instrument["probability"];
+//     loop.start();
+// }
 
 // instruments
 
@@ -102,24 +103,28 @@ function createSynthPad() {
                 "attack": 2,
                 "decay": 1,
                 "sustain": 0.8,
-                "release": 0.1
+                "release": 0
             },
         },
     });
 
-    // let dist = new Tone.Chebyshev(7);
-    // let chorus = new Tone.Chorus("3n", 35, 0.65);
+    let dist = new Tone.Chebyshev(7);
+    let filter = new Tone.Filter(800, "lowpass")
+    let chorus = new Tone.Chorus("3n", 35, 0.65);
     // let delay = new Tone.PingPongDelay("8n", 0.2);
     // let verb = new Tone.Freeverb(0.80, 6000);
 
     let chain = [
-        synth
+        synth,
+        dist,
+        chorus,
+        filter
     ];
 
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
 
-    let notes = ["E2", "A2", "C2", "G2"];
+    let notes = ["E2", "A1", "C2", "G2"];
     let timeDelay = "1m";
     let humanize = 0;
     let probability = 1;
@@ -182,7 +187,7 @@ function createSynthFX() {
 function createSynthLead() {
 
     let synth = new Tone.Synth({
-        "volume": baseVolume - 10.0,
+        "volume": baseVolume - 15.0,
         "portamento": 0.3,
         "oscillator": {
             "type": "amsine"
@@ -205,14 +210,14 @@ function createSynthLead() {
     // let filter = new Tone.Filter(300, "highpass")
 
     let chain = [
-        synth    
+        synth,
     ];
 
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
 
     let notes = ["C4", "D4", "E4", "A4", "C5", "D5", "E5", "A5"];
-    let timeDelay = "1t";
+    let timeDelay = "1q";
     let humanize = 0.2;
     let probability = 1;
 
@@ -265,7 +270,7 @@ function createSynthBell() {
     let synthParams = createSynthParams(chain);
 
     let notes = ["C6", "D6", "E6", "A6", "C7", "D7", "E7", "A7"];
-    let timeDelay = "8t";
+    let timeDelay = "8n";
     let humanize = 0.5;
     let probability = 0.2;
 
