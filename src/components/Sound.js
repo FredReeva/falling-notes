@@ -4,6 +4,8 @@ import ChordsMenu from './ChordsMenu';
 let baseVolume = -18.0;
 const analyserBus = new Tone.Channel(0, 0);
 
+
+
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -15,12 +17,12 @@ function connectEffectsChain(chain) {
         chain[i].connect(chain[i + 1]);
     }
     // let pingPong = new Tone.PingPongDelay("8n", 0.7);
-    // // let verb = new Tone.Freeverb(0.80, 6000);
-    // chain[chain.length - 1].connect(pingPong);
-    // pingPong.connect(analyserBus);
-    // analyserBus.connect(Tone.Master);
-    chain[chain.length - 1].connect(analyserBus);
+    let verb = new Tone.Freeverb(0.80, 6000);
+    chain[chain.length - 1].connect(verb);
+    verb.connect(analyserBus);
     analyserBus.connect(Tone.Master);
+    // chain[chain.length - 1].connect(analyserBus);
+    // analyserBus.connect(Tone.Master);
 }
 
 function createSynthParams(chain) {
@@ -257,14 +259,16 @@ function createSynthBell() {
         "volume": baseVolume - 5.0
     });
 
-    // let filter1 = new Tone.Filter(5000, "highpass")
-    // let pingPong = new Tone.FeedbackDelay("2t", 0.4);
-    // let panner = new Tone.AutoPanner("1m", 0.5).start();
+    //let filter1 = new Tone.Filter(5000, "highpass");
+    let pingPong = new Tone.FeedbackDelay("2t", 0.4);
+    let panner = new Tone.AutoPanner("1m", 0.5).start();
     // let verb = new Tone.Freeverb(0.80, 6000);
     // let filter2 = new Tone.Filter(1000, "highpass")
 
     let chain = [
-        synth
+        synth,
+        pingPong,
+        panner
     ]
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
@@ -292,10 +296,10 @@ const generateSounds = () => {
     createLoop(pad);
     // var fx = createSynthFX();
     // createLoop(fx);
-    // var lead = createSynthLead();
-    // createLoop(lead);
-    // var bell = createSynthBell();
-    // createLoop(bell);
+    var lead = createSynthLead();
+    createLoop(lead);
+    var bell = createSynthBell();
+    createLoop(bell);
 };
 
 export default generateSounds;
