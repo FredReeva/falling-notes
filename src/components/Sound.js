@@ -51,37 +51,37 @@ let sequence = [
     { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: "G4"},
 ];
 
-let i=0;
+// let i=0;
 
-function createLoop(instrument) {
-    let loop = new Tone.Loop(function (time) {
-        // let sequence = ChordsMenu.melody;
-        for (let i = 0; i < sequence.length; i++) {
-            if (sequence[i].type == 'note') {
-                instrument['synth'].triggerAttackRelease(
-                    sequence[i].pitch,
-                    sequence[i].duration,
-                    sequence[i].onsetTime
-                );
-            }
-        }
-        console.log("loop");
-    }, 0.8);
-    loop.humanize = instrument['humanize'];
-    // loop.probability = instrument['probability'];
-    loop.start();
-}
-
-// function createLoop (instrument) {
-//     let loop = new Tone.Loop(function(time) {
-//         let notes = instrument["notes"];
-//         let note = notes[getRandomInt(0, notes.length)];
-//         instrument["synth"].triggerAttackRelease(note, instrument["timeDelay"], time);
-//     }, instrument["timeDelay"]);
-//     loop.humanize = instrument["humanize"];
-//     loop.probability = instrument["probability"];
+// function createLoop(instrument) {
+//     let loop = new Tone.Loop(function (time) {
+//         // let sequence = ChordsMenu.melody;
+//         for (let i = 0; i < sequence.length; i++) {
+//             if (sequence[i].type == 'note') {
+//                 instrument['synth'].triggerAttackRelease(
+//                     sequence[i].pitch,
+//                     sequence[i].duration,
+//                     sequence[i].onsetTime
+//                 );
+//             }
+//         }
+//         console.log("loop");
+//     }, 0.8);
+//     loop.humanize = instrument['humanize'];
+//     // loop.probability = instrument['probability'];
 //     loop.start();
 // }
+
+function createLoop (instrument) {
+    let loop = new Tone.Loop(function(time) {
+        let notes = instrument["notes"];
+        let note = notes[getRandomInt(0, notes.length)];
+        instrument["synth"].triggerAttackRelease(note, instrument["timeDelay"], time);
+    }, instrument["timeDelay"]);
+    loop.humanize = instrument["humanize"];
+    loop.probability = instrument["probability"];
+    loop.start();
+}
 
 // instruments
 
