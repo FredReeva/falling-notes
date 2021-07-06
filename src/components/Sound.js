@@ -3,7 +3,7 @@ import ChordsMenu from './ChordsMenu';
 
 let baseVolume = -18.0;
 const analyserBus = new Tone.Channel(0, 0);
-
+Tone.Transport.bpm.value = 60;
 
 
 function getRandomInt(min, max) {
@@ -47,11 +47,11 @@ function createSynthParams(chain) {
     };
 }
 
-let sequence = [
-    { type: 'note', onsetTime: 0.25, duration: 0.125, pitch: "C4"},
-    { type: 'note', onsetTime: 0.375, duration: 0.25, pitch: "E4"},
-    { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: "G4"},
-];
+// let sequence = [
+//     { type: 'note', onsetTime: 0.25, duration: 0.125, pitch: "C4"},
+//     { type: 'note', onsetTime: 0.375, duration: 0.25, pitch: "E4"},
+//     { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: "G4"},
+// ];
 
 // let i=0;
 
@@ -67,9 +67,8 @@ let sequence = [
 //                 );
 //             }
 //         }
-//         console.log("loop");
-//     }, 0.8);
-//     loop.humanize = instrument['humanize'];
+//     }, 1);
+//     //loop.humanize = instrument['humanize'];
 //     // loop.probability = instrument['probability'];
 //     loop.start();
 // }
@@ -109,6 +108,7 @@ function createSynthPad() {
             },
         },
     });
+    //synth.sync();
 
     let dist = new Tone.Chebyshev(7);
     let filter = new Tone.Filter(800, "lowpass")
@@ -158,6 +158,7 @@ function createSynthFX() {
             "release": 0.5,
         }
     });
+    //synth.sync();
 
     // let dist = new Tone.Chebyshev(4);
     // let chorus = new Tone.Chorus("8n", 30, 1);
@@ -203,6 +204,7 @@ function createSynthLead() {
 
         "detune": 0.5,
     });
+    //synth.sync();
 
     // let chorus = new Tone.Chorus("1m", 10, 0.5);
     // let pingPong = new Tone.PingPongDelay("8n", 0.7);
@@ -258,6 +260,7 @@ function createSynthBell() {
         },
         "volume": baseVolume - 5.0
     });
+    //synth.sync();
 
     //let filter1 = new Tone.Filter(5000, "highpass");
     let pingPong = new Tone.FeedbackDelay("2t", 0.4);

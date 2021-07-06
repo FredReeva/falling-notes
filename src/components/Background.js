@@ -17,11 +17,12 @@ function sleep(ms) {
 
 let Background = () => {
     let mount = useRef(null);
-    let mainColor = new THREE.Color(Math.random(),Math.random(),Math.random());
-    mainColor = mainColor.setHSL(mainColor.getHSL().h, 0.7, 0.5);
-
+    
     useEffect(() => {
 
+        let mainColor = new THREE.Color(Math.random(),Math.random(),Math.random());
+        mainColor = mainColor.setHSL(mainColor.getHSL().h, 0.7, 0.5);
+    
         // THREE INITIALIZATION
         let winWidth = mount.current.clientWidth;
         let winHeight = mount.current.clientHeight;
@@ -80,12 +81,12 @@ let Background = () => {
         let splitter = audioCtx.createChannelSplitter(2);
 
         analyserLeft.fftSize = 128;
-        analyserLeft.smoothingTimeConstant = 0.1;
+        analyserLeft.smoothingTimeConstant = 0.7;
         analyserLeft.minDecibels = -110;
         analyserLeft.maxDecibels = -10;
 
         analyserRight.fftSize = 128;
-        analyserRight.smoothingTimeConstant = 0.1;
+        analyserRight.smoothingTimeConstant = 0.7;
         analyserRight.minDecibels = -110;
         analyserRight.maxDecibels = -10;
 
@@ -188,8 +189,8 @@ let Background = () => {
 
         // STAR FIELD
 
-        let numField = 2000;
-        let starFieldradius = 400;
+        let numField = 200;
+        let starFieldradius = 350;
 
         function generateStarField(num, radius, baseColor) {
             let starFieldGeom = new THREE.BufferGeometry();
@@ -202,13 +203,13 @@ let Background = () => {
                 let x = (Math.random()-0.5)*radius;
                 let y = (Math.random()-0.5)*radius;
                 let z = (Math.random()-0.5)*radius;
-                let r = Math.sqrt(Math.pow(x,2),Math.pow(y,2),Math.pow(z,2))
+                let r = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2))
 
-                while (radius - r < 300) {
+                while (radius - r < 200) {
                     x = (Math.random()-0.5)*radius;
                     y = (Math.random()-0.5)*radius;
                     z = (Math.random()-0.5)*radius;
-                    r = Math.sqrt(Math.pow(x,2),Math.pow(y,2),Math.pow(z,2));
+                    r = Math.sqrt(Math.pow(x,2)+Math.pow(y,2)+Math.pow(z,2));
                 }
 
                 starFieldpos[3*i] = x;
