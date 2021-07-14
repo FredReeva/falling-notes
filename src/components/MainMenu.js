@@ -73,11 +73,11 @@ const MainMenu = (props) => {
     // return pulsanti
     return (
         <StyledMainMenu className={props.className}>
-            <MenuButton onClick={props.btnAction(0)}>
+            <MenuButton onClick={props.btnAction}>
                 <IoMusicalNotes className="Icon" />
             </MenuButton>
 
-            <MenuButton onClick={props.btnAction(1)}>
+            <MenuButton onClick={props.btnAction}>
                 <IoColorPalette className="Icon" />
             </MenuButton>
 
