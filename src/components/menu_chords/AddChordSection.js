@@ -62,19 +62,17 @@ const Select = styled.div`
 function AddChord(props) {
     const [tonic, setTonic] = useState('');
     const [quality, setQuality] = useState('');
-    const [octave, setOctave] = useState('');
     const [duration, setDuration] = useState('');
 
     const onSubmit = (e) => {
-        if (!tonic || !quality || !octave || !duration) {
+        if (!tonic || !quality || !duration) {
             return;
         }
-        props.onAdd({ tonic, quality, octave, duration });
+        props.onAdd({ tonic, quality, duration });
         setTonic('');
         setQuality('');
-        setOctave('');
         setDuration('');
-        setShowMenu([false, false, false, false]);
+        setShowMenu([false, false, false]);
     };
 
     const tonics = [
@@ -92,12 +90,11 @@ function AddChord(props) {
         'B',
     ];
     const qualities = ['Major', 'minor', 'Maj7', 'minor7', '7', 'm7b5'];
-    const octaves = ['-2', '-1', '0', '1', '2'];
     const durations = ['1', '2', '3', '4'];
 
-    const [showMenu, setShowMenu] = useState([false, false, false, false]);
+    const [showMenu, setShowMenu] = useState([false, false, false]);
     const toggleMenu = (i) => {
-        let newMenuState = [false, false, false, false];
+        let newMenuState = [false, false, false];
         let changeMenu = !showMenu[i];
         newMenuState[i] = changeMenu;
         setShowMenu(newMenuState);
@@ -145,24 +142,6 @@ function AddChord(props) {
             </Select>
 
             <Select
-                onClick={() => toggleMenu(2)}
-                style={{
-                    background: showMenu[2] ? 'rgba(255, 255, 255, 0.9)' : null,
-                }}
-            >
-                {octave ? octave : 'Octave'}
-                {showMenu[2] ? (
-                    <DropMenu
-                        elements={octaves}
-                        setElements={(e) => {
-                            setOctave(e);
-                            toggleMenu();
-                        }}
-                    />
-                ) : null}
-            </Select>
-
-            <Select
                 onClick={() => toggleMenu(3)}
                 style={{
                     background: showMenu[3] ? 'rgba(255, 255, 255, 0.9)' : null,
@@ -184,13 +163,11 @@ function AddChord(props) {
                 onClick={onSubmit}
                 style={{
                     color:
-                        !tonic || !quality || !octave || !duration
+                        !tonic || !quality || !duration
                             ? 'rgb(210, 210, 210)'
                             : 'rgb(255, 180, 0)',
                     pointerEvents:
-                        !tonic || !quality || !octave || !duration
-                            ? 'none'
-                            : null,
+                        !tonic || !quality || !duration ? 'none' : null,
                 }}
             />
         </StyledAddChord>

@@ -37,21 +37,6 @@ const StyledChord = styled.div`
     cursor: grab;
 `;
 
-const HiddenInfo = styled.div`
-    transition: 0.2s;
-    font-size: 0.7rem;
-
-    margin: auto;
-
-    padding-top: 35px;
-
-    opacity: 0;
-    &:hover {
-        transition: 0.8s;
-        opacity: 1;
-    }
-`;
-
 const DeleteChord = styled(IoRemoveCircle)`
     transition: 0.2s;
     position: absolute;
@@ -66,7 +51,7 @@ const DeleteChord = styled(IoRemoveCircle)`
     }
 `;
 
-const Chords = (props) => {
+const ChordsDnDSection = (props) => {
     return (
         <DragDropContext onDragEnd={props.handleOnDragEnd}>
             <Droppable droppableId="chords" direction="horizontal">
@@ -94,9 +79,7 @@ const Chords = (props) => {
                                                 {chord.tonic}
                                                 {chord.quality}
                                             </h3>
-                                            <HiddenInfo>
-                                                octave: {chord.octave}
-                                            </HiddenInfo>
+
                                             <DeleteChord
                                                 onClick={() => {
                                                     props.onDelete(chord.id);
@@ -125,4 +108,4 @@ const Chords = (props) => {
     );
 };
 
-export default Chords;
+export default ChordsDnDSection;

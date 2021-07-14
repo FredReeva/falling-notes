@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './components/GlobalStyles';
 import MainMenu from './components/MainMenu';
-import ChordsMenu from './components/ChordsMenu';
+import ChordsMenu from './components/menu_chords/ChordsMenu';
 import World from './components/Background';
 import { IoHelpCircle } from 'react-icons/io5';
 import themes from './Themes';

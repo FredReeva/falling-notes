@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { IoCloseCircle } from 'react-icons/io5';
-import Chords from './Chords';
+import ChordsDnDSection from './ChordsDnDSection';
 import AddChordSection from './AddChordSection';
-import firebase from './firebase';
-import { MelodyGen } from '../libraries/melodygen/main.js';
+import firebase from '../firebase';
+import { MelodyGen } from '../../libraries/melodygen/main.js';
 
 const BlurredPage = styled.div`
     position: fixed;
@@ -118,7 +118,6 @@ const ChordsMenu = (props) => {
         updateChords(items);
     }
 
-
     // dati gli accordi, li converte in modo che siano comprensibili al codice di antonio e calcola melodia
     const computeMelody = () => {
         // adapter dell'interfaccia
@@ -157,7 +156,7 @@ const ChordsMenu = (props) => {
                     />
                 </HeaderMenu>
 
-                <Chords
+                <ChordsDnDSection
                     chords={chords}
                     handleOnDragEnd={handleOnDragEnd}
                     onDelete={deleteChord}

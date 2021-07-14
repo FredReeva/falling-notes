@@ -1,10 +1,9 @@
 import * as Tone from 'tone';
-import ChordsMenu from './ChordsMenu';
+import ChordsMenu from './menu_chords/ChordsMenu';
 
 let baseVolume = -18.0;
 const analyserBus = new Tone.Channel(0, 0);
 Tone.Transport.bpm.value = 60;
-
 
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -17,7 +16,7 @@ function connectEffectsChain(chain) {
         chain[i].connect(chain[i + 1]);
     }
     // let pingPong = new Tone.PingPongDelay("8n", 0.7);
-    let verb = new Tone.Freeverb(0.80, 6000);
+    let verb = new Tone.Freeverb(0.8, 6000);
     chain[chain.length - 1].connect(verb);
     verb.connect(analyserBus);
     analyserBus.connect(Tone.Master);
@@ -73,61 +72,59 @@ function createSynthParams(chain) {
 //     loop.start();
 // }
 
-function createLoop (instrument) {
-    let loop = new Tone.Loop(function(time) {
-        let notes = instrument["notes"];
+function createLoop(instrument) {
+    let loop = new Tone.Loop(function (time) {
+        let notes = instrument['notes'];
         let note = notes[getRandomInt(0, notes.length)];
-        instrument["synth"].triggerAttackRelease(note, instrument["timeDelay"], time);
-    }, instrument["timeDelay"]);
-    loop.humanize = instrument["humanize"];
-    loop.probability = instrument["probability"];
+        instrument['synth'].triggerAttackRelease(
+            note,
+            instrument['timeDelay'],
+            time
+        );
+    }, instrument['timeDelay']);
+    loop.humanize = instrument['humanize'];
+    loop.probability = instrument['probability'];
     loop.start();
 }
 
 // instruments
 
 function createSynthPad() {
-
     let synth = new Tone.DuoSynth();
     synth.set({
-        "volume": baseVolume - 10.0,
-        "portamento": 0.7,
-        "harmonicity": 1.5,
-        "vibratoAmount": 0.1,
-        "vibratoRate": "4n",
+        volume: baseVolume - 10.0,
+        portamento: 0.7,
+        harmonicity: 1.5,
+        vibratoAmount: 0.1,
+        vibratoRate: '4n',
 
-        "voice0": {
-            "oscillator": {
-                "type": "sawtooth6"
+        voice0: {
+            oscillator: {
+                type: 'sawtooth6',
             },
-            "envelope": {
-                "attack": 2,
-                "decay": 1,
-                "sustain": 0.8,
-                "release": 0
+            envelope: {
+                attack: 2,
+                decay: 1,
+                sustain: 0.8,
+                release: 0,
             },
         },
     });
     //synth.sync();
 
     let dist = new Tone.Chebyshev(7);
-    let filter = new Tone.Filter(800, "lowpass")
-    let chorus = new Tone.Chorus("3n", 35, 0.65);
+    let filter = new Tone.Filter(800, 'lowpass');
+    let chorus = new Tone.Chorus('3n', 35, 0.65);
     // let delay = new Tone.PingPongDelay("8n", 0.2);
     // let verb = new Tone.Freeverb(0.80, 6000);
 
-    let chain = [
-        synth,
-        dist,
-        chorus,
-        filter
-    ];
+    let chain = [synth, dist, chorus, filter];
 
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
 
-    let notes = ["E2", "A1", "C2", "G2"];
-    let timeDelay = "1m";
+    let notes = ['E2', 'A1', 'C2', 'G2'];
+    let timeDelay = '1m';
     let humanize = 0;
     let probability = 1;
 
@@ -135,28 +132,27 @@ function createSynthPad() {
         synth: synth,
         synthParams: synthParams,
         notes: notes,
-        timeDelay : timeDelay,
-        humanize : humanize,
-        probability : probability
+        timeDelay: timeDelay,
+        humanize: humanize,
+        probability: probability,
     };
 }
 
 function createSynthFX() {
-
     let synth = new Tone.FMSynth();
     synth.set({
-        "volume": baseVolume + 10.0,
+        volume: baseVolume + 10.0,
         //"portamento": 0.1,
-        "harmonicity": 1.5,
-        "oscillator": {
-            "type": "square4"
+        harmonicity: 1.5,
+        oscillator: {
+            type: 'square4',
         },
-        "envelope": {
-            "attack": 0.01,
-            "decay": 0.1,
-            "sustain": 0.1,
-            "release": 0.5,
-        }
+        envelope: {
+            attack: 0.01,
+            decay: 0.1,
+            sustain: 0.1,
+            release: 0.5,
+        },
     });
     //synth.sync();
 
@@ -166,14 +162,12 @@ function createSynthFX() {
     // let verb = new Tone.Freeverb(0.60, 8000);
     // let filter = new Tone.Filter(300, "highpass")
 
-    let chain = [
-        synth
-    ];
+    let chain = [synth];
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
 
-    let notes = ["C4", "D4", "E4", "A4", "C5", "D5", "E5", "A5"];
-    let timeDelay = "8n";
+    let notes = ['C4', 'D4', 'E4', 'A4', 'C5', 'D5', 'E5', 'A5'];
+    let timeDelay = '8n';
     let humanize = 0.2;
     let probability = 0.1;
 
@@ -181,28 +175,27 @@ function createSynthFX() {
         synth: synth,
         synthParams: synthParams,
         notes: notes,
-        timeDelay : timeDelay,
-        humanize : humanize,
-        probability : probability
+        timeDelay: timeDelay,
+        humanize: humanize,
+        probability: probability,
     };
 }
 
 function createSynthLead() {
-
     let synth = new Tone.Synth({
-        "volume": baseVolume - 15.0,
-        "portamento": 0.3,
-        "oscillator": {
-            "type": "amsine"
+        volume: baseVolume - 15.0,
+        portamento: 0.3,
+        oscillator: {
+            type: 'amsine',
         },
-        "envelope": {
-            "attack": 1,
-            "decay": 2,
-            "sustain": 0,
-            "release": 5,
+        envelope: {
+            attack: 1,
+            decay: 2,
+            sustain: 0,
+            release: 5,
         },
 
-        "detune": 0.5,
+        detune: 0.5,
     });
     //synth.sync();
 
@@ -213,15 +206,13 @@ function createSynthLead() {
     // let verb = new Tone.Freeverb(0.80, 3000);
     // let filter = new Tone.Filter(300, "highpass")
 
-    let chain = [
-        synth,
-    ];
+    let chain = [synth];
 
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
 
-    let notes = ["C4", "D4", "E4", "A4", "C5", "D5", "E5", "A5"];
-    let timeDelay = "1q";
+    let notes = ['C4', 'D4', 'E4', 'A4', 'C5', 'D5', 'E5', 'A5'];
+    let timeDelay = '1q';
     let humanize = 0.2;
     let probability = 1;
 
@@ -229,55 +220,51 @@ function createSynthLead() {
         synth: synth,
         synthParams: synthParams,
         notes: notes,
-        timeDelay : timeDelay,
-        humanize : humanize,
-        probability : probability
+        timeDelay: timeDelay,
+        humanize: humanize,
+        probability: probability,
     };
 }
 
 function createSynthBell() {
     let synth = new Tone.Synth();
     synth.set({
-        "harmonicity": 8,
-        "modulationIndex": 2,
-        "oscillator": {
-            "type": "sine"
+        harmonicity: 8,
+        modulationIndex: 2,
+        oscillator: {
+            type: 'sine',
         },
-        "envelope": {
-            "attack": 0.001,
-            "decay": 2,
-            "sustain": 0,
-            "release": 2
+        envelope: {
+            attack: 0.001,
+            decay: 2,
+            sustain: 0,
+            release: 2,
         },
-        "modulation": {
-            "type": "triangle"
+        modulation: {
+            type: 'triangle',
         },
-        "modulationEnvelope": {
-            "attack": 0.001,
-            "decay": 0.2,
-            "sustain": 0,
-            "release": 0.5
+        modulationEnvelope: {
+            attack: 0.001,
+            decay: 0.2,
+            sustain: 0,
+            release: 0.5,
         },
-        "volume": baseVolume - 5.0
+        volume: baseVolume - 5.0,
     });
     //synth.sync();
 
     //let filter1 = new Tone.Filter(5000, "highpass");
-    let pingPong = new Tone.FeedbackDelay("2t", 0.4);
-    let panner = new Tone.AutoPanner("1m", 0.5).start();
+    let pingPong = new Tone.FeedbackDelay('2t', 0.4);
+    let panner = new Tone.AutoPanner('1m', 0.5).start();
     // let verb = new Tone.Freeverb(0.80, 6000);
     // let filter2 = new Tone.Filter(1000, "highpass")
 
-    let chain = [
-        synth,
-        pingPong,
-        panner
-    ]
+    let chain = [synth, pingPong, panner];
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
 
-    let notes = ["C6", "D6", "E6", "A6", "C7", "D7", "E7", "A7"];
-    let timeDelay = "8n";
+    let notes = ['C6', 'D6', 'E6', 'A6', 'C7', 'D7', 'E7', 'A7'];
+    let timeDelay = '8n';
     let humanize = 0.5;
     let probability = 0.2;
 
@@ -285,9 +272,9 @@ function createSynthBell() {
         synth: synth,
         synthParams: synthParams,
         notes: notes,
-        timeDelay : timeDelay,
-        humanize : humanize,
-        probability : probability
+        timeDelay: timeDelay,
+        humanize: humanize,
+        probability: probability,
     };
 }
 
