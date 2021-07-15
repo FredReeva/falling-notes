@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import * as Tone from 'tone';
 import { IoMusicalNotes, IoColorPalette, IoPlayCircle } from 'react-icons/io5';
 import generateSounds from './Sound.js';
-import { MelodyGen } from '../libraries/melodygen/main.js';
 
 const StyledMainMenu = styled.div`
     display: flex;
@@ -53,6 +52,7 @@ const MainMenu = (props) => {
 
     const startContext = async () => {
         //Tone.setContext(new Tone.Context({ latencyHint: 1000 }));
+        //ChordsMelodyState.getSong();
 
         await Tone.start();
 
@@ -65,6 +65,7 @@ const MainMenu = (props) => {
             return;
         }
 
+        props.computeMelody();
         console.log('play...');
         setIsPlaying(true);
         await Tone.Transport.start();
@@ -81,7 +82,11 @@ const MainMenu = (props) => {
                 <IoColorPalette className="Icon" />
             </MenuButton>
 
-            <MenuButton onClick={() => startContext()}>
+            <MenuButton
+                onClick={() => {
+                    startContext();
+                }}
+            >
                 <IoPlayCircle className="Icon" />
             </MenuButton>
         </StyledMainMenu>

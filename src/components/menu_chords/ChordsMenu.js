@@ -49,49 +49,9 @@ const ChordsMenu = (props) => {
     // TODO: accesso utente al proprio spazio e salvataggio canzoni
     // TODO: crea più documenti (song) e dai la possibilità di salvare preset
 
-    const [chords, updateChords] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    const ref = firebase.firestore().collection('songs');
-    const documentSong = '3';
-
-    function getSong(docName = documentSong) {
-        setLoading(true);
-
-        ref.doc(docName)
-            .get()
-            .then((doc) => {
-                if (doc.exists) {
-                    const items = doc.data();
-                    if (items) {
-                        for (const key in items) {
-                            updateChords((chords) => [...chords, items[key]]);
-                        }
-                    }
-                } else {
-                    // doc.data() will be undefined in this case
-                    console.log('No such document! Creating an empty one...');
-                    updateServer(docName);
-                }
-            })
-            .catch((error) => {
-                console.log('Error getting document:', error);
-            });
-
-        setLoading(false);
-    }
-
-    useEffect(() => {
-        getSong();
-    }, []); // execute only at start
-
-    if (loading) {
-        return <h1>Loading...</h1>;
-    }
-
     const deleteChord = (id) => {
         // console.log('delete', id);
-        updateChords(chords.filter((chord) => chord.id !== id));
+        props.updateChords(props.chords.filter((chord) => chord.id !== id));
     };
 
     const addChord = (chord) => {
@@ -99,48 +59,16 @@ const ChordsMenu = (props) => {
         const id = Date.now().toString();
         const newChord = { id, ...chord };
 
-        updateChords([...chords, newChord]);
-    };
-
-    const updateServer = (docName = documentSong) => {
-        const newState = { ...chords };
-        ref.doc(docName).delete();
-        ref.doc(docName).set(newState);
-
-        computeMelody(); // ogni volta che il server viene aggiornato calcolo la melodia
+        props.updateChords([...props.chords, newChord]);
     };
 
     function handleOnDragEnd(result) {
         if (!result.destination) return;
-        const items = Array.from(chords);
+        const items = Array.from(props.chords);
         const [reorderedItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reorderedItem);
-        updateChords(items);
+        props.updateChords(items);
     }
-
-    // dati gli accordi, li converte in modo che siano comprensibili al codice di antonio e calcola melodia
-    const computeMelody = () => {
-        // adapter dell'interfaccia
-        var chordList = [];
-        chords.forEach((element) => {
-            const tonic = element['tonic'];
-            const color = element['quality'];
-            const duration = parseInt(element['duration']);
-            var readChord = { tonic, color, duration };
-
-            chordList = [...chordList, readChord];
-        });
-        // console.log(chordList);
-
-        // genero melodia se ci sono accordi:
-        if (chordList.length > 0) {
-            //Istanzio l'oggetto generatore
-            let generator = new MelodyGen();
-            //Genero la linea melodica dando in input gli accordi dell'utente
-            let melody = generator.generate(chordList);
-            console.log('New melody: ', melody);
-        }
-    };
 
     return props.showMenu ? (
         <BlurredPage>
@@ -150,14 +78,14 @@ const ChordsMenu = (props) => {
                     <IoCloseCircle
                         className="CloseBtn"
                         onClick={() => {
-                            updateServer();
+                            props.updateServer();
                             props.toggleMenu();
                         }}
                     />
                 </HeaderMenu>
 
                 <ChordsDnDSection
-                    chords={chords}
+                    chords={props.chords}
                     handleOnDragEnd={handleOnDragEnd}
                     onDelete={deleteChord}
                 />

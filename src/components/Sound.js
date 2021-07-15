@@ -1,5 +1,5 @@
 import * as Tone from 'tone';
-import ChordsMenu from './menu_chords/ChordsMenu';
+import React, { useState, useEffect } from 'react';
 
 let baseVolume = -18.0;
 const analyserBus = new Tone.Channel(0, 0);
