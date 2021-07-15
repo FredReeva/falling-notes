@@ -8,6 +8,8 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "firebase": "^8.4.1",
+    "midi-file": "^1.1.2",
+    "midi-writer-js": "^2.0.1",
     "music-chord": "^1.2.1",
     "music-scale": "^1.2.0",
     "react": "^17.0.2",

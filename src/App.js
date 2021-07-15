@@ -4,10 +4,11 @@ import { GlobalStyles } from './components/GlobalStyles';
 import MainMenu from './components/MainMenu';
 import ChordsMenu from './components/menu_chords/ChordsMenu';
 import World from './components/Background';
-import { IoHelpCircle } from 'react-icons/io5';
 import themes from './Themes';
 import { MelodyGen } from './libraries/melodygen/main.js';
 import firebase from './components/firebase';
+import StyleMenu from './components/menu_styles/StyleMenu';
+import { createMidi } from './components/MidiCreator';
 
 // const Background = styled.div`
 //     height: 100vh;
@@ -57,7 +58,7 @@ function App() {
 
     useEffect(() => {
         getSong();
-        computeMelody();
+        //computeMelody();
     }, []); // execute only at start
 
     // dati gli accordi, li converte in modo che siano comprensibili al codice di antonio e calcola melodia
@@ -87,11 +88,19 @@ function App() {
         }
     };
 
-    const [showMenu, setMenu] = useState(false);
+    // const [showMenu, setMenu] = useState([false, false]);
 
-    const toggleMenu = () => {
-        setMenu((prev) => !prev);
-        console.log('ho cliccato menu accordi');
+    // const toggleMenu = (index) => {
+    //     setMenu((prev) => !prev);
+    //     console.log('ho cliccato menu accordi');
+    // };
+
+    const [showMenu, setShowMenu] = useState([false, false]);
+    const toggleMenu = (i) => {
+        let newMenuState = [false, false];
+        let changeMenu = !showMenu[i];
+        newMenuState[i] = changeMenu;
+        setShowMenu(newMenuState);
     };
 
     return (
@@ -109,16 +118,17 @@ function App() {
                     }}
                 /> */}
                 <MainMenu
-                    btnAction={toggleMenu}
+                    toggleMenu={toggleMenu}
                     computeMelody={computeMelody}
                 />
                 <ChordsMenu
-                    showMenu={showMenu}
+                    showMenu={showMenu[0]}
                     toggleMenu={toggleMenu}
                     chords={chords}
                     updateChords={updateChords}
                     updateServer={updateServer}
                 />
+                <StyleMenu showMenu={showMenu[1]} toggleMenu={toggleMenu} />
             </ThemeProvider>
         </div>
     );

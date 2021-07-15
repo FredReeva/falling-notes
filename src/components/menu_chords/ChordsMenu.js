@@ -1,49 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { IoCloseCircle } from 'react-icons/io5';
+import React from 'react';
 import ChordsDnDSection from './ChordsDnDSection';
 import AddChordSection from './AddChordSection';
-import firebase from '../firebase';
-import { MelodyGen } from '../../libraries/melodygen/main.js';
-
-const BlurredPage = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(8.5px);
-    -webkit-backdrop-filter: blur(8.5px);
-`;
-
-const StyledChordsMenu = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    width: 90vw;
-    overflow: visible;
-
-    background: ${(props) => props.theme.panelColor};
-    box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.37);
-
-    border-radius: 15px;
-    border: ${(props) => props.theme.border};
-    padding: 10px;
-`;
-
-const HeaderMenu = styled.div`
-    position: relative;
-    top: -3px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-`;
+import BlurredPage from '../shared_components/BlurredPage';
+import HeaderMenu from '../shared_components/HeaderMenu';
+import ModalMenu from '../shared_components/ModalMenu';
 
 const ChordsMenu = (props) => {
     // TODO: accesso utente al proprio spazio e salvataggio canzoni
@@ -72,17 +32,14 @@ const ChordsMenu = (props) => {
 
     return props.showMenu ? (
         <BlurredPage>
-            <StyledChordsMenu className={props.className}>
-                <HeaderMenu>
-                    <h2>Chords Lab</h2>
-                    <IoCloseCircle
-                        className="CloseBtn"
-                        onClick={() => {
-                            props.updateServer();
-                            props.toggleMenu();
-                        }}
-                    />
-                </HeaderMenu>
+            <ModalMenu className="ChordsMenu">
+                <HeaderMenu
+                    titleMenu={'Chords Lab'}
+                    toggleMenu={() => {
+                        props.toggleMenu(0);
+                        props.updateServer();
+                    }}
+                />
 
                 <ChordsDnDSection
                     chords={props.chords}
@@ -90,7 +47,7 @@ const ChordsMenu = (props) => {
                     onDelete={deleteChord}
                 />
                 <AddChordSection onAdd={addChord} />
-            </StyledChordsMenu>
+            </ModalMenu>
         </BlurredPage>
     ) : null;
 };

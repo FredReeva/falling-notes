@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import * as Tone from 'tone';
-import { IoMusicalNotes, IoColorPalette, IoPlayCircle } from 'react-icons/io5';
+import {
+    IoMusicalNotes,
+    IoColorPalette,
+    IoPlayCircle,
+    IoDownloadOutline,
+} from 'react-icons/io5';
 import generateSounds from './Sound.js';
+import { createMidi } from './MidiCreator.js';
 
 const StyledMainMenu = styled.div`
     display: flex;
@@ -74,12 +80,20 @@ const MainMenu = (props) => {
     // return pulsanti
     return (
         <StyledMainMenu className={props.className}>
-            <MenuButton onClick={props.btnAction}>
+            <MenuButton onClick={() => props.toggleMenu(0)}>
                 <IoMusicalNotes className="Icon" />
             </MenuButton>
 
-            <MenuButton onClick={props.btnAction}>
+            <MenuButton onClick={() => props.toggleMenu(1)}>
                 <IoColorPalette className="Icon" />
+            </MenuButton>
+
+            <MenuButton
+                onClick={() => {
+                    createMidi();
+                }}
+            >
+                <IoDownloadOutline className="Icon" />
             </MenuButton>
 
             <MenuButton
