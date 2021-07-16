@@ -1,24 +1,25 @@
-import * as pieceProto from '../../piece.prototype.js'
+import * as pieceProto from '../../piece.prototype.js';
 
-export default class TemporalVariation{
-    constructor(piece, segmentIndex, motif){
-        this.piece = piece
-        this.motif = motif
-        this.segment = piece.segments[segmentIndex]
-        this.previousSegment = (segmentIndex > 0) ? piece.segments[segmentIndex-1] : null
-        this.segmentIndex = segmentIndex
-        
-        this.generateTiming()
-        this.generatePitch()
-        return this.segment
+export default class TemporalVariation {
+    constructor(piece, segmentIndex, motif) {
+        this.piece = piece;
+        this.motif = motif;
+        this.segment = piece.segments[segmentIndex];
+        this.previousSegment =
+            segmentIndex > 0 ? piece.segments[segmentIndex - 1] : null;
+        this.segmentIndex = segmentIndex;
+
+        this.generateTiming();
+        this.generatePitch();
+        return this.segment;
     }
 
     //Generation of onsetTime and Durations
-    generateTiming(){
-        let durations = []
+    generateTiming() {
+        let durations = [];
 
-        for(let i=0; i<this.motif.objects.length; i++){
-            durations.push(this.motif.objects[i].duration)
+        for (let i = 0; i < this.motif.objects.length; i++) {
+            durations.push(this.motif.objects[i].duration);
         }
 
         /* Shuffle duration in-place using Durstenfeld shuffle algorithm */
@@ -29,27 +30,25 @@ export default class TemporalVariation{
             durations[j] = temp;
         }
 
-        let onsetTime = 0
-        for(let i=0; i<this.motif.objects.length; i++){
-            let obj = pieceProto.object()
-            obj.type = this.motif.objects[i].type
-            obj.duration = durations[i]
-            obj.onsetTime = onsetTime
-            onsetTime += durations[i]
-            this.segment.objects.push(obj)
+        let onsetTime = 0;
+        for (let i = 0; i < this.motif.objects.length; i++) {
+            let obj = pieceProto.object();
+            obj.type = this.motif.objects[i].type;
+            obj.duration = durations[i];
+            obj.onsetTime = onsetTime;
+            onsetTime += durations[i];
+            this.segment.objects.push(obj);
         }
-
     }
-    
+
     //Generation of pitches
-    generatePitch(){
-        for(let i=0; i<this.motif.objects.length; i++){    
-            if(this.segment.objects[i].type == 'pause'){
-                delete this.segment.objects[i].pitch 
-            }else{
-                this.segment.objects[i].pitch = this.motif.objects[i].pitch
+    generatePitch() {
+        for (let i = 0; i < this.motif.objects.length; i++) {
+            if (this.segment.objects[i].type === 'pause') {
+                delete this.segment.objects[i].pitch;
+            } else {
+                this.segment.objects[i].pitch = this.motif.objects[i].pitch;
             }
-            
         }
     }
 }

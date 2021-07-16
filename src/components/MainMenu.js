@@ -57,9 +57,6 @@ const MainMenu = (props) => {
     }, [isPlaying]);
 
     const startContext = async () => {
-        //Tone.setContext(new Tone.Context({ latencyHint: 1000 }));
-        //ChordsMelodyState.getSong();
-
         await Tone.start();
 
         if (isPlaying) {

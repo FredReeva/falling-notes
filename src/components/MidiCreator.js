@@ -35,7 +35,7 @@ export const createMidi = (name, melody, chords) => {
     console.log(write.dataUri());
 
     var link = document.createElement('a');
-    link.download = 'NOME_CANZONE';
+    link.download = 'untitled';
     link.href = write.dataUri();
     document.body.appendChild(link);
     link.click();

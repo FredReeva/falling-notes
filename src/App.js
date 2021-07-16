@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './components/GlobalStyles';
 import MainMenu from './components/MainMenu';
 import ChordsMenu from './components/menu_chords/ChordsMenu';
@@ -8,7 +8,7 @@ import themes from './Themes';
 import { MelodyGen } from './libraries/melodygen/main.js';
 import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
-import { createMidi } from './components/MidiCreator';
+import Form from './components/shared_components/Form';
 
 // const Background = styled.div`
 //     height: 100vh;
@@ -18,13 +18,40 @@ import { createMidi } from './components/MidiCreator';
 // `;
 
 function App() {
+    const changeColor = (color) => {
+        updateColor(color);
+    };
+
+    const [songName, updateSongName] = useState('default');
+
+    const songAlreadyExists = async (text) => {
+        console.log(text);
+        const snapshot = await firebase.firestore().collection('songs').get();
+        const songs = snapshot.docs.map((doc) => doc.id);
+        console.log(songs);
+        return ['a', 'b'].includes('c');
+    };
+
+    const submitSongName = (event) => {
+        event.preventDefault();
+
+        getSong(songName);
+    };
+
+    const changeSongName = (event) => {
+        var text = event.target.value !== '' ? event.target.value : 'default';
+        updateSongName(text);
+    };
+
+    const [selectedColor, updateColor] = useState([]);
     const [chords, updateChords] = useState([]);
     const [melody, updateMelody] = useState([]);
 
     const ref = firebase.firestore().collection('songs');
-    const documentSong = '3';
+    //console.log(ref);
+    //const documentSong = '3';
 
-    function getSong(docName = documentSong) {
+    function getSong(docName) {
         ref.doc(docName)
             .get()
             .then((doc) => {
@@ -40,6 +67,7 @@ function App() {
                 } else {
                     // doc.data() will be undefined in this case
                     console.log('No such document! Creating an empty one...');
+                    updateChords([]);
                     updateServer(docName);
                 }
             })
@@ -48,7 +76,7 @@ function App() {
             });
     }
 
-    const updateServer = (docName = documentSong) => {
+    const updateServer = (docName = songName) => {
         const newState = { ...chords };
         ref.doc(docName).delete();
         ref.doc(docName).set(newState);
@@ -57,7 +85,7 @@ function App() {
     };
 
     useEffect(() => {
-        getSong();
+        getSong(songName);
         //computeMelody();
     }, []); // execute only at start
 
@@ -65,7 +93,7 @@ function App() {
     const computeMelody = () => {
         // adapter dell'interfaccia
 
-        console.log(chords);
+        //console.log(chords);
         var chordList = [];
         chords.forEach((element) => {
             const tonic = element['tonic'];
@@ -84,7 +112,7 @@ function App() {
             //Genero la linea melodica dando in input gli accordi dell'utente
             let generatedMelody = generator.generate(chordList);
             updateMelody(generatedMelody);
-            //console.log('New melody: ', generatedMelody);
+            console.log('New melody: ', generatedMelody);
         }
     };
 
@@ -105,9 +133,9 @@ function App() {
 
     return (
         <div className="app">
-            <ThemeProvider theme={themes.orange}>
+            <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
-                <World melody={melody} />
+                <World melody={melody} selectedColor={selectedColor} />
                 {/* <IoHelpCircle
                     className="Icon"
                     style={{
@@ -117,9 +145,15 @@ function App() {
                         right: '20px',
                     }}
                 /> */}
+
                 <MainMenu
                     toggleMenu={toggleMenu}
                     computeMelody={computeMelody}
+                />
+                <Form
+                    songName={songName}
+                    onChange={changeSongName}
+                    onSubmit={submitSongName}
                 />
                 <ChordsMenu
                     showMenu={showMenu[0]}
@@ -128,7 +162,11 @@ function App() {
                     updateChords={updateChords}
                     updateServer={updateServer}
                 />
-                <StyleMenu showMenu={showMenu[1]} toggleMenu={toggleMenu} />
+                <StyleMenu
+                    showMenu={showMenu[1]}
+                    toggleMenu={toggleMenu}
+                    changeColor={changeColor}
+                />
             </ThemeProvider>
         </div>
     );
