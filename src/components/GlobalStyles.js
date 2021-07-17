@@ -68,7 +68,23 @@ export const GlobalStyles = createGlobalStyle`
   }
 
 input{
-  width: 50px;
+  justify-content: center;
+  align-items: center;
+  //font-size: 1em;
+  height: 30px;
+  width: fit-content;
+  min-width: 50px;
+  border-radius: 10px;
+  margin-right: 5px;
+  margin-top: 7px;
+  padding: 7px;
+}
+
+form{
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
   `;

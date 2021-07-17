@@ -9,6 +9,7 @@ import { MelodyGen } from './libraries/melodygen/main.js';
 import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
 import Form from './components/shared_components/Form';
+import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 
 // const Background = styled.div`
 //     height: 100vh;
@@ -18,38 +19,36 @@ import Form from './components/shared_components/Form';
 // `;
 
 function App() {
+    // state shared through various components
+    const [selectedColor, updateColor] = useState([]);
+    const [chords, updateChords] = useState([]);
+    const [melody, updateMelody] = useState([]);
+    const [songName, updateSongName] = useState('default');
+    const [allSongs, updateAllSongs] = useState([]);
+
     const changeColor = (color) => {
         updateColor(color);
     };
 
-    const [songName, updateSongName] = useState('default');
-
-    const songAlreadyExists = async (text) => {
-        console.log(text);
+    const getAllSongs = async () => {
         const snapshot = await firebase.firestore().collection('songs').get();
-        const songs = snapshot.docs.map((doc) => doc.id);
-        console.log(songs);
-        return ['a', 'b'].includes('c');
+        const updatedSongs = snapshot.docs.map((doc) => doc.id);
+        //console.log(updatedSongs);
+        updateAllSongs(updatedSongs);
     };
 
     const submitSongName = (event) => {
-        event.preventDefault();
-
-        getSong(songName);
-    };
-
-    const changeSongName = (event) => {
-        var text = event.target.value !== '' ? event.target.value : 'default';
+        //console.log(event.target.elements.song.value);
+        var text =
+            event.target.elements.song.value !== ''
+                ? event.target.elements.song.value
+                : 'default';
         updateSongName(text);
+        event.preventDefault();
+        getSong(text);
     };
-
-    const [selectedColor, updateColor] = useState([]);
-    const [chords, updateChords] = useState([]);
-    const [melody, updateMelody] = useState([]);
 
     const ref = firebase.firestore().collection('songs');
-    //console.log(ref);
-    //const documentSong = '3';
 
     function getSong(docName) {
         ref.doc(docName)
@@ -86,8 +85,12 @@ function App() {
 
     useEffect(() => {
         getSong(songName);
-        //computeMelody();
+        computeMelody();
     }, []); // execute only at start
+
+    useEffect(() => {
+        getAllSongs();
+    }, [songName]);
 
     // dati gli accordi, li converte in modo che siano comprensibili al codice di antonio e calcola melodia
     const computeMelody = () => {
@@ -123,9 +126,9 @@ function App() {
     //     console.log('ho cliccato menu accordi');
     // };
 
-    const [showMenu, setShowMenu] = useState([false, false]);
+    const [showMenu, setShowMenu] = useState([false, false, true]);
     const toggleMenu = (i) => {
-        let newMenuState = [false, false];
+        let newMenuState = [false, false, false];
         let changeMenu = !showMenu[i];
         newMenuState[i] = changeMenu;
         setShowMenu(newMenuState);
@@ -136,24 +139,22 @@ function App() {
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
                 <World melody={melody} selectedColor={selectedColor} />
-                {/* <IoHelpCircle
-                    className="Icon"
+                <p
+                    className="Info"
                     style={{
                         color: 'white',
                         position: 'fixed',
                         top: '20px',
                         right: '20px',
                     }}
-                /> */}
+                >
+                    Song: {songName}
+                </p>
 
                 <MainMenu
                     toggleMenu={toggleMenu}
                     computeMelody={computeMelody}
-                />
-                <Form
-                    songName={songName}
-                    onChange={changeSongName}
-                    onSubmit={submitSongName}
+                    melody={melody}
                 />
                 <ChordsMenu
                     showMenu={showMenu[0]}
@@ -166,6 +167,13 @@ function App() {
                     showMenu={showMenu[1]}
                     toggleMenu={toggleMenu}
                     changeColor={changeColor}
+                />
+                <SongTitleMenu
+                    showMenu={showMenu[2]}
+                    toggleMenu={toggleMenu}
+                    songName={songName}
+                    onSubmit={submitSongName}
+                    allSongs={allSongs}
                 />
             </ThemeProvider>
         </div>

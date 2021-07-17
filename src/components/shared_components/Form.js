@@ -1,33 +1,47 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { IoPlay } from 'react-icons/io5';
 
 const StyledForm = styled.div`
     display: flex;
-
-    align-items: center;
+    align-items: left;
+    flex-direction: column;
     width: fit-content;
+    height: fit-content;
+`;
 
-    background: ${(props) => props.theme.panelColor};
-    box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.4);
-
-    backdrop-filter: blur(8.5px);
-    -webkit-backdrop-filter: blur(8.5px);
-
-    border-radius: 15px;
+const SubmitButton = styled.button`
+    display: flex;
+    align-self: flex-end;
+    transition: 0.2s;
+    height: 30px;
+    width: fit-content;
     border: ${(props) => props.theme.border};
+    border-radius: 15px;
+    font-size: 1em;
+    background: ${(props) => props.theme.buttonColor};
+    padding: 4px;
 
-    margin: 1%;
-    padding: 0.2%;
+    margin-left: 10px;
+
+    cursor: pointer;
+
+    transition: 0.5s;
+    &:hover {
+        background: rgba(100, 255, 100, 0.9);
+    }
 `;
 
 const Form = (props) => {
     return (
         <StyledForm>
+            <p>
+                Please, enter the name of the song you want to modify ✍🏼 or
+                create a new one 🆕
+            </p>
             <form onSubmit={props.onSubmit}>
-                <p>Enter the name of the song:</p>
-                <input type="text" onChange={props.onChange} />
-                <input type="submit" />
-                <p>Current song: {props.songName}</p>
+                <input name="song" type="text" placeholder="nice title..." />
+                <SubmitButton type="submit">Enter</SubmitButton>
             </form>
         </StyledForm>
     );

@@ -6,6 +6,7 @@ import {
     IoColorPalette,
     IoPlayCircle,
     IoDownloadOutline,
+    IoText,
 } from 'react-icons/io5';
 import generateSounds from './Sound.js';
 import { createMidi } from './MidiCreator.js';
@@ -77,6 +78,9 @@ const MainMenu = (props) => {
     // return pulsanti
     return (
         <StyledMainMenu className={props.className}>
+            <MenuButton onClick={() => props.toggleMenu(2)}>
+                <IoText className="Icon" />
+            </MenuButton>
             <MenuButton onClick={() => props.toggleMenu(0)}>
                 <IoMusicalNotes className="Icon" />
             </MenuButton>
@@ -87,7 +91,7 @@ const MainMenu = (props) => {
 
             <MenuButton
                 onClick={() => {
-                    createMidi();
+                    createMidi(props.melody);
                 }}
             >
                 <IoDownloadOutline className="Icon" />
