@@ -151,6 +151,7 @@ function App() {
                     toggleMenu={toggleMenu}
                     computeMelody={computeMelody}
                     melody={melody}
+                    chords={chords}
                 />
                 <ChordsMenu
                     showMenu={showMenu[0]}

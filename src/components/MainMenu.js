@@ -91,7 +91,7 @@ const MainMenu = (props) => {
 
             <MenuButton
                 onClick={() => {
-                    createMidi(props.melody);
+                    createMidi(props.melody, props.chords);
                 }}
             >
                 <IoDownloadOutline className="Icon" />
