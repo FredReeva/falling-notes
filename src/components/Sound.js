@@ -1,6 +1,10 @@
 import * as Tone from 'tone';
 
-let baseVolume = -18.0;
+// NON FUNZIONA
+// const toneContext = new Tone.Context({ latencyHint: "playback" });
+// Tone.setContext(toneContext);
+
+let baseVolume = -15.0;
 const analyserBus = new Tone.Channel(0, 0);
 Tone.Transport.bpm.value = 60;
 
@@ -18,7 +22,7 @@ function connectEffectsChain(chain) {
     let verb = new Tone.Freeverb(0.8, 6000);
     chain[chain.length - 1].connect(verb);
     verb.connect(analyserBus);
-    analyserBus.connect(Tone.Master);
+    analyserBus.connect(Tone.getDestination());
     // chain[chain.length - 1].connect(analyserBus);
     // analyserBus.connect(Tone.Master);
 }
@@ -32,14 +36,14 @@ function createSynthParams(chain) {
         stop: function () {
             if (this.enabled !== false) {
                 this.enabled = false;
-                lastSignalChain.disconnect(Tone.Master);
+                lastSignalChain.disconnect(Tone.getDestination());
             }
         },
 
         start: function () {
             if (this.enabled !== true) {
                 this.enabled = true;
-                lastSignalChain.connect(Tone.Master);
+                lastSignalChain.connect(Tone.getDestination());
             }
         },
     };
@@ -111,13 +115,13 @@ function createSynthPad() {
     });
     //synth.sync();
 
-    let dist = new Tone.Chebyshev(7);
-    let filter = new Tone.Filter(800, 'lowpass');
-    let chorus = new Tone.Chorus('3n', 35, 0.65);
+    // let dist = new Tone.Chebyshev(7);
+    // let filter = new Tone.Filter(800, 'lowpass');
+    // let chorus = new Tone.Chorus('3n', 35, 0.65);
     // let delay = new Tone.PingPongDelay("8n", 0.2);
     // let verb = new Tone.Freeverb(0.80, 6000);
 
-    let chain = [synth, dist, chorus, filter];
+    let chain = [synth];
 
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
@@ -254,11 +258,11 @@ function createSynthBell() {
 
     //let filter1 = new Tone.Filter(5000, "highpass");
     let pingPong = new Tone.FeedbackDelay('2t', 0.4);
-    let panner = new Tone.AutoPanner('1m', 0.5).start();
+    // let panner = new Tone.AutoPanner('1m', 0.5).start();
     // let verb = new Tone.Freeverb(0.80, 6000);
     // let filter2 = new Tone.Filter(1000, "highpass")
 
-    let chain = [synth, pingPong, panner];
+    let chain = [synth, pingPong];
     connectEffectsChain(chain);
     let synthParams = createSynthParams(chain);
 
@@ -280,15 +284,61 @@ function createSynthBell() {
 export var context = Tone.getContext();
 export var bus = analyserBus;
 
+// var pad = createSynthPad();
+// createLoop(pad);
+// var fx = createSynthFX();
+// createLoop(fx);
+// var lead = createSynthLead();
+// createLoop(lead);
+var bell = createSynthBell();
+createLoop(bell);
+
 const generateSounds = () => {
-    var pad = createSynthPad();
-    createLoop(pad);
-    // var fx = createSynthFX();
-    // createLoop(fx);
-    var lead = createSynthLead();
-    createLoop(lead);
-    var bell = createSynthBell();
-    createLoop(bell);
 };
 
 export default generateSounds;
+
+// TEST LATENCY HINT
+
+// import * as Tone from 'tone';
+
+// const toneContext = new Tone.Context({ latencyHint: "playback" });
+// Tone.setContext(toneContext);
+
+// let baseVolume = -10.0;
+// const analyserBus = new Tone.Channel(0, 0);
+// Tone.Transport.bpm.value = 60;
+
+// function getRandomInt(min, max) {
+//     min = Math.ceil(min);
+//     max = Math.floor(max);
+//     return Math.floor(Math.random() * (max - min + 1)) + min;
+// }
+
+// function createLoop(instrument) {
+//     let loop = new Tone.Loop(function (time) {
+//         let notes = instrument['notes'];
+//         let note = notes[getRandomInt(0, notes.length)];
+//         instrument['synth'].triggerAttackRelease(
+//             note,
+//             instrument['timeDelay'],
+//             time
+//         );
+//     }, instrument['timeDelay']);
+//     loop.humanize = instrument['humanize'];
+//     loop.probability = instrument['probability'];
+//     loop.start();
+// }
+
+// var duoSynth = new Tone.DuoSynth();
+// duoSynth.connect(analyserBus);
+// analyserBus.connect(Tone.getDestination());
+
+// export var context = Tone.getContext();
+// export var bus = analyserBus;
+
+// const generateSounds = () => {
+//     duoSynth.triggerAttackRelease("C4", "2n");
+// };
+
+// export default generateSounds;

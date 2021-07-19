@@ -21,14 +21,14 @@ const Background = (props) => {
     let mount = useRef(null);
 
     useEffect(() => {
-        let convertedColor = new THREE.Color();
+
         let mainColor = new THREE.Color(
             Math.random(),
             Math.random(),
             Math.random()
-        ).getHSL(convertedColor);
-
-        mainColor = mainColor.setHSL(convertedColor.h, 0.7, 0.5);
+        );
+        mainColor = mainColor.getHSL(mainColor);
+        mainColor = mainColor.setHSL(mainColor.h, 0.7, 0.5);
 
         // THREE INITIALIZATION
         let winWidth = mount.current.clientWidth;
@@ -88,7 +88,7 @@ const Background = (props) => {
 
         let analyserLeft = audioCtx.createAnalyser();
         let analyserRight = audioCtx.createAnalyser();
-        let splitter = audioCtx.createChannelSplitter(2);
+        let analyserSplitter = audioCtx.createChannelSplitter(2);
 
         analyserLeft.fftSize = 128;
         analyserLeft.smoothingTimeConstant = 0.7;
@@ -102,10 +102,10 @@ const Background = (props) => {
 
         let bufferLength = analyserLeft.frequencyBinCount;
 
-        Tone.connect(Tone.Master, splitter);
+        Tone.connect(sound.bus, analyserSplitter);
 
-        splitter.connect(analyserLeft, 0);
-        splitter.connect(analyserRight, 1);
+        analyserSplitter.connect(analyserLeft, 0);
+        analyserSplitter.connect(analyserRight, 1);
 
         // WORLD
 
@@ -204,7 +204,7 @@ const Background = (props) => {
 
         // STAR FIELD
 
-        let numField = 200;
+        let numField = 500;
         let starFieldradius = 350;
 
         function generateStarField(num, radius, baseColor) {
@@ -239,10 +239,10 @@ const Background = (props) => {
                     (Math.random() - 0.5) * 0.05,
                     0
                 );
-                //! qui sta il problema
+                color = color.getHSL(color);
                 color = color.setHSL(
-                    color.getHSL().h,
-                    color.getHSL().s,
+                    color.h,
+                    color.s,
                     0.5 + Math.random() * 0.2
                 );
                 starFieldcol[3 * i] = color.r;
@@ -382,10 +382,10 @@ const Background = (props) => {
             let tresh = 0.1;
             let color = baseColor.clone();
 
-            let convertedColor = new THREE.Color();
-            let deathColor = baseColor.clone().getHSL(convertedColor);
+            let deathColor = baseColor.clone()
+            deathColor = deathColor.getHSL(deathColor);
 
-            deathColor = deathColor.setHSL(convertedColor.h, 1, 0.2);
+            deathColor = deathColor.setHSL(deathColor.h, 1, 0.2);
             color = color.lerpHSL(deathColor, progress);
             star.material.color = color;
 
@@ -466,10 +466,9 @@ const Background = (props) => {
             camera.lookAt(target);
 
             updateSpectrum(world);
-            //! very slow
-            // updateStar(star1, timer1, starFallradius, mainColor);
-            // updateStar(star2, timer2, starFallradius, mainColor);
-            // updateStar(star3, timer3, starFallradius, mainColor);
+            updateStar(star1, timer1, starFallradius, mainColor);
+            updateStar(star2, timer2, starFallradius, mainColor);
+            updateStar(star3, timer3, starFallradius, mainColor);
 
             if (mouseY > 0) {
                 starField.rotation.x =
