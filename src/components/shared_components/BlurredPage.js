@@ -15,7 +15,11 @@ const StyledBlurredPage = styled.div`
 `;
 
 const BlurredPage = (props) => {
-    return <StyledBlurredPage>{props.children}</StyledBlurredPage>;
+    return (
+        <StyledBlurredPage onClick={props.onClick}>
+            {props.children}
+        </StyledBlurredPage>
+    );
 };
 
 export default BlurredPage;

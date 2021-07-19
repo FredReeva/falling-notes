@@ -20,15 +20,11 @@ import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 
 function App() {
     // state shared through various components
-    const [selectedColor, updateColor] = useState([]);
+    const [color, setColor] = useState(300);
     const [chords, updateChords] = useState([]);
     const [melody, updateMelody] = useState([]);
     const [songName, updateSongName] = useState('default');
     const [allSongs, updateAllSongs] = useState([]);
-
-    const changeColor = (color) => {
-        updateColor(color);
-    };
 
     const getAllSongs = async () => {
         const snapshot = await firebase.firestore().collection('songs').get();
@@ -138,7 +134,7 @@ function App() {
         <div className="app">
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
-                <World melody={melody} selectedColor={selectedColor} />
+                <World melody={melody} color={color} />
                 <p
                     className="Info"
                     style={{
@@ -166,7 +162,8 @@ function App() {
                 <StyleMenu
                     showMenu={showMenu[1]}
                     toggleMenu={toggleMenu}
-                    changeColor={changeColor}
+                    color={color}
+                    setColor={setColor}
                 />
                 <SongTitleMenu
                     showMenu={showMenu[2]}

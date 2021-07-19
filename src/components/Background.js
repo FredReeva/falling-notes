@@ -5,8 +5,6 @@ import * as THREE from 'three';
 
 let StyledBackground = styled.div`
     position: fixed;
-    background-color: ${(props) =>
-        props.selectedColor ? props.selectedColor['hex'] : '#000000'};
     top: 0;
     right: 0;
     bottom: 0;
@@ -14,6 +12,7 @@ let StyledBackground = styled.div`
 `;
 
 const Background = (props) => {
+    console.log((props.color + 1) / 360);
     function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
@@ -21,21 +20,21 @@ const Background = (props) => {
     let mount = useRef(null);
 
     useEffect(() => {
+        let mainColor = new THREE.Color();
+        // Math.random(),
+        // Math.random(),
+        // Math.random()
+        //mainColor = mainColor.getHSL(mainColor);
 
-        let mainColor = new THREE.Color(
-            Math.random(),
-            Math.random(),
-            Math.random()
-        );
-        mainColor = mainColor.getHSL(mainColor);
-        mainColor = mainColor.setHSL(mainColor.h, 0.7, 0.5);
+        // instead of mainColor.h //props.color, 0.7, 0.5
+        mainColor = mainColor.setHSL((props.color + 1) / 360, 0.7, 0.5); //! color
 
         // THREE INITIALIZATION
         let winWidth = mount.current.clientWidth;
         let winHeight = mount.current.clientHeight;
         let scene = new THREE.Scene();
         {
-            //! selected color for fog
+            // selected color for fog
             let color = '#000000';
             let density = 0.01;
             scene.fog = new THREE.FogExp2(color, density);
@@ -46,8 +45,8 @@ const Background = (props) => {
             1,
             20000
         );
-        //! selected color for sky
-        scene.background = new THREE.Color('#000000'); //selectedColor
+        // selected color for sky
+        scene.background = new THREE.Color('#000000');
 
         let renderer = new THREE.WebGLRenderer({ alpha: true });
 
@@ -382,7 +381,7 @@ const Background = (props) => {
             let tresh = 0.1;
             let color = baseColor.clone();
 
-            let deathColor = baseColor.clone()
+            let deathColor = baseColor.clone();
             deathColor = deathColor.getHSL(deathColor);
 
             deathColor = deathColor.setHSL(deathColor.h, 1, 0.2);
@@ -509,7 +508,7 @@ const Background = (props) => {
             renderer.render(scene, camera);
         }
         animate();
-    }, []);
+    }, [props.color]); //! update when prop changes
 
     return <StyledBackground className={props.className} ref={mount} />;
 };

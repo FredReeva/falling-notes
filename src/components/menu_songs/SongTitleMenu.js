@@ -35,7 +35,8 @@ const StyledSongName = styled.div`
 
 const SongTitleMenu = (props) => {
     return props.showMenu ? (
-        <BlurredPage>
+        <div className="Container">
+            <BlurredPage onClick={() => props.toggleMenu(2)} />
             <ModalMenu className="SongTitleMenu">
                 <HeaderMenu
                     titleMenu={'Song Selection'}
@@ -51,9 +52,8 @@ const SongTitleMenu = (props) => {
                     ))}
                 </StyledSongSection>
             </ModalMenu>
-        </BlurredPage>
+        </div>
     ) : null;
 };
-//onChange={props.changeSongName}
 
 export default SongTitleMenu;

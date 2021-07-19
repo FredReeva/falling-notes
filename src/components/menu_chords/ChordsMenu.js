@@ -6,9 +6,6 @@ import HeaderMenu from '../shared_components/HeaderMenu';
 import ModalMenu from '../shared_components/ModalMenu';
 
 const ChordsMenu = (props) => {
-    // TODO: accesso utente al proprio spazio e salvataggio canzoni
-    // TODO: crea più documenti (song) e dai la possibilità di salvare preset
-
     const deleteChord = (id) => {
         // console.log('delete', id);
         props.updateChords(props.chords.filter((chord) => chord.id !== id));
@@ -31,7 +28,13 @@ const ChordsMenu = (props) => {
     }
 
     return props.showMenu ? (
-        <BlurredPage>
+        <div className="Container">
+            <BlurredPage
+                onClick={() => {
+                    props.toggleMenu(0);
+                    props.updateServer();
+                }}
+            />
             <ModalMenu className="ChordsMenu">
                 <HeaderMenu
                     titleMenu={'Chords Lab'}
@@ -48,7 +51,7 @@ const ChordsMenu = (props) => {
                 />
                 <AddChordSection onAdd={addChord} />
             </ModalMenu>
-        </BlurredPage>
+        </div>
     ) : null;
 };
 

@@ -30,23 +30,23 @@ export const GlobalStyles = createGlobalStyle`
     transition: 0.3s;  
     justify-content: center;
     align-items: center;
-    font-size: 150%;
+    font-size: 200%;
     
     cursor: pointer;
     outline: none;
 
-    color: rgba(255,0,0, 0.3);
+    color: rgba(255,0,0, 0.55);
 
     &:hover {
         transition: 0.5s;  
-        color: rgba(255,0,0, 0.8);
+        color: rgba(255,0,0, 0.9);
     }
   }
 
   h2 {
     
     display: block;
-    font-size: 1em;
+    font-size: 1.4em;
     margin-top: 0;
     margin-bottom: 0;
     margin-left: 0;
@@ -85,6 +85,17 @@ form{
   align-items: center;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.Container{
+  position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
   `;
