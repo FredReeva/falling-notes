@@ -5,6 +5,7 @@ import {
     IoMusicalNotes,
     IoColorPalette,
     IoPlayCircle,
+    IoStopCircle,
     IoDownloadOutline,
     IoText,
 } from 'react-icons/io5';
@@ -102,7 +103,11 @@ const MainMenu = (props) => {
                     startContext();
                 }}
             >
-                <IoPlayCircle className="Icon" />
+                {!isPlaying ? (
+                    <IoPlayCircle className="Icon" />
+                ) : (
+                    <IoStopCircle className="Icon" />
+                )}
             </MenuButton>
         </StyledMainMenu>
     );

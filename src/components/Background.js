@@ -11,16 +11,10 @@ let StyledBackground = styled.div`
     left: 0;
 `;
 
-let mainColor = new THREE.Color(
-    Math.random(),
-    Math.random(),
-    Math.random()
-);
+let mainColor = new THREE.Color(Math.random(), Math.random(), Math.random());
 mainColor = mainColor.getHSL(mainColor);
 
-
 const Background = (props) => {
-
     function sleep(ms) {
         return new Promise((resolve) => setTimeout(resolve, ms));
     }
@@ -235,14 +229,10 @@ const Background = (props) => {
                 if (color.h + hueOffset < 0) {
                     color.h = color.h - hueOffset;
                 } else if (color.h + hueOffset > 1) {
-                    color.h = color.h - hueOffset;;
+                    color.h = color.h - hueOffset;
                 }
 
-                color = color.offsetHSL(
-                    0,
-                    (Math.random() - 0.5) * 0.2,
-                    0
-                );
+                color = color.offsetHSL(0, (Math.random() - 0.5) * 0.2, 0);
                 color = color.setHSL(
                     color.h,
                     color.s,
@@ -280,22 +270,17 @@ const Background = (props) => {
             let colors = starField.geometry.attributes.color.array;
 
             for (let i = 0; i < numField; i++) {
-
                 let color = baseColor.clone();
                 color = color.getHSL(color);
-                
+
                 let hueOffset = (Math.random() - 0.5) * 0.5; // +/- 0.15
                 if (color.h + hueOffset < 0) {
                     color.h = color.h - hueOffset;
                 } else if (color.h + hueOffset > 1) {
-                    color.h = color.h - hueOffset;;
+                    color.h = color.h - hueOffset;
                 }
 
-                color = color.offsetHSL(
-                    0,
-                    (Math.random() - 0.5) * 0.2,
-                    0
-                );
+                color = color.offsetHSL(0, (Math.random() - 0.5) * 0.2, 0);
                 color = color.setHSL(
                     color.h,
                     color.s,
@@ -306,7 +291,6 @@ const Background = (props) => {
                 colors[3 * i + 1] = color.g;
                 colors[3 * i + 2] = color.b;
             }
-
         }
 
         let starField = generateStarField(mainColor);
@@ -364,7 +348,9 @@ const Background = (props) => {
             );
             starGeom.computeBoundingBox();
 
-            let starMaterial = new THREE.LineBasicMaterial({ color: baseColor });
+            let starMaterial = new THREE.LineBasicMaterial({
+                color: baseColor,
+            });
 
             return [new THREE.Line(starGeom, starMaterial), timer];
         }
@@ -551,13 +537,12 @@ const Background = (props) => {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
         }
-        animate();        
+        animate();
     }, []); // never update
 
     useEffect(() => {
         mainColor = mainColor.getHSL(mainColor);
-        mainColor = mainColor.setHSL((props.color +0.1)/ 360, 0.7, 0.5);
-        
+        mainColor = mainColor.setHSL((props.color + 0.1) / 360, 0.7, 0.5);
     }, [props.color]); // update when prop changes
 
     return <StyledBackground className={props.className} ref={mount} />;

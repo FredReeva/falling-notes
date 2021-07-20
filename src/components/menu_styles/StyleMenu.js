@@ -11,6 +11,7 @@ const StyledColorPicker = styled(HuePicker)`
     margin-top: 10px;
 
     align-self: center;
+    cursor: pointer;
 `;
 
 const StyleMenu = (props) => {
@@ -25,7 +26,7 @@ const StyleMenu = (props) => {
                 <StyledColorPicker
                     color={props.color}
                     onChangeComplete={(color) => {
-                        props.setColor(color.hsl.h);
+                        props.setColor(color);
                     }}
                 ></StyledColorPicker>
             </ModalMenu>

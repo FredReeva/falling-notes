@@ -21,9 +21,9 @@ export const createMidi = (melody, chords) => {
         if (dur === 11) return ['d2', '1', '1'];
         if (dur === 12) return ['1', '1', '1'];
         //! finish
-        if (dur === 13) return '';
-        if (dur === 14) return '';
-        if (dur === 15) return '';
+        if (dur === 13) return ['1', '1', 'd2', '2'];
+        if (dur === 14) return ['1', '1', 'd2', 'd2'];
+        if (dur === 15) return ['1', '1', '1', 'd2'];
 
         return dur;
     };

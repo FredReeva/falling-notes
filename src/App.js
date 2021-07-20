@@ -20,7 +20,14 @@ import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 
 function App() {
     // state shared through various components
-    const [color, setColor] = useState(300);
+    const [color, setColor] = useState({
+        hsl: {
+            h: 0,
+            s: 1,
+            l: 0.5,
+            a: 1,
+        },
+    });
     const [chords, updateChords] = useState([]);
     const [melody, updateMelody] = useState([]);
     const [songName, updateSongName] = useState('default');
@@ -134,7 +141,7 @@ function App() {
         <div className="app">
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
-                <World melody={melody} color={color} />
+                <World melody={melody} color={color.hsl.h} />
                 <p
                     className="Info"
                     style={{

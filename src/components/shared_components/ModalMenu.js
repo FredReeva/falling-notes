@@ -6,7 +6,8 @@ const StyledModalMenu = styled.div`
     flex-direction: column;
     justify-content: center;
     position: relative;
-    width: 90vw;
+    min-width: 50vw;
+    max-width: 80vw;
     overflow: visible;
 
     background: ${(props) => props.theme.panelColor};
