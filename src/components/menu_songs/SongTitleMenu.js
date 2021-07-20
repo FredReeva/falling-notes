@@ -29,26 +29,49 @@ const StyledSongName = styled.div`
     margin-right: 10px;
     margin-bottom: 5px;
     margin-top: 5px;
-
+    cursor: pointer;
     padding: 5px;
+    &:hover {
+        background: rgba(255, 255, 255, 0.9);
+    }
 `;
 
 const SongTitleMenu = (props) => {
+    const [value, setValue] = useState('');
+
     return props.showMenu ? (
         <div className="Container">
-            <BlurredPage onClick={() => props.toggleMenu(2)} />
+            <BlurredPage
+                onClick={() => {
+                    props.toggleMenu(2);
+                    setValue('');
+                }}
+            />
             <ModalMenu className="SongTitleMenu">
                 <HeaderMenu
                     titleMenu={'Song Selection'}
                     toggleMenu={() => {
                         props.toggleMenu(2);
+                        setValue('');
                     }}
                 />
-                <Form songName={props.songName} onSubmit={props.onSubmit} />
+                <Form
+                    onSubmit={props.onSubmit}
+                    onChange={(e) => setValue(e.target.value)}
+                    value={value}
+                />
                 <p>List of available songs 🎶</p>
                 <StyledSongSection>
                     {props.allSongs.map((song, index) => (
-                        <StyledSongName key={index}>{song}</StyledSongName>
+                        <StyledSongName
+                            key={index}
+                            onClick={(e) => {
+                                setValue(e.target.innerText);
+                                //props.onDelete(e.target.innerText);
+                            }}
+                        >
+                            {song}
+                        </StyledSongName>
                     ))}
                 </StyledSongSection>
             </ModalMenu>

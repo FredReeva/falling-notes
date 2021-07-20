@@ -19,9 +19,7 @@ export const GlobalStyles = createGlobalStyle`
 
   .Icon{
     
-    
-    justify-content: center;
-    align-items: center;
+    margin-top:5px;
     font-size: 200%;
 
   }

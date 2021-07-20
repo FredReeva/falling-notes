@@ -39,8 +39,14 @@ const Form = (props) => {
                 Please, enter the name of the song you want to modify ✍🏼 or
                 create a new one 🆕
             </p>
-            <form onSubmit={props.onSubmit}>
-                <input name="song" type="text" placeholder="nice title..." />
+            <form id="test" onSubmit={props.onSubmit}>
+                <input
+                    name="song"
+                    type="text"
+                    placeholder="nice title..."
+                    value={props.value}
+                    onChange={props.onChange}
+                />
                 <SubmitButton type="submit">Enter</SubmitButton>
             </form>
         </StyledForm>

@@ -53,7 +53,7 @@ function App() {
 
     const ref = firebase.firestore().collection('songs');
 
-    function getSong(docName) {
+    const getSong = (docName) => {
         ref.doc(docName)
             .get()
             .then((doc) => {
@@ -76,7 +76,7 @@ function App() {
             .catch((error) => {
                 console.log('Error getting document:', error);
             });
-    }
+    };
 
     const updateServer = (docName = songName) => {
         const newState = { ...chords };
@@ -84,6 +84,12 @@ function App() {
         ref.doc(docName).set(newState);
 
         //computeMelody(); // ogni volta che il server viene aggiornato calcolo la melodia
+    };
+
+    const deleteSong = (docName) => {
+        ref.doc(docName).delete();
+        //! da ottimizzare... non è il massimo così
+        getAllSongs();
     };
 
     useEffect(() => {
@@ -176,8 +182,8 @@ function App() {
                 <SongTitleMenu
                     showMenu={showMenu[2]}
                     toggleMenu={toggleMenu}
-                    songName={songName}
                     onSubmit={submitSongName}
+                    onDelete={deleteSong}
                     allSongs={allSongs}
                 />
             </ThemeProvider>
