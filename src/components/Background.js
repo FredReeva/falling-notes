@@ -13,6 +13,12 @@ let StyledBackground = styled.div`
 
 let mainColor = new THREE.Color(Math.random(), Math.random(), Math.random());
 mainColor = mainColor.getHSL(mainColor);
+mainColor = mainColor.setHSL(mainColor.h, 0.7, 0.5);
+
+let prevColor = mainColor.clone();
+prevColor = prevColor.getHSL(prevColor);
+
+let colorNeedsUpdate = 0;
 
 const Background = (props) => {
     function sleep(ms) {
@@ -195,11 +201,14 @@ const Background = (props) => {
         let numField = 500;
         let starFieldradius = 350;
 
-        function generateStarField(baseColor) {
+        function generateStarField() {
+
             let starFieldGeom = new THREE.BufferGeometry();
 
             let starFieldpos = new Float32Array(3 * numField);
             let starFieldcol = new Float32Array(3 * numField);
+
+            let color = mainColor.clone();
 
             for (let i = 0; i < numField; i++) {
                 let x = (Math.random() - 0.5) * starFieldradius;
@@ -222,21 +231,24 @@ const Background = (props) => {
                 starFieldpos[3 * i + 1] = y;
                 starFieldpos[3 * i + 2] = z;
 
-                let color = baseColor.clone();
                 color = color.getHSL(color);
-
-                let hueOffset = (Math.random() - 0.5) * 0.5; // +/- 0.15
+                let hueOffset = (Math.random()-0.5)*0.05;
                 if (color.h + hueOffset < 0) {
-                    color.h = color.h - hueOffset;
+                    hueOffset = -hueOffset;
                 } else if (color.h + hueOffset > 1) {
-                    color.h = color.h - hueOffset;
+                    hueOffset = -hueOffset;
                 }
 
-                color = color.offsetHSL(0, (Math.random() - 0.5) * 0.2, 0);
+                color = color.offsetHSL(
+                    hueOffset,
+                    (Math.random()-0.5)*0.1,
+                    0
+                );
+                color = color.getHSL(color);
                 color = color.setHSL(
                     color.h,
                     color.s,
-                    0.5 + Math.random() * 0.2
+                    0.5 + Math.random() * 0.3
                 );
 
                 starFieldcol[3 * i] = color.r;
@@ -266,41 +278,51 @@ const Background = (props) => {
             return new THREE.Points(starFieldGeom, starFieldMaterial);
         }
 
-        function updateStarField(starField, baseColor) {
-            let colors = starField.geometry.attributes.color.array;
+        function updateStarField(starField) {
+
+            let starFieldcol = starField.geometry.attributes.color.array;
+
+            let color = mainColor.clone();
 
             for (let i = 0; i < numField; i++) {
-                let color = baseColor.clone();
-                color = color.getHSL(color);
 
-                let hueOffset = (Math.random() - 0.5) * 0.5; // +/- 0.15
+                color = color.getHSL(color);
+                let hueOffset = (Math.random()-0.5)*0.05;
                 if (color.h + hueOffset < 0) {
-                    color.h = color.h - hueOffset;
+                    hueOffset = -hueOffset;
                 } else if (color.h + hueOffset > 1) {
-                    color.h = color.h - hueOffset;
+                    hueOffset = -hueOffset;
                 }
 
-                color = color.offsetHSL(0, (Math.random() - 0.5) * 0.2, 0);
+                color = color.offsetHSL(
+                    hueOffset,
+                    (Math.random()-0.5)*0.1,
+                    0
+                );
+                color = color.getHSL(color);
                 color = color.setHSL(
                     color.h,
                     color.s,
-                    0.5 + Math.random() * 0.2
+                    0.5 + Math.random() * 0.3
                 );
 
-                colors[3 * i] = color.r;
-                colors[3 * i + 1] = color.g;
-                colors[3 * i + 2] = color.b;
+                starFieldcol[3 * i] = color.r;
+                starFieldcol[3 * i + 1] = color.g;
+                starFieldcol[3 * i + 2] = color.b;
             }
+
+            console.log('update');
+
         }
 
-        let starField = generateStarField(mainColor);
+        let starField = generateStarField();
         scene.add(starField);
 
         // FALLING STARS
 
         let starFallradius = 10;
 
-        function generateStar(baseColor) {
+        function generateStar() {
             let timer = new THREE.Clock();
 
             let starGeom = new THREE.BufferGeometry();
@@ -348,14 +370,12 @@ const Background = (props) => {
             );
             starGeom.computeBoundingBox();
 
-            let starMaterial = new THREE.LineBasicMaterial({
-                color: baseColor,
-            });
+            let starMaterial = new THREE.LineBasicMaterial({ color: mainColor });
 
             return [new THREE.Line(starGeom, starMaterial), timer];
         }
 
-        function resetStar(star, timer, baseColor) {
+        function resetStar(star, timer) {
             let position = star.geometry.attributes.position.array;
             let velocity = star.geometry.attributes.velocity.array;
 
@@ -385,12 +405,12 @@ const Background = (props) => {
             velocity[4] = directionY * 0.01;
             velocity[5] = directionZ * 0.01;
 
-            star.material.color = new THREE.Color(baseColor);
+            star.material.color = new THREE.Color(mainColor);
 
             timer.start();
         }
 
-        function updateStar(star, timer, baseColor) {
+        function updateStar(star, timer) {
             let positions = star.geometry.attributes.position.array;
             let velocity = star.geometry.attributes.velocity.array;
 
@@ -404,13 +424,12 @@ const Background = (props) => {
                 positions[1] += velocity[1];
                 positions[2] += velocity[2];
             }
-            let tresh = 0.1;
+ 
+            let color = mainColor.clone();
 
-            let color = baseColor.clone();
-
-            let deathColor = baseColor.clone();
+            let deathColor = mainColor.clone();
             deathColor = deathColor.getHSL(deathColor);
-            deathColor = deathColor.setHSL(0, 1, 0.2);
+            deathColor = deathColor.setHSL(deathColor.h, 1, 0.8);
 
             color = color.lerp(deathColor, progress);
             star.material.color = color;
@@ -421,19 +440,19 @@ const Background = (props) => {
             positions[5] += velocity[5];
 
             if (progress > 1) {
-                resetStar(star, timer, baseColor);
+                resetStar(star, timer);
             }
         }
 
-        let starFall1 = generateStar(mainColor);
+        let starFall1 = generateStar();
         let star1 = starFall1[0];
         let timer1 = starFall1[1];
 
-        let starFall2 = generateStar(mainColor);
+        let starFall2 = generateStar();
         let star2 = starFall2[0];
         let timer2 = starFall2[1];
 
-        let starFall3 = generateStar(mainColor);
+        let starFall3 = generateStar();
         let star3 = starFall3[0];
         let timer3 = starFall3[1];
 
@@ -492,10 +511,14 @@ const Background = (props) => {
             camera.lookAt(target);
 
             updateSpectrum(world);
-            updateStar(star1, timer1, mainColor);
-            updateStar(star2, timer2, mainColor);
-            updateStar(star3, timer3, mainColor);
-            updateStarField(starField, mainColor);
+            updateStar(star1, timer1);
+            updateStar(star2, timer2);
+            updateStar(star3, timer3);
+
+            if (colorNeedsUpdate == 1) {
+                updateStarField(starField);
+                colorNeedsUpdate = 0;
+            }
 
             if (mouseY > 0) {
                 starField.rotation.x =
@@ -541,8 +564,11 @@ const Background = (props) => {
     }, []); // never update
 
     useEffect(() => {
+        prevColor = mainColor;
         mainColor = mainColor.getHSL(mainColor);
-        mainColor = mainColor.setHSL((props.color + 0.1) / 360, 0.7, 0.5);
+        mainColor = mainColor.setHSL((props.color +0.1)/ 360, 0.7, 0.5);
+        colorNeedsUpdate = 1;
+        
     }, [props.color]); // update when prop changes
 
     return <StyledBackground className={props.className} ref={mount} />;
