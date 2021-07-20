@@ -10,6 +10,8 @@ import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
 import Form from './components/shared_components/Form';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
+import MelodyMenu from './components/menu_melody/MelodyMenu';
+import { get } from 'music-chord';
 
 // const Background = styled.div`
 //     height: 100vh;
@@ -49,6 +51,7 @@ function App() {
         updateSongName(text);
         event.preventDefault();
         getSong(text);
+        getAllSongs();
     };
 
     const ref = firebase.firestore().collection('songs');
@@ -82,24 +85,24 @@ function App() {
         const newState = { ...chords };
         ref.doc(docName).delete();
         ref.doc(docName).set(newState);
-
-        //computeMelody(); // ogni volta che il server viene aggiornato calcolo la melodia
+        //updateMelody([]);
+        computeMelody(); // ogni volta che il server viene aggiornato calcolo la melodia
     };
 
     const deleteSong = (docName) => {
+        //console.log('deleting' + docName);
         ref.doc(docName).delete();
-        //! da ottimizzare... non è il massimo così
-        getAllSongs();
     };
 
     useEffect(() => {
         getSong(songName);
-        computeMelody();
+        getAllSongs();
+        //computeMelody();
     }, []); // execute only at start
 
     useEffect(() => {
         getAllSongs();
-    }, [songName]);
+    }, [songName, allSongs]);
 
     // dati gli accordi, li converte in modo che siano comprensibili al codice di antonio e calcola melodia
     const computeMelody = () => {
@@ -115,7 +118,7 @@ function App() {
 
             chordList = [...chordList, readChord];
         });
-        console.log(chordList);
+        //console.log(chordList);
 
         // genero melodia se ci sono accordi:
         if (chordList.length > 0) {
@@ -135,9 +138,9 @@ function App() {
     //     console.log('ho cliccato menu accordi');
     // };
 
-    const [showMenu, setShowMenu] = useState([false, false, true]);
+    const [showMenu, setShowMenu] = useState([true, false, false, false]);
     const toggleMenu = (i) => {
-        let newMenuState = [false, false, false];
+        let newMenuState = [false, false, false, false];
         let changeMenu = !showMenu[i];
         newMenuState[i] = changeMenu;
         setShowMenu(newMenuState);
@@ -166,26 +169,27 @@ function App() {
                     melody={melody}
                     chords={chords}
                 />
-                <ChordsMenu
+                <SongTitleMenu
                     showMenu={showMenu[0]}
+                    toggleMenu={toggleMenu}
+                    onSubmit={submitSongName}
+                    onDelete={deleteSong}
+                    allSongs={allSongs}
+                />
+                <ChordsMenu
+                    showMenu={showMenu[1]}
                     toggleMenu={toggleMenu}
                     chords={chords}
                     updateChords={updateChords}
                     updateServer={updateServer}
                 />
                 <StyleMenu
-                    showMenu={showMenu[1]}
+                    showMenu={showMenu[2]}
                     toggleMenu={toggleMenu}
                     color={color}
                     setColor={setColor}
                 />
-                <SongTitleMenu
-                    showMenu={showMenu[2]}
-                    toggleMenu={toggleMenu}
-                    onSubmit={submitSongName}
-                    onDelete={deleteSong}
-                    allSongs={allSongs}
-                />
+                <MelodyMenu showMenu={showMenu[3]} toggleMenu={toggleMenu} />
             </ThemeProvider>
         </div>
     );

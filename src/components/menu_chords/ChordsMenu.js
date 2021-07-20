@@ -27,22 +27,16 @@ const ChordsMenu = (props) => {
         props.updateChords(items);
     }
 
+    const toggleMenu = () => {
+        props.toggleMenu(1);
+        props.updateServer();
+    };
+
     return props.showMenu ? (
         <div className="Container">
-            <BlurredPage
-                onClick={() => {
-                    props.toggleMenu(0);
-                    props.updateServer();
-                }}
-            />
+            <BlurredPage onClick={toggleMenu} />
             <ModalMenu className="ChordsMenu">
-                <HeaderMenu
-                    titleMenu={'Chords Lab'}
-                    toggleMenu={() => {
-                        props.toggleMenu(0);
-                        props.updateServer();
-                    }}
-                />
+                <HeaderMenu titleMenu={'Chords Lab'} toggleMenu={toggleMenu} />
 
                 <ChordsDnDSection
                     chords={props.chords}

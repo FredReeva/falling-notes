@@ -7,6 +7,7 @@ import {
     IoPlayCircle,
     IoStopCircle,
     IoDownloadOutline,
+    IoDice,
     IoText,
 } from 'react-icons/io5';
 import generateSounds from './Sound.js';
@@ -54,6 +55,8 @@ const MenuButton = styled.button`
 const MainMenu = (props) => {
     const [isPlaying, setIsPlaying] = useState(false);
 
+    useEffect(() => {}, [props.chords, props.melody]);
+
     useEffect(() => {
         generateSounds();
     }, [isPlaying]);
@@ -70,7 +73,6 @@ const MainMenu = (props) => {
             return;
         }
 
-        props.computeMelody();
         console.log('play...');
         setIsPlaying(true);
         await Tone.Transport.start();
@@ -79,20 +81,38 @@ const MainMenu = (props) => {
     // return pulsanti
     return (
         <StyledMainMenu className={props.className}>
-            <MenuButton onClick={() => props.toggleMenu(2)}>
+            <MenuButton onClick={() => props.toggleMenu(0)}>
                 <IoText className="Icon" />
             </MenuButton>
-            <MenuButton onClick={() => props.toggleMenu(0)}>
+            <MenuButton onClick={() => props.toggleMenu(1)}>
                 <IoMusicalNotes className="Icon" />
             </MenuButton>
 
-            <MenuButton onClick={() => props.toggleMenu(1)}>
+            <MenuButton onClick={() => props.toggleMenu(2)}>
                 <IoColorPalette className="Icon" />
             </MenuButton>
 
             <MenuButton
                 onClick={() => {
+                    props.toggleMenu(3);
+                    props.computeMelody();
+                }}
+                style={{
+                    pointerEvents: props.chords.length === 0 ? 'none' : null,
+                }}
+            >
+                <IoDice className="Icon" />
+            </MenuButton>
+
+            <MenuButton
+                onClick={() => {
                     createMidi(props.melody, props.chords);
+                }}
+                style={{
+                    pointerEvents:
+                        props.melody.length === 0 || props.chords.length === 0
+                            ? 'none'
+                            : null,
                 }}
             >
                 <IoDownloadOutline className="Icon" />
@@ -101,6 +121,12 @@ const MainMenu = (props) => {
             <MenuButton
                 onClick={() => {
                     startContext();
+                }}
+                style={{
+                    pointerEvents:
+                        props.melody.length === 0 || props.chords.length === 0
+                            ? 'none'
+                            : null,
                 }}
             >
                 {!isPlaying ? (

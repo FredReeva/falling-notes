@@ -38,41 +38,48 @@ const StyledSongName = styled.div`
 
 const SongTitleMenu = (props) => {
     const [value, setValue] = useState('');
+    const toggleMenu = () => {
+        props.toggleMenu(0);
+        setValue('');
+    };
 
     return props.showMenu ? (
         <div className="Container">
-            <BlurredPage
-                onClick={() => {
-                    props.toggleMenu(2);
-                    setValue('');
-                }}
-            />
+            <BlurredPage onClick={toggleMenu} />
             <ModalMenu className="SongTitleMenu">
                 <HeaderMenu
                     titleMenu={'Song Selection'}
-                    toggleMenu={() => {
-                        props.toggleMenu(2);
-                        setValue('');
-                    }}
+                    toggleMenu={toggleMenu}
                 />
+                <p>
+                    Please, enter the name of the song you want to modify ✍🏼 or
+                    create a new one 🆕
+                </p>
                 <Form
                     onSubmit={props.onSubmit}
                     onChange={(e) => setValue(e.target.value)}
                     value={value}
+                    allSongs={props.allSongs}
+                    onDelete={() => {
+                        props.onDelete(value);
+                        setValue('');
+                    }}
                 />
+
                 <p>List of available songs 🎶</p>
                 <StyledSongSection>
-                    {props.allSongs.map((song, index) => (
-                        <StyledSongName
-                            key={index}
-                            onClick={(e) => {
-                                setValue(e.target.innerText);
-                                //props.onDelete(e.target.innerText);
-                            }}
-                        >
-                            {song}
-                        </StyledSongName>
-                    ))}
+                    {props.allSongs
+                        .filter((song) => song !== 'default')
+                        .map((song, index) => (
+                            <StyledSongName
+                                key={index}
+                                onClick={(e) => {
+                                    setValue(e.target.innerText);
+                                }}
+                            >
+                                {song}
+                            </StyledSongName>
+                        ))}
                 </StyledSongSection>
             </ModalMenu>
         </div>

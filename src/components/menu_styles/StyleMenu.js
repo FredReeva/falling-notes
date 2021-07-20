@@ -15,14 +15,15 @@ const StyledColorPicker = styled(HuePicker)`
 `;
 
 const StyleMenu = (props) => {
+    const toggleMenu = () => {
+        props.toggleMenu(2);
+    };
+
     return props.showMenu ? (
         <div className="Container">
-            <BlurredPage onClick={() => props.toggleMenu(1)} />
+            <BlurredPage onClick={toggleMenu} />
             <ModalMenu className="StyleMenu">
-                <HeaderMenu
-                    titleMenu={'Style Lab'}
-                    toggleMenu={() => props.toggleMenu(1)}
-                />
+                <HeaderMenu titleMenu={'Style Lab'} toggleMenu={toggleMenu} />
                 <StyledColorPicker
                     color={props.color}
                     onChangeComplete={(color) => {
