@@ -10,8 +10,8 @@ import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
 import Form from './components/shared_components/Form';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
-import MelodyMenu from './components/menu_melody/MelodyMenu';
-import { get } from 'music-chord';
+import ParametersMenu from './components/menu_parameters/ParametersMenu';
+
 import * as Tone from 'tone';
 import Sound from './components/Sound';
 
@@ -38,6 +38,16 @@ function App() {
         },
     });
     const [isPlaying, setIsPlaying] = useState(false);
+
+    const complexityModes = ['Noob', 'Classical', 'Pro Jazz'];
+    const melodySounds = ['Bells', 'Synth', 'Piano'];
+    const chordSounds = ['Pad', 'Piano'];
+    const [parameters, updateParameters] = useState({
+        tempo: 120,
+        complexityMode: complexityModes[0],
+        melodySound: melodySounds[0],
+        chordSound: chordSounds[0],
+    });
 
     //* Visual and menu functions
 
@@ -241,7 +251,26 @@ function App() {
                     color={color}
                     setColor={setColor}
                 />
-                <MelodyMenu showMenu={showMenu[3]} toggleMenu={toggleMenu} />
+                <ParametersMenu
+                    showMenu={showMenu[3]}
+                    toggleMenu={toggleMenu}
+                    parameters={parameters}
+                    changeTempo={(e) =>
+                        updateParameters({ ...parameters, tempo: e })
+                    }
+                    changeComplexity={(e) =>
+                        updateParameters({ ...parameters, complexityMode: e })
+                    }
+                    changeChordSound={(e) =>
+                        updateParameters({ ...parameters, chordSound: e })
+                    }
+                    changeMelodySound={(e) =>
+                        updateParameters({ ...parameters, melodySound: e })
+                    }
+                    complexityModes={complexityModes}
+                    melodySounds={melodySounds}
+                    chordSounds={chordSounds}
+                />
             </ThemeProvider>
         </div>
     );
