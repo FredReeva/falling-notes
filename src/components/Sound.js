@@ -284,12 +284,12 @@ function createSynthBell() {
 export var context = Tone.getContext();
 export var bus = analyserBus;
 
-var pad = createSynthPad();
-createLoop(pad);
-var fx = createSynthFX();
-createLoop(fx);
-var lead = createSynthLead();
-createLoop(lead);
+// var pad = createSynthPad();
+// createLoop(pad);
+// var fx = createSynthFX();
+// createLoop(fx);
+// var lead = createSynthLead();
+// createLoop(lead);
 var bell = createSynthBell();
 createLoop(bell);
 
