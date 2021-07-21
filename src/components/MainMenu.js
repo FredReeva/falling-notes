@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import * as Tone from 'tone';
+
 import {
     IoMusicalNotes,
     IoColorPalette,
@@ -53,30 +53,11 @@ const MenuButton = styled.button`
 `;
 
 const MainMenu = (props) => {
-    const [isPlaying, setIsPlaying] = useState(false);
-
     useEffect(() => {}, [props.chords, props.melody]);
 
     useEffect(() => {
         generateSounds();
-    }, [isPlaying]);
-
-    const startContext = async () => {
-        await Tone.start();
-
-        if (isPlaying) {
-            // Turn of our player if music is currently playing
-            console.log('...stop');
-            setIsPlaying(false);
-            await Tone.Transport.stop();
-
-            return;
-        }
-
-        console.log('play...');
-        setIsPlaying(true);
-        await Tone.Transport.start();
-    };
+    }, [props.isPlaying]);
 
     // return pulsanti
     return (
@@ -119,9 +100,7 @@ const MainMenu = (props) => {
             </MenuButton>
 
             <MenuButton
-                onClick={() => {
-                    startContext();
-                }}
+                onClick={props.startStopContext}
                 style={{
                     pointerEvents:
                         props.melody.length === 0 || props.chords.length === 0
@@ -129,7 +108,7 @@ const MainMenu = (props) => {
                             : null,
                 }}
             >
-                {!isPlaying ? (
+                {!props.isPlaying ? (
                     <IoPlayCircle className="Icon" />
                 ) : (
                     <IoStopCircle className="Icon" />
