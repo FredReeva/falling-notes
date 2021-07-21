@@ -181,7 +181,13 @@ function App() {
         <div className="app">
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
-                <World melody={melody} color={color.hsl.h} />
+                <World
+                    melody={melody}
+                    chords={chords}
+                    color={color.hsl.h}
+                    isPlaying={isPlaying}
+                />
+                
                 <p
                     className="Info"
                     style={{

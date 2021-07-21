@@ -36,6 +36,8 @@ let scene = new THREE.Scene();
 }
 scene.background = new THREE.Color('#000000');
 
+let triggerStarFall = 0;
+
 function generateWorld(color, width, depth) {
 
     let geometry = new THREE.BufferGeometry();
@@ -200,13 +202,34 @@ function generateStarField(num, radius) {
     return new THREE.Points(geom, starFieldMaterial);
 }
 
-function updateStarField(num, field) {
+function updateStarField(num, radius, field) {
 
+    let pos = field.geometry.attributes.position.array
     let col = field.geometry.attributes.color.array;
 
     let color = mainColor.clone();
 
     for (let i = 0; i < num; i++) {
+
+        let x = (Math.random() - 0.5) * radius;
+        let y = (Math.random() - 0.5) * radius;
+        let z = (Math.random() - 0.5) * radius;
+        let r = Math.sqrt(
+            Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)
+        );
+
+        while (radius - r < 200) {
+            x = (Math.random() - 0.5) * radius;
+            y = (Math.random() - 0.5) * radius;
+            z = (Math.random() - 0.5) * radius;
+            r = Math.sqrt(
+                Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)
+            );
+        }
+
+        pos[3 * i] = x;
+        pos[3 * i + 1] = y;
+        pos[3 * i + 2] = z;
 
         color = color.getHSL(color);
         let hueOffset = (Math.random()-0.5)*0.05;
@@ -232,23 +255,16 @@ function updateStarField(num, field) {
         col[3 * i + 1] = color.g;
         col[3 * i + 2] = color.b;
     }
-
-    console.log('update');
-
 }
 
 function generateStar(radius) {
 
-    let timer = new THREE.Clock();
+    let timer = new THREE.Clock( {autoStart : false });
 
     let geom = new THREE.BufferGeometry();
 
     let position = new Float32Array(6);
     let velocity = new Float32Array(6);
-
-    let targetX = 0;
-    let targetY = 0;
-    let targetZ = 50;
 
     // line start
     position[0] = radius * 2 * (Math.random() - 0.5);
@@ -259,17 +275,14 @@ function generateStar(radius) {
     position[4] = position[1];
     position[5] = position[2];
 
-    let directionX = targetX - position[0];
-    let directionY = targetY - position[1];
-    let directionZ = targetZ - position[2];
-
-    velocity[0] = directionX * 0.03;
-    velocity[1] = directionY * 0.03;
-    velocity[2] = directionZ * 0.03;
+    // velocity start
+    velocity[0] = 0;
+    velocity[1] = 0;
+    velocity[2] = 0;
     // velocity end
-    velocity[3] = directionX * 0.02;
-    velocity[4] = directionY * 0.02;
-    velocity[5] = directionZ * 0.02;
+    velocity[3] = 0;
+    velocity[4] = 0;
+    velocity[5] = 0;
 
     geom.setAttribute(
         'position',
@@ -485,23 +498,6 @@ const Background = (props) => {
         let star3 = starFall3[0];
         let timer3 = starFall3[1];
 
-        // TRIGGER STARFALL (spostare in useEffect triggerato da stato play)
-
-        async function starFall() {
-            timer1.start();
-            scene.add(star1);
-
-            await sleep(1800);
-            timer2.start();
-            scene.add(star2);
-
-            await sleep(11200);
-            timer3.start();
-            scene.add(star3);
-        }
-
-        starFall();
-
         // FLOOR
 
         let floorGeom = new THREE.PlaneBufferGeometry(2000, 2000, 8, 8);
@@ -527,12 +523,45 @@ const Background = (props) => {
             camera.lookAt(target);
 
             updateSpectrum(world, worldWidth, worldDepth);
-            updateStar(star1, timer1, starFallRadius);
-            updateStar(star2, timer2, starFallRadius);
-            updateStar(star3, timer3, starFallRadius);
+
+            if (triggerStarFall == 1) {
+                async function startStarFall() {
+                    timer1.start();
+                    scene.add(star1);
+                    await sleep(1200);
+                    timer2.start();
+                    scene.add(star2);
+                    await sleep(1800);
+                    timer3.start();
+                    scene.add(star3);
+                }
+                startStarFall();
+                triggerStarFall = 0;
+            } else if (triggerStarFall == -1) {
+                async function endStarFall() {
+                    await sleep(2600);        
+                    scene.remove(star1);
+                    scene.remove(star2);
+                    scene.remove(star3);
+                    resetStar(star1, timer1, starFallRadius);
+                    resetStar(star2, timer2, starFallRadius);
+                    resetStar(star3, timer3, starFallRadius);
+                }
+                endStarFall();
+
+                timer1.stop();
+                timer2.stop();
+                timer3.stop();
+                triggerStarFall = 0;
+            } else {
+                updateStar(star1, timer1, starFallRadius);
+                updateStar(star2, timer2, starFallRadius);
+                updateStar(star3, timer3, starFallRadius);
+            }
+
 
             if (colorNeedsUpdate == 1) {
-                updateStarField(numField, starField);
+                updateStarField(numField, starFieldRadius, starField);
                 colorNeedsUpdate = 0;
             }
 
@@ -588,6 +617,17 @@ const Background = (props) => {
         colorNeedsUpdate = 1;
 
     }, [props.color]); // update when prop changes
+
+    // TRIGGER STAR FALL
+    useEffect(() => {
+
+        if (props.isPlaying == 0) {
+            triggerStarFall = -1;
+        } else if (props.isPlaying == 1) {
+            triggerStarFall = 1;
+        }
+
+    }, [props.isPlaying]); // update when prop changes
 
     return <StyledBackground className={props.className} ref={mount} />;
 };
