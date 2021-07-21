@@ -11,26 +11,12 @@ export const createMidi = (melody, chords) => {
     var pause = 0;
 
     const convertDurationValues = (dur) => {
-        //console.log('converting' + dur);
-        if (dur === 3) return 'd2';
-        if (dur === 5) return ['d2', '2'];
-        if (dur === 6) return ['d2', 'd2'];
-        if (dur === 7) return ['d2', '1'];
-        if (dur === 9) return ['d2', '2', '1'];
-        if (dur === 10) return ['d2', 'd2', '1'];
-        if (dur === 11) return ['d2', '1', '1'];
-        if (dur === 12) return ['1', '1', '1'];
-        //! finish
-        if (dur === 13) return ['1', '1', 'd2', '2'];
-        if (dur === 14) return ['1', '1', 'd2', 'd2'];
-        if (dur === 15) return ['1', '1', '1', 'd2'];
-
-        return dur;
+        return ['T' + dur * 128];
     };
 
     melody.forEach((note) => {
         if (note['type'] === 'pause') {
-            pause = pause + 1 / (note['duration'] * 2);
+            pause = pause + note['duration'];
         }
 
         if (note['type'] === 'note') {
@@ -41,7 +27,7 @@ export const createMidi = (melody, chords) => {
                 [
                     new MidiWriter.NoteEvent({
                         pitch: note['pitch'],
-                        duration: 1 / (note['duration'] * 2),
+                        duration: 4 / note['duration'],
                         wait: pause,
                     }),
                 ],

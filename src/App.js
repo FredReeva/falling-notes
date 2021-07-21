@@ -13,6 +13,7 @@ import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 import MelodyMenu from './components/menu_melody/MelodyMenu';
 import { get } from 'music-chord';
 import * as Tone from 'tone';
+import Sound from './components/Sound';
 
 // const Background = styled.div`
 //     height: 100vh;
@@ -181,13 +182,14 @@ function App() {
         <div className="app">
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
+                <Sound chords={chords} melody={melody} />
                 <World
                     melody={melody}
                     chords={chords}
                     color={color.hsl.h}
                     isPlaying={isPlaying}
                 />
-                
+
                 <p
                     className="Info"
                     style={{
@@ -195,6 +197,7 @@ function App() {
                         position: 'fixed',
                         top: '20px',
                         right: '20px',
+                        zIndex: '100',
                     }}
                 >
                     Song: {songName}
