@@ -12,6 +12,7 @@ import Form from './components/shared_components/Form';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 import MelodyMenu from './components/menu_melody/MelodyMenu';
 import { get } from 'music-chord';
+import * as Tone from 'tone';
 
 // const Background = styled.div`
 //     height: 100vh;
@@ -21,7 +22,12 @@ import { get } from 'music-chord';
 // `;
 
 function App() {
-    // state shared through various components
+    //* state of the app, passed to the components
+    const [showMenu, setShowMenu] = useState([true, false, false, false]);
+    const [songName, updateSongName] = useState('default');
+    const [allSongs, updateAllSongs] = useState([]);
+    const [chords, updateChords] = useState([]);
+    const [melody, updateMelody] = useState([]);
     const [color, setColor] = useState({
         hsl: {
             h: 0,
@@ -30,32 +36,34 @@ function App() {
             a: 1,
         },
     });
-    const [chords, updateChords] = useState([]);
-    const [melody, updateMelody] = useState([]);
-    const [songName, updateSongName] = useState('default');
-    const [allSongs, updateAllSongs] = useState([]);
+    const [isPlaying, setIsPlaying] = useState(false);
 
-    const getAllSongs = async () => {
-        const snapshot = await firebase.firestore().collection('songs').get();
-        const updatedSongs = snapshot.docs.map((doc) => doc.id);
-        //console.log(updatedSongs);
-        updateAllSongs(updatedSongs);
-    };
-
-    const submitSongName = (event) => {
-        //console.log(event.target.elements.song.value);
-        var text =
-            event.target.elements.song.value !== ''
-                ? event.target.elements.song.value
-                : 'default';
-        updateSongName(text);
-        event.preventDefault();
-        getSong(text);
+    //* effects
+    useEffect(() => {
+        getSong(songName);
         getAllSongs();
+        //computeMelody();
+    }, []); // execute only at start
+
+    useEffect(() => {
+        getAllSongs();
+    }, [songName, allSongs]);
+
+    //* Visual and menu functions
+
+    const toggleMenu = (i) => {
+        let newMenuState = [false, false, false, false];
+        let changeMenu = !showMenu[i];
+        newMenuState[i] = changeMenu;
+        setShowMenu(newMenuState);
     };
 
+    //* DB management functions
+
+    // reference to the DB on firebase
     const ref = firebase.firestore().collection('songs');
 
+    // Given the name of the song, get it from the DB or create a new one
     const getSong = (docName) => {
         ref.doc(docName)
             .get()
@@ -81,30 +89,66 @@ function App() {
             });
     };
 
+    // update the currently selected song
     const updateServer = (docName = songName) => {
         const newState = { ...chords };
         ref.doc(docName).delete();
         ref.doc(docName).set(newState);
         //updateMelody([]);
-        computeMelody(); // ogni volta che il server viene aggiornato calcolo la melodia
+        computeMelody();
     };
 
+    // delete the provided song from the DB
     const deleteSong = (docName) => {
         //console.log('deleting' + docName);
         ref.doc(docName).delete();
     };
 
-    useEffect(() => {
-        getSong(songName);
-        getAllSongs();
-        //computeMelody();
-    }, []); // execute only at start
+    // query the DB to obtain the list of available songs
+    const getAllSongs = async () => {
+        const snapshot = await firebase.firestore().collection('songs').get();
+        const updatedSongs = snapshot.docs.map((doc) => doc.id);
+        //console.log(updatedSongs);
+        updateAllSongs(updatedSongs);
+    };
 
-    useEffect(() => {
+    // get the selected song from the Form in the title menu
+    const submitSongName = (event) => {
+        //console.log(event.target.elements.song.value);
+        var text =
+            event.target.elements.song.value !== ''
+                ? event.target.elements.song.value
+                : 'default';
+        updateSongName(text);
+        event.preventDefault();
+        getSong(text);
         getAllSongs();
-    }, [songName, allSongs]);
+    };
 
-    // dati gli accordi, li converte in modo che siano comprensibili al codice di antonio e calcola melodia
+    //* Sound-related functions
+
+    // start/stop the transport
+    const startStopContext = async () => {
+        await Tone.start();
+
+        if (isPlaying) {
+            // Turn of our player if music is currently playing
+            console.log('...stop');
+            setIsPlaying(false);
+            await Tone.Transport.stop();
+
+            return;
+        }
+
+        console.log('play...');
+        setIsPlaying(true);
+        await Tone.Transport.start();
+    };
+
+    // * melody computation functions
+
+    // given a list of chords, generate the melody
+    //! add parameters
     const computeMelody = () => {
         // adapter dell'interfaccia
 
@@ -131,20 +175,7 @@ function App() {
         }
     };
 
-    // const [showMenu, setMenu] = useState([false, false]);
-
-    // const toggleMenu = (index) => {
-    //     setMenu((prev) => !prev);
-    //     console.log('ho cliccato menu accordi');
-    // };
-
-    const [showMenu, setShowMenu] = useState([true, false, false, false]);
-    const toggleMenu = (i) => {
-        let newMenuState = [false, false, false, false];
-        let changeMenu = !showMenu[i];
-        newMenuState[i] = changeMenu;
-        setShowMenu(newMenuState);
-    };
+    //* app structure
 
     return (
         <div className="app">
@@ -168,6 +199,8 @@ function App() {
                     computeMelody={computeMelody}
                     melody={melody}
                     chords={chords}
+                    isPlaying={isPlaying}
+                    startStopContext={startStopContext}
                 />
                 <SongTitleMenu
                     showMenu={showMenu[0]}
