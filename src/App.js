@@ -8,19 +8,11 @@ import themes from './Themes';
 import { MelodyGen } from './libraries/melodygen/main.js';
 import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
-import Form from './components/shared_components/Form';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
-import MelodyMenu from './components/menu_melody/MelodyMenu';
-import { get } from 'music-chord';
+import ParametersMenu from './components/menu_parameters/ParametersMenu';
+
 import * as Tone from 'tone';
 import Sound from './components/Sound';
-
-// const Background = styled.div`
-//     height: 100vh;
-//     width: 100vw;
-//     overflow: hidden;
-//     background-color: ${(props) => props.theme.background};
-// `;
 
 function App() {
     //* state of the app, passed to the components
@@ -39,16 +31,16 @@ function App() {
     });
     const [isPlaying, setIsPlaying] = useState(false);
 
-    //* effects
-    useEffect(() => {
-        getSong(songName);
-        getAllSongs();
-        //computeMelody();
-    }, []); // execute only at start
-
-    useEffect(() => {
-        getAllSongs();
-    }, [songName, allSongs]);
+    const complexityModes = ['Classical', 'Pro Jazz'];
+    const melodySounds = ['Bells', 'Synth'];
+    const chordSounds = ['Pad', 'Piano'];
+    const [parameters, updateParameters] = useState({
+        tempo: 120,
+        notePause: 0.5,
+        complexityMode: complexityModes[0],
+        melodySound: melodySounds[0],
+        chordSound: chordSounds[0],
+    });
 
     //* Visual and menu functions
 
@@ -61,11 +53,14 @@ function App() {
 
     //* DB management functions
 
+    const debugDb = true;
+
     // reference to the DB on firebase
     const ref = firebase.firestore().collection('songs');
 
     // Given the name of the song, get it from the DB or create a new one
     const getSong = (docName) => {
+        if (debugDb) console.log('Aceess to db get song');
         ref.doc(docName)
             .get()
             .then((doc) => {
@@ -80,9 +75,11 @@ function App() {
                     }
                 } else {
                     // doc.data() will be undefined in this case
-                    console.log('No such document! Creating an empty one...');
+                    //console.log('No such document! Creating an empty one...');
                     updateChords([]);
                     updateServer(docName);
+                    const newAllSongs = [...allSongs, docName];
+                    updateAllSongs(newAllSongs);
                 }
             })
             .catch((error) => {
@@ -92,6 +89,7 @@ function App() {
 
     // update the currently selected song
     const updateServer = (docName = songName) => {
+        if (debugDb) console.log('Aceess to db update');
         const newState = { ...chords };
         ref.doc(docName).delete();
         ref.doc(docName).set(newState);
@@ -101,29 +99,35 @@ function App() {
 
     // delete the provided song from the DB
     const deleteSong = (docName) => {
-        //console.log('deleting' + docName);
+        if (debugDb) console.log('Aceess to db delete');
+
+        const newAllSongs = allSongs.filter((song) => song !== docName);
+        console.log(newAllSongs);
+        updateAllSongs(newAllSongs);
+
         ref.doc(docName).delete();
     };
 
     // query the DB to obtain the list of available songs
     const getAllSongs = async () => {
+        if (debugDb) console.log('Aceess to db get all');
         const snapshot = await firebase.firestore().collection('songs').get();
         const updatedSongs = snapshot.docs.map((doc) => doc.id);
-        //console.log(updatedSongs);
+
         updateAllSongs(updatedSongs);
     };
 
     // get the selected song from the Form in the title menu
     const submitSongName = (event) => {
         //console.log(event.target.elements.song.value);
+        event.preventDefault();
         var text =
             event.target.elements.song.value !== ''
                 ? event.target.elements.song.value
                 : 'default';
         updateSongName(text);
-        event.preventDefault();
+
         getSong(text);
-        getAllSongs();
     };
 
     //* Sound-related functions
@@ -175,6 +179,15 @@ function App() {
             console.log('New melody: ', generatedMelody);
         }
     };
+
+    //* effects
+    useEffect(() => {
+        console.log('effect 1');
+        getAllSongs();
+        getSong(songName);
+
+        //computeMelody();
+    }, []); // execute only at start
 
     //* app structure
 
@@ -230,8 +243,31 @@ function App() {
                     toggleMenu={toggleMenu}
                     color={color}
                     setColor={setColor}
+                    parameters={parameters}
+                    changeChordSound={(e) =>
+                        updateParameters({ ...parameters, chordSound: e })
+                    }
+                    changeMelodySound={(e) =>
+                        updateParameters({ ...parameters, melodySound: e })
+                    }
+                    melodySounds={melodySounds}
+                    chordSounds={chordSounds}
                 />
-                <MelodyMenu showMenu={showMenu[3]} toggleMenu={toggleMenu} />
+                <ParametersMenu
+                    showMenu={showMenu[3]}
+                    toggleMenu={toggleMenu}
+                    parameters={parameters}
+                    changeTempo={(e) =>
+                        updateParameters({ ...parameters, tempo: e })
+                    }
+                    changeNotePause={(e) =>
+                        updateParameters({ ...parameters, notePause: e })
+                    }
+                    changeComplexity={(e) =>
+                        updateParameters({ ...parameters, complexityMode: e })
+                    }
+                    complexityModes={complexityModes}
+                />
             </ThemeProvider>
         </div>
     );
