@@ -8,19 +8,11 @@ import themes from './Themes';
 import { MelodyGen } from './libraries/melodygen/main.js';
 import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
-import Form from './components/shared_components/Form';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 import ParametersMenu from './components/menu_parameters/ParametersMenu';
 
 import * as Tone from 'tone';
 import Sound from './components/Sound';
-
-// const Background = styled.div`
-//     height: 100vh;
-//     width: 100vw;
-//     overflow: hidden;
-//     background-color: ${(props) => props.theme.background};
-// `;
 
 function App() {
     //* state of the app, passed to the components
@@ -39,11 +31,12 @@ function App() {
     });
     const [isPlaying, setIsPlaying] = useState(false);
 
-    const complexityModes = ['Noob', 'Classical', 'Pro Jazz'];
-    const melodySounds = ['Bells', 'Synth', 'Piano'];
+    const complexityModes = ['Classical', 'Pro Jazz'];
+    const melodySounds = ['Bells', 'Synth'];
     const chordSounds = ['Pad', 'Piano'];
     const [parameters, updateParameters] = useState({
         tempo: 120,
+        notePause: 0.5,
         complexityMode: complexityModes[0],
         melodySound: melodySounds[0],
         chordSound: chordSounds[0],
@@ -82,7 +75,7 @@ function App() {
                     }
                 } else {
                     // doc.data() will be undefined in this case
-                    console.log('No such document! Creating an empty one...');
+                    //console.log('No such document! Creating an empty one...');
                     updateChords([]);
                     updateServer(docName);
                     const newAllSongs = [...allSongs, docName];
@@ -250,6 +243,15 @@ function App() {
                     toggleMenu={toggleMenu}
                     color={color}
                     setColor={setColor}
+                    parameters={parameters}
+                    changeChordSound={(e) =>
+                        updateParameters({ ...parameters, chordSound: e })
+                    }
+                    changeMelodySound={(e) =>
+                        updateParameters({ ...parameters, melodySound: e })
+                    }
+                    melodySounds={melodySounds}
+                    chordSounds={chordSounds}
                 />
                 <ParametersMenu
                     showMenu={showMenu[3]}
@@ -258,18 +260,13 @@ function App() {
                     changeTempo={(e) =>
                         updateParameters({ ...parameters, tempo: e })
                     }
+                    changeNotePause={(e) =>
+                        updateParameters({ ...parameters, notePause: e })
+                    }
                     changeComplexity={(e) =>
                         updateParameters({ ...parameters, complexityMode: e })
                     }
-                    changeChordSound={(e) =>
-                        updateParameters({ ...parameters, chordSound: e })
-                    }
-                    changeMelodySound={(e) =>
-                        updateParameters({ ...parameters, melodySound: e })
-                    }
                     complexityModes={complexityModes}
-                    melodySounds={melodySounds}
-                    chordSounds={chordSounds}
                 />
             </ThemeProvider>
         </div>

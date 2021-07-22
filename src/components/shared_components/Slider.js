@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledSlider = styled.div`
+const StyledSliderSection = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -17,14 +17,37 @@ const StyledSlider = styled.div`
     padding: 5px;
 `;
 
+const StyledSlider = styled.input`
+    -webkit-appearance: none;
+    width: 300px;
+    height: 20px;
+
+    background: ${(props) => props.theme.panelColor};
+    border: ${(props) => props.theme.border};
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
+    margin: 5px;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: rgb(100, 100, 100);
+        cursor: pointer;
+    }
+`;
+
 const Slider = (props) => {
     return (
-        <StyledSlider className={props.className}>
+        <StyledSliderSection className={props.className}>
             <p>{props.title}</p>
-            <input
+            <StyledSlider
                 type="range"
                 min={props.min}
                 max={props.max}
+                step={props.step}
                 value={props.value}
                 onChange={(e) => {
                     props.onSlide(e.target.value);
@@ -44,7 +67,7 @@ const Slider = (props) => {
                         props.onSlide(e.target.value);
                 }}
             /> */}
-        </StyledSlider>
+        </StyledSliderSection>
     );
 };
 

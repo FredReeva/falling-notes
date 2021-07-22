@@ -8,6 +8,7 @@ const StyledModalMenu = styled.div`
     position: relative;
     min-width: 50vw;
     max-width: 80vw;
+
     overflow: visible;
 
     background: ${(props) => props.theme.panelColor};

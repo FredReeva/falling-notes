@@ -6,6 +6,13 @@ import ModalMenu from '../shared_components/ModalMenu';
 import RadioButton from '../shared_components/RadioButton';
 import Slider from '../shared_components/Slider';
 
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+`;
+
 const ParametersMenu = (props) => {
     const toggleMenu = () => {
         props.toggleMenu(3);
@@ -21,42 +28,36 @@ const ParametersMenu = (props) => {
                     toggleMenu={toggleMenu}
                 />
                 <p>Select the level of complexity of the generated melody:</p>
+                <Container>
+                    <RadioButton
+                        mode={props.parameters.complexityMode}
+                        buttons={props.complexityModes}
+                        buttonPressed={(button) => {
+                            props.changeComplexity(button);
+                        }}
+                    ></RadioButton>
 
-                <RadioButton
-                    mode={props.parameters.complexityMode}
-                    buttons={props.complexityModes}
-                    buttonPressed={(button) => {
-                        props.changeComplexity(button);
-                    }}
-                ></RadioButton>
+                    <Slider
+                        title={'BPM'}
+                        min={60}
+                        max={200}
+                        value={props.parameters.tempo}
+                        onSlide={(value) => {
+                            props.changeTempo(value);
+                        }}
+                    ></Slider>
 
-                <RadioButton
-                    mode={props.parameters.chordSound}
-                    buttons={props.chordSounds}
-                    buttonPressed={(button) => {
-                        props.changeChordSound(button);
-                    }}
-                ></RadioButton>
-
-                <RadioButton
-                    mode={props.parameters.melodySound}
-                    buttons={props.melodySounds}
-                    buttonPressed={(button) => {
-                        props.changeMelodySound(button);
-                    }}
-                ></RadioButton>
-
-                <Slider
-                    title={'BPM'}
-                    min={60}
-                    max={200}
-                    value={props.parameters.tempo}
-                    onSlide={(value) => {
-                        props.changeTempo(value);
-                    }}
-                ></Slider>
-
-                <p>Other parameters there</p>
+                    <Slider
+                        title={'Pauses ↔ Notes'}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        value={props.parameters.notePause}
+                        onSlide={(value) => {
+                            props.changeNotePause(value);
+                        }}
+                    ></Slider>
+                </Container>
             </ModalMenu>
         </div>
     ) : null;
