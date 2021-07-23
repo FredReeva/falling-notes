@@ -87,7 +87,12 @@ const MainMenu = (props) => {
 
             <MenuButton
                 onClick={() => {
-                    createMidi(props.melody, props.chords);
+                    createMidi(
+                        props.melody,
+                        props.chords,
+                        props.tempo,
+                        props.songName
+                    );
                 }}
                 style={{
                     pointerEvents:

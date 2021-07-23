@@ -2,11 +2,14 @@ import { IoPause } from 'react-icons/io5';
 import { convert, chordNotes } from '../libraries/melodygen/utils.js';
 import { MidiWriter } from 'midi-writer-js';
 
-export const createMidi = (melody, chords) => {
+export const createMidi = (melody, chords, tempo, songName) => {
     var MidiWriter = require('midi-writer-js');
 
     var melodyMidi = new MidiWriter.Track();
     var chordsMidi = new MidiWriter.Track();
+
+    melodyMidi.setTempo(tempo);
+    chordsMidi.setTempo(tempo);
 
     var pause = 0;
 
@@ -41,38 +44,39 @@ export const createMidi = (melody, chords) => {
         }
     });
 
-    // var notesInChords = [];
-    // var convertChord = { tonic: 'C', color: 'Major' };
+    var notesInChord = [];
+    var convertChord = { tonic: 'C', color: 'Major' };
 
-    // chords.forEach((chord) => {
-    //     convertChord.tonic = chord['tonic'];
-    //     convertChord.color = chord['quality'];
-    //     notesInChords.push(chordNotes(convertChord, 2));
+    chords.forEach((chord) => {
+        notesInChord = [];
+        convertChord.tonic = chord['tonic'];
+        convertChord.color = chord['quality'];
+        notesInChord = chordNotes(convertChord, 2);
 
-    //     melodyMidi.addEvent(
-    //         [
-    //             new MidiWriter.NoteEvent({
-    //                 pitch: note['pitch'],
-    //                 duration: 1 / (chord['duration'] * 2),
-    //                 wait: pause,
-    //             }),
-    //         ],
+        var dur = 4 / chord['duration'];
+        if (dur === 4 / 3) dur = 'd2';
 
-    //         function (event, index) {
-    //             return { sequential: true };
-    //         }
-    //     );
-    // });
-    // console.log(notesInChords);
+        // add array of notes, non sequentially!
+        chordsMidi.addEvent(
+            [
+                new MidiWriter.NoteEvent({
+                    pitch: notesInChord,
+                    duration: dur,
+                }),
+            ],
+            function (event, index) {
+                return { sequential: false };
+            }
+        );
+    });
 
-    //console.log(melodyMidi);
+    var track = new MidiWriter.Writer([melodyMidi, chordsMidi]);
 
-    var write = new MidiWriter.Writer(melodyMidi);
     //console.log(write.dataUri());
 
     var link = document.createElement('a');
-    link.download = 'untitled';
-    link.href = write.dataUri();
+    link.download = songName;
+    link.href = track.dataUri();
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

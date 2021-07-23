@@ -221,6 +221,8 @@ function App() {
                     computeMelody={computeMelody}
                     melody={melody}
                     chords={chords}
+                    tempo={parameters.tempo}
+                    songName={songName}
                     isPlaying={isPlaying}
                     startStopContext={startStopContext}
                 />
