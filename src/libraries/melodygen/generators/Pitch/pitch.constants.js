@@ -7,6 +7,16 @@ export const colorToScale = {
     'm7b5': ['locrian'],
 }
 
+export const colorToStaticScale = {
+    'Major': ['ionian'],
+    'minor': ['aeolian'],
+    'Maj7': ['ionian'],
+    'minor7': ['aeolian'],
+    '7': ['mixolydian'],
+    'm7b5': ['locrian'],
+}
+
+
 export const scaleNumber = {
     ionian:     0,
     dorian:     1,

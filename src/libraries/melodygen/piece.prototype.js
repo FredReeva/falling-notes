@@ -2,6 +2,8 @@ const map = function(){
     return {
         pieceDuration: Number,
         segmentDuration: Number,
+        pausePresence: Number,
+        staticScaleAssociation: Boolean,
         segments: [
             {
                 directionality: String,

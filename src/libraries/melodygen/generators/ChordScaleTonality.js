@@ -13,7 +13,8 @@ export class ChordScaleTonality {
     }
 
     generate() {
-        let segmentChordData = this.calcSegmentChordData();
+        let segmentChordData = this.calcSegmentChordData(this.piece.staticScaleAssociation);
+        console.log(segmentChordData)
         for (let i = 0; i < this.piece.segments.length; i++) {
             this.piece.segments[i].chord = segmentChordData[i].chord;
             this.piece.segments[i].diatonicScale =
@@ -22,11 +23,10 @@ export class ChordScaleTonality {
         return this.piece;
     }
 
-    calcDiatonicScale(chord, previousScale) {
+    calcDiatonicScale(chord, previousScale, scalesAssociated) {
         let diatonicScale = pieceProto.diatonicScale();
 
         let note = Utils.convert(Utils.chordNotes(chord))[0];
-        let scalesAssociated = Const.colorToScale[chord.color];
 
         let firstCromaticNote = note % 12;
         let diatonicNote = Const.cromaticToDiatonic[firstCromaticNote];
@@ -105,7 +105,7 @@ export class ChordScaleTonality {
         }
 
         diatonicScale.notes = this.calcDiatonicArray(
-            diatonicNote,
+            firstCromaticNote,
             Const.scalePattern[diatonicScale.name],
             7
         );
@@ -114,7 +114,7 @@ export class ChordScaleTonality {
     }
 
     //chord-segment association
-    calcSegmentChordData() {
+    calcSegmentChordData(staticScaleAssociation = false) {
         let segmentChords = [];
         for (let i = 0; i < this.chords.length; i++) {
             let chordSegs =
@@ -124,10 +124,25 @@ export class ChordScaleTonality {
                 previousScale =
                     segmentChords[segmentChords.length - 1].diatonicScale;
             }
-            let diatonicScaleObj = this.calcDiatonicScale(
-                this.chords[i],
-                previousScale
-            );
+
+            let diatonicScaleObj = null;
+
+            if(staticScaleAssociation){
+                diatonicScaleObj = this.calcDiatonicScale(
+                    this.chords[i],
+                    null,
+                    Const.colorToStaticScale[this.chords[i].color]
+                );
+            }else{
+                diatonicScaleObj = this.calcDiatonicScale(
+                    this.chords[i],
+                    previousScale,
+                    Const.colorToScale[this.chords[i].color]
+                );
+            }
+
+            
+
             for (let j = 0; j < chordSegs; j++) {
                 let chordObj = pieceProto.chord();
                 chordObj.tonic = this.chords[i].tonic;

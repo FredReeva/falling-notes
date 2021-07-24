@@ -66,7 +66,7 @@ export class Transform {
         let diatonicChordNotes = [];
         for (let n = 0; n < chordNotes.length; n++) {
             let note = chordNotes[n];
-            diatonicChordNotes.push(Const.cromaticToDiatonic[note]);
+            diatonicChordNotes.push(note);
         }
 
         let scale = this.piece.segments[lastSegmentIndex].diatonicScale.notes;
@@ -78,13 +78,8 @@ export class Transform {
             return;
         }
 
-        let p = new Pitch();
-        let lastPieceNote = p.diatonicToCromatic(
-            Utils.nearestNote(filteredNotes, lastObj.pitch),
-            this.piece.segments[lastSegmentIndex].diatonicScale.cromaticOffset
-        );
         this.piece.segments[lastSegmentIndex].objects[lastObjectIndex].pitch =
-            lastPieceNote;
+            Utils.nearestNote(filteredNotes, lastObj.pitch);
     }
 
     pickTransformations() {

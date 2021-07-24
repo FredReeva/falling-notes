@@ -5,23 +5,31 @@ import {ChordScaleTonality} from './generators/ChordScaleTonality.js'
 import {Transform} from './generators/Transform/Transform.js'
 import * as Utils from './utils.js'
 
+import * as Tone from 'tone'
+
 export class MelodyGen{
     
     constructor(){
         this.utils = Utils
     }
     
-    generate(chords){
+    generate(chords, pausePresence = 0.1, classicMode = false){
         /**
           chords = [
                {
                     tonic: "C",
                     color: "Major",
-                    duration: 10
-                },
+                    duration: 4
+                }
             ]
+
+            pausePresence = <0.00 - 1.00>
+            classicMode = <true/false>
          */
         let piece = pieceProto.piece()
+        piece.pausePresence = pausePresence
+        piece.staticScaleAssociation = classicMode
+
         piece = new Segmentation(piece, chords).generate()
         piece = new Directionality(piece).generate()
         piece = new ChordScaleTonality(piece, chords).generate()
@@ -44,7 +52,6 @@ export class MelodyGen{
             }
         }
         return out
-    }  
-
+    }
 
 }

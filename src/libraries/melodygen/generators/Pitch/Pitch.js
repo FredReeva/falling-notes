@@ -110,8 +110,7 @@ export class Pitch {
                 if (startingNote == null) {
                     filteredNotes = Filters.startingOctave(filteredNotes);
                 } else {
-                    let diatonicStartingPitch =
-                        Const.cromaticToDiatonic[startingNote % 12];
+                    let diatonicStartingPitch = startingNote % 12;
                     let diatonicStartingOctave =
                         Math.floor(startingNote / 12) * 7;
                     let diatonicStartingNote =
@@ -194,10 +193,7 @@ export class Pitch {
             diatonicPitches.push(NOTE);
             debug.diatonicPitches = diatonicPitches;
 
-            this.segment.objects[i].pitch = this.diatonicToCromatic(
-                NOTE,
-                this.segment.diatonicScale.cromaticOffset
-            );
+            this.segment.objects[i].pitch = NOTE
         }
 
         //BUG WORKAROUND PATCH: prevent NaN pitches
@@ -219,15 +215,5 @@ export class Pitch {
         }
 
         return this.segment;
-    }
-
-    diatonicToCromatic(diatonicPitch, cromaticOffset) {
-        let diatonicNote = diatonicPitch % 7;
-        let octave = Math.floor(diatonicPitch / 7);
-        let cromaticNote = Const.diatonicToCromaticNote(
-            diatonicNote,
-            cromaticOffset
-        );
-        return cromaticNote + (12 * octave - 48);
     }
 }

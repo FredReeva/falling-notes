@@ -9,7 +9,6 @@ export default class Contrast {
         this.previousSegment =
             segmentIndex > 0 ? piece.segments[segmentIndex - 1] : null;
         this.segmentIndex = segmentIndex;
-
         this.generateTiming();
         this.generatePitch();
         return this.segment;
@@ -69,8 +68,8 @@ export default class Contrast {
             }
 
             let objType = Utils.pickState([
-                ['note', 80],
-                ['pause', 20],
+                ['note', 100 - (this.piece.pausePresence * 100)],
+                ['pause', this.piece.pausePresence * 100],
             ]);
 
             let objOnsetTime = c * granularity;
