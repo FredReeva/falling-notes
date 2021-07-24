@@ -22,9 +22,9 @@ export default class Contrast {
 
         //Set probabilities with respect to segment duration
         let probs = [];
-        if (this.piece.segmentDuration >= 3) probs = [30, 50, 20];
-        if (this.piece.segmentDuration === 2) probs = [15, 25, 60];
-        if (this.piece.segmentDuration === 1) probs = [0, 30, 70];
+        if (this.piece.segmentDuration >= 3) probs = [20, 50, 20, 10];
+        if (this.piece.segmentDuration === 2) probs = [10, 40, 30, 20];
+        if (this.piece.segmentDuration === 1) probs = [0, 40, 50, 10];
 
         let filledCells = 0.0;
 
@@ -36,22 +36,33 @@ export default class Contrast {
 
             let objDuration = 0.0;
 
-            if (freeCells >= 4) {
+            if (freeCells >= 8) {
                 objDuration = Utils.pickState([
-                    [granularity * 4, probs[0]],
-                    [granularity * 2, probs[1]],
-                    [granularity, probs[2]],
+                    [granularity * 8, probs[0]],
+                    [granularity * 4, probs[1]],
+                    [granularity * 2, probs[2]],
+                    [granularity, probs[3]],
+                ]);
+                filledCells += objDuration / granularity;
+            } else if (freeCells >= 4) {
+                let adjust = probs[1] + probs[2] + probs[3];
+
+                objDuration = Utils.pickState([
+                    [granularity * 4, (probs[1] / adjust) * 100],
+                    [granularity * 2, (probs[2] / adjust) * 100],
+                    [granularity, (probs[3] / adjust) * 100],
                 ]);
                 filledCells += objDuration / granularity;
             } else if (freeCells >= 2) {
-                let adjust = probs[1] + probs[2];
+                let adjust = probs[2] + probs[3];
 
                 objDuration = Utils.pickState([
-                    [granularity * 2, (probs[1] / adjust) * 100],
-                    [granularity, (probs[2] / adjust) * 100],
+                    [granularity * 2, (probs[2] / adjust) * 100],
+                    [granularity, (probs[3] / adjust) * 100],
                 ]);
 
                 filledCells += objDuration / granularity;
+
             } else if (freeCells === 1) {
                 objDuration = granularity;
                 filledCells += objDuration / granularity;

@@ -44,7 +44,7 @@ export class MelodyGen{
             }
         }
         return out
-    }
+    }  
 
 
 }
