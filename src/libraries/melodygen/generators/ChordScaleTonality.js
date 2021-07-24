@@ -14,7 +14,6 @@ export class ChordScaleTonality {
 
     generate() {
         let segmentChordData = this.calcSegmentChordData(this.piece.staticScaleAssociation);
-        console.log(segmentChordData)
         for (let i = 0; i < this.piece.segments.length; i++) {
             this.piece.segments[i].chord = segmentChordData[i].chord;
             this.piece.segments[i].diatonicScale =
