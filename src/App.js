@@ -28,6 +28,7 @@ function App() {
             l: 0.5,
             a: 1,
         },
+        hex: '#FF0000',
     });
     const [isPlaying, setIsPlaying] = useState(false);
 
@@ -42,6 +43,13 @@ function App() {
         chordSound: chordSounds[0],
     });
 
+    //* effects
+    useEffect(() => {
+        getAllSongs();
+        getSong(songName);
+        computeMelody();
+    }, []); // execute only at start
+
     //* Visual and menu functions
 
     const toggleMenu = (i) => {
@@ -53,7 +61,7 @@ function App() {
 
     //* DB management functions
 
-    const debugDb = true;
+    const debugDb = false;
 
     // reference to the DB on firebase
     const ref = firebase.firestore().collection('songs');
@@ -138,7 +146,7 @@ function App() {
 
         if (isPlaying) {
             // Turn of our player if music is currently playing
-            console.log('...stop');
+            //console.log('...stop');
             setIsPlaying(false);
             await Tone.Transport.stop();
 
@@ -148,6 +156,20 @@ function App() {
         console.log('play...');
         setIsPlaying(true);
         await Tone.Transport.start();
+    };
+
+    // start/stop the transport
+    const stopContext = async () => {
+        await Tone.start();
+        if (isPlaying) {
+            // Turn of our player if music is currently playing
+            //console.log('...stop');
+            setIsPlaying(false);
+            await Tone.Transport.stop();
+
+            return;
+        }
+        return;
     };
 
     // * melody computation functions
@@ -179,15 +201,6 @@ function App() {
             console.log('New melody: ', generatedMelody);
         }
     };
-
-    //* effects
-    useEffect(() => {
-        console.log('effect 1');
-        getAllSongs();
-        getSong(songName);
-
-        //computeMelody();
-    }, []); // execute only at start
 
     //* app structure
 
@@ -225,11 +238,17 @@ function App() {
                     songName={songName}
                     isPlaying={isPlaying}
                     startStopContext={startStopContext}
+                    stopContext={stopContext}
                 />
                 <SongTitleMenu
+                    songName={songName}
+                    color={color}
                     showMenu={showMenu[0]}
                     toggleMenu={toggleMenu}
-                    onSubmit={submitSongName}
+                    onSubmit={(e) => {
+                        submitSongName(e);
+                        computeMelody();
+                    }}
                     onDelete={deleteSong}
                     allSongs={allSongs}
                 />
@@ -257,8 +276,10 @@ function App() {
                 />
                 <ParametersMenu
                     showMenu={showMenu[3]}
+                    computeMelody={computeMelody}
                     toggleMenu={toggleMenu}
                     parameters={parameters}
+                    color={color}
                     changeTempo={(e) =>
                         updateParameters({ ...parameters, tempo: e })
                     }

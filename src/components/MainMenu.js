@@ -62,10 +62,20 @@ const MainMenu = (props) => {
     // return pulsanti
     return (
         <StyledMainMenu className={props.className}>
-            <MenuButton onClick={() => props.toggleMenu(0)}>
+            <MenuButton
+                onClick={() => {
+                    props.toggleMenu(0);
+                    props.stopContext();
+                }}
+            >
                 <IoText className="Icon" />
             </MenuButton>
-            <MenuButton onClick={() => props.toggleMenu(1)}>
+            <MenuButton
+                onClick={() => {
+                    props.toggleMenu(1);
+                    props.stopContext();
+                }}
+            >
                 <IoMusicalNotes className="Icon" />
             </MenuButton>
 
@@ -76,9 +86,12 @@ const MainMenu = (props) => {
             <MenuButton
                 onClick={() => {
                     props.toggleMenu(3);
-                    props.computeMelody();
                 }}
                 style={{
+                    background:
+                        props.melody.length === 0 || props.chords.length === 0
+                            ? 'rgb(130,130,130)'
+                            : null,
                     pointerEvents: props.chords.length === 0 ? 'none' : null,
                 }}
             >
@@ -95,6 +108,10 @@ const MainMenu = (props) => {
                     );
                 }}
                 style={{
+                    background:
+                        props.melody.length === 0 || props.chords.length === 0
+                            ? 'rgb(130,130,130)'
+                            : null,
                     pointerEvents:
                         props.melody.length === 0 || props.chords.length === 0
                             ? 'none'
@@ -107,6 +124,10 @@ const MainMenu = (props) => {
             <MenuButton
                 onClick={props.startStopContext}
                 style={{
+                    background:
+                        props.melody.length === 0 || props.chords.length === 0
+                            ? 'rgb(130,130,130)'
+                            : null,
                     pointerEvents:
                         props.melody.length === 0 || props.chords.length === 0
                             ? 'none'

@@ -16,6 +16,7 @@ const Container = styled.div`
 const ParametersMenu = (props) => {
     const toggleMenu = () => {
         props.toggleMenu(3);
+        props.computeMelody();
     };
 
     //var Toggle = require('react-toggle');
@@ -30,6 +31,7 @@ const ParametersMenu = (props) => {
                 <p>Select the level of complexity of the generated melody:</p>
                 <Container>
                     <RadioButton
+                        color={props.color}
                         mode={props.parameters.complexityMode}
                         buttons={props.complexityModes}
                         buttonPressed={(button) => {
@@ -38,6 +40,7 @@ const ParametersMenu = (props) => {
                     ></RadioButton>
 
                     <Slider
+                        color={props.color}
                         title={'BPM'}
                         min={60}
                         max={200}
@@ -48,6 +51,7 @@ const ParametersMenu = (props) => {
                     ></Slider>
 
                     <Slider
+                        color={props.color}
                         title={'Pauses ↔ Notes'}
                         min={0}
                         max={1}

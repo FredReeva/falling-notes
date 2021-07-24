@@ -49,6 +49,7 @@ const StyleMenu = (props) => {
                         }}
                     ></StyledColorPicker>
                     <RadioButton
+                        color={props.color}
                         mode={props.parameters.chordSound}
                         buttons={props.chordSounds}
                         buttonPressed={(button) => {
@@ -57,6 +58,7 @@ const StyleMenu = (props) => {
                     ></RadioButton>
 
                     <RadioButton
+                        color={props.color}
                         mode={props.parameters.melodySound}
                         buttons={props.melodySounds}
                         buttonPressed={(button) => {

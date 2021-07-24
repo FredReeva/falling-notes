@@ -51,7 +51,7 @@ export const createMidi = (melody, chords, tempo, songName) => {
         notesInChord = [];
         convertChord.tonic = chord['tonic'];
         convertChord.color = chord['quality'];
-        notesInChord = chordNotes(convertChord, 2);
+        notesInChord = chordNotes(convertChord, 3);
 
         var dur = 4 / chord['duration'];
         if (dur === 4 / 3) dur = 'd2';

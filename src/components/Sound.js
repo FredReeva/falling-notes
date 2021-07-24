@@ -71,21 +71,18 @@ function createLoop(instrument) {
     loop.start();
 }
 
-function createLoop(instrument, values) {
-    const part = new Tone.Part(((time, values) => {
-        // the value is an object which contains both the note and the velocity
-        instrument['synth'].triggerAttackRelease(values.pitch, velues.duration, values.onset, value.velocity);
-    }), [{ time: 0, note: "C3", velocity: 0.9 },
-        { time: "0:2", note: "C4", velocity: 0.5 }
-    ])
-}
-
-
+// function createLoop(instrument, values) {
+//     const part = new Tone.Part(((time, values) => {
+//         // the value is an object which contains both the note and the velocity
+//         instrument['synth'].triggerAttackRelease(values.pitch, velues.duration, values.onset, value.velocity);
+//     }), [{ time: 0, note: "C3", velocity: 0.9 },
+//         { time: "0:2", note: "C4", velocity: 0.5 }
+//     ])
+// }
 
 // INSTRUMENTS
 
 function createSynthPad() {
-
     let synth = new Tone.DuoSynth();
     synth.set({
         volume: baseVolume - 10.0,
@@ -115,7 +112,7 @@ function createSynthPad() {
                 sustain: 0.8,
                 release: 0,
             },
-        }
+        },
     });
 
     // let dist = new Tone.Chebyshev(7);
@@ -271,7 +268,6 @@ var lead = createSynthLead();
 var bell = createSynthBell();
 
 const Sound = (props) => {
-
     // useEffect(() => {
 
     // }, []); // never update
@@ -279,7 +275,7 @@ const Sound = (props) => {
     // useEffect(() => {
     //     console.log(props.chords, props.melody);
     // }, [props.melody]); // update when prop changes
-    
+
     return <></>;
 };
 
