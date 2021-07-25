@@ -55,7 +55,7 @@ function App() {
     //* effects
     useEffect(() => {
         getAllSongs();
-        getSong(songName);
+        getSong('default');
         computeMelody();
     }, []); // execute only at start
 
@@ -70,7 +70,7 @@ function App() {
 
     //* DB management functions
 
-    const debugDb = false;
+    const debugDb = true;
 
     // reference to the DB on firebase
     const refSongs = firebase.firestore().collection('songs');
@@ -122,6 +122,7 @@ function App() {
                             chordSound: items.chordSound,
                             color: items.color,
                         });
+                        computeMelody();
                     }
                 } else {
                     // doc.data() will be undefined in this case
@@ -224,7 +225,6 @@ function App() {
 
     // start/stop the transport
     const stopContext = async () => {
-        await Tone.start();
         if (isPlaying) {
             // Turn of our player if music is currently playing
             //console.log('...stop');
@@ -272,11 +272,7 @@ function App() {
         <div className="app">
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
-                <Sound 
-                    chords={chords} 
-                    melody={melody}
-                    isPlaying={isPlaying}
-                />
+                <Sound chords={chords} melody={melody} isPlaying={isPlaying} />
                 <World
                     melody={melody}
                     chords={chords}
