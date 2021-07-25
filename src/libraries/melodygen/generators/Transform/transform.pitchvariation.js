@@ -16,13 +16,12 @@ export default class PitchVariation {
         return this.segment;
     }
 
-    //Generation of onsetTime and Durations
+    //Generation of durations
     generateTiming() {
         for (let i = 0; i < this.motif.objects.length; i++) {
             let obj = pieceProto.object();
             obj.type = this.motif.objects[i].type;
             obj.duration = this.motif.objects[i].duration;
-            obj.onsetTime = this.motif.objects[i].onsetTime;
             this.segment.objects.push(obj);
         }
     }

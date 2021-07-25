@@ -15,7 +15,7 @@ export default class TemporalVariation {
         return this.segment;
     }
 
-    //Generation of onsetTime and Durations
+    //Generation of Durations
     generateTiming() {
         let durations = [];
 
@@ -31,13 +31,10 @@ export default class TemporalVariation {
             durations[j] = temp;
         }
 
-        let onsetTime = 0;
         for (let i = 0; i < this.motif.objects.length; i++) {
             let obj = pieceProto.object();
             obj.type = this.motif.objects[i].type;
             obj.duration = durations[i];
-            obj.onsetTime = onsetTime;
-            onsetTime += durations[i];
             this.segment.objects.push(obj);
         }
     }

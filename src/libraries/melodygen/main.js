@@ -3,6 +3,7 @@ import {Segmentation} from './generators/Segmentation.js'
 import {Directionality} from './generators/Directionality.js'
 import {ChordScaleTonality} from './generators/ChordScaleTonality.js'
 import {Transform} from './generators/Transform/Transform.js'
+import {OnsetTime} from './generators/OnsetTime.js'
 
 //The melody generation is managed entirely by this class
 export class MelodyGen{
@@ -35,6 +36,7 @@ export class MelodyGen{
         piece = new ChordScaleTonality(piece, chords).generate()
         piece = new Transform(piece).pickTransformations()
         piece = new Transform(piece).applyTransformations()
+        piece = new OnsetTime(piece).generate()
         
         //Prints piece object
         console.log(piece)
@@ -46,12 +48,10 @@ export class MelodyGen{
 
     //Final output object rendering
     export(piece){
-        piece = Object.assign({}, piece);
         let out = []
         for(let i=0; i<piece.segments.length; i++){
             for(let j=0; j<piece.segments[i].objects.length; j++){
                 let obj = piece.segments[i].objects[j]
-                obj.onsetTime = obj.onsetTime + (piece.segmentDuration * i)
                 out.push(obj)
             }
         }

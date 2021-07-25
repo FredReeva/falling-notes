@@ -17,7 +17,7 @@ export default class Contrast {
         return this.segment;
     }
 
-    //Generation of onsetTime and Duration
+    //Generation of duration
     generateTiming() {
         const cells = this.piece.segmentDuration * 8;
         const granularity = 0.125;
@@ -75,12 +75,9 @@ export default class Contrast {
                 ['pause', this.piece.pausePresence * 100],
             ]);
 
-            let objOnsetTime = c * granularity;
-
             let obj = pieceProto.object();
             obj.type = objType;
             obj.duration = objDuration;
-            obj.onsetTime = objOnsetTime;
 
             this.segment.objects.push(obj);
         }

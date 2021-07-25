@@ -12,7 +12,7 @@ export default class Retrogradation{
         return this.segment
     }
 
-    //Generation of onsetTime and Durations
+    //Generation of durations
     generateTiming(){
         for(let i=0; i<this.motif.objects.length; i++){
             this.segment.objects.push(

@@ -12,7 +12,7 @@ export default class Repetition{
         return this.segment
     }
 
-    //Generation of onsetTime and Durations
+    //Generation of durations
     generateTiming(){
         
         for(let i in this.motif.objects){
