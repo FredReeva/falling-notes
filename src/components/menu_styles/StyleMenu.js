@@ -32,6 +32,7 @@ const StyledPointer = styled.div`
 const StyleMenu = (props) => {
     const toggleMenu = () => {
         props.toggleMenu(2);
+        props.updateServer();
     };
 
     return props.showMenu ? (
