@@ -91,6 +91,7 @@ function App() {
                             loadSong = [...loadSong, items[key]];
                         }
                         updateChords(loadSong);
+                        computeMelody();
                     }
                 } else {
                     // doc.data() will be undefined in this case
@@ -122,7 +123,7 @@ function App() {
                             chordSound: items.chordSound,
                             color: items.color,
                         });
-                        computeMelody();
+                        //computeMelody();
                     }
                 } else {
                     // doc.data() will be undefined in this case
@@ -272,7 +273,12 @@ function App() {
         <div className="app">
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
-                <Sound chords={chords} melody={melody} isPlaying={isPlaying} />
+                <Sound
+                    chords={chords}
+                    melody={melody}
+                    isPlaying={isPlaying}
+                    parameters={parameters}
+                />
                 <World
                     melody={melody}
                     chords={chords}
@@ -315,6 +321,7 @@ function App() {
                     }}
                     onDelete={deleteSong}
                     allSongs={allSongs}
+                    stopContext={stopContext}
                 />
                 <ChordsMenu
                     showMenu={showMenu[1]}
@@ -322,6 +329,7 @@ function App() {
                     chords={chords}
                     updateChords={updateChords}
                     updateServer={updateServer}
+                    stopContext={stopContext}
                 />
                 <StyleMenu
                     showMenu={showMenu[2]}
@@ -347,6 +355,7 @@ function App() {
                     melodySounds={melodySounds}
                     chordSounds={chordSounds}
                     updateServer={updateServer}
+                    stopContext={stopContext}
                 />
                 <ParametersMenu
                     showMenu={showMenu[3]}
@@ -365,6 +374,7 @@ function App() {
                     }
                     complexityModes={complexityModes}
                     updateServer={updateServer}
+                    stopContext={stopContext}
                 />
             </ThemeProvider>
         </div>
