@@ -53,33 +53,43 @@ const MenuButton = styled.button`
 `;
 
 const MainMenu = (props) => {
-    useEffect(() => {}, [props.chords, props.melody]);
+    // useEffect(() => {}, [props.chords, props.melody]);
 
-    useEffect(() => {
-        generateSounds();
-    }, [props.isPlaying]);
+    // useEffect(() => {
+    //     generateSounds();
+    // }, [props.isPlaying]);
 
     // return pulsanti
     return (
         <StyledMainMenu className={props.className}>
-            <MenuButton onClick={() => props.toggleMenu(0)}>
+            <MenuButton
+                onClick={() => {
+                    props.toggleMenu(0);
+                    props.stopContext();
+                }}
+            >
                 <IoText className="Icon" />
             </MenuButton>
-            <MenuButton onClick={() => props.toggleMenu(1)}>
+            <MenuButton
+                onClick={() => {
+                    props.toggleMenu(1);
+                    props.stopContext();
+                }}
+            >
                 <IoMusicalNotes className="Icon" />
             </MenuButton>
 
-            <MenuButton onClick={() => props.toggleMenu(2)}>
+            <MenuButton onClick={() => {
+                props.toggleMenu(2);
+                props.stopContext();
+                }}>
                 <IoColorPalette className="Icon" />
             </MenuButton>
 
             <MenuButton
                 onClick={() => {
                     props.toggleMenu(3);
-                    props.computeMelody();
-                }}
-                style={{
-                    pointerEvents: props.chords.length === 0 ? 'none' : null,
+                    props.stopContext();
                 }}
             >
                 <IoDice className="Icon" />
@@ -95,6 +105,10 @@ const MainMenu = (props) => {
                     );
                 }}
                 style={{
+                    background:
+                        props.melody.length === 0 || props.chords.length === 0
+                            ? 'rgb(130,130,130)'
+                            : null,
                     pointerEvents:
                         props.melody.length === 0 || props.chords.length === 0
                             ? 'none'
@@ -107,6 +121,10 @@ const MainMenu = (props) => {
             <MenuButton
                 onClick={props.startStopContext}
                 style={{
+                    background:
+                        props.melody.length === 0 || props.chords.length === 0
+                            ? 'rgb(130,130,130)'
+                            : null,
                     pointerEvents:
                         props.melody.length === 0 || props.chords.length === 0
                             ? 'none'

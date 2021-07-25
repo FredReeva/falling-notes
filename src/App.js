@@ -21,14 +21,15 @@ function App() {
     const [allSongs, updateAllSongs] = useState([]);
     const [chords, updateChords] = useState([]);
     const [melody, updateMelody] = useState([]);
-    const [color, setColor] = useState({
-        hsl: {
-            h: 0,
-            s: 1,
-            l: 0.5,
-            a: 1,
-        },
-    });
+    // const [color, setColor] = useState({
+    //     hsl: {
+    //         h: 0,
+    //         s: 1,
+    //         l: 0.5,
+    //         a: 1,
+    //     },
+    //     hex: '#FF0000',
+    // });
     const [isPlaying, setIsPlaying] = useState(false);
 
     const complexityModes = ['Classical', 'Pro Jazz'];
@@ -40,7 +41,23 @@ function App() {
         complexityMode: complexityModes[0],
         melodySound: melodySounds[0],
         chordSound: chordSounds[0],
+        color: {
+            hsl: {
+                h: 0,
+                s: 1,
+                l: 0.5,
+                a: 1,
+            },
+            hex: '#FF0000',
+        },
     });
+
+    //* effects
+    useEffect(() => {
+        getAllSongs();
+        getSong('default');
+        computeMelody();
+    }, []); // execute only at start
 
     //* Visual and menu functions
 
@@ -56,12 +73,14 @@ function App() {
     const debugDb = true;
 
     // reference to the DB on firebase
-    const ref = firebase.firestore().collection('songs');
+    const refSongs = firebase.firestore().collection('songs');
+    const refParams = firebase.firestore().collection('parameters');
 
     // Given the name of the song, get it from the DB or create a new one
     const getSong = (docName) => {
         if (debugDb) console.log('Aceess to db get song');
-        ref.doc(docName)
+        refSongs
+            .doc(docName)
             .get()
             .then((doc) => {
                 if (doc.exists) {
@@ -72,6 +91,7 @@ function App() {
                             loadSong = [...loadSong, items[key]];
                         }
                         updateChords(loadSong);
+                        computeMelody();
                     }
                 } else {
                     // doc.data() will be undefined in this case
@@ -85,14 +105,67 @@ function App() {
             .catch((error) => {
                 console.log('Error getting document:', error);
             });
+
+        refParams
+            .doc(docName)
+            .get()
+            .then((doc) => {
+                if (doc.exists) {
+                    const items = doc.data();
+                    if (items) {
+                        // here save parameters in state
+
+                        updateParameters({
+                            tempo: items.tempo,
+                            notePause: items.notePause,
+                            complexityMode: items.complexityMode,
+                            melodySound: items.melodySound,
+                            chordSound: items.chordSound,
+                            color: items.color,
+                        });
+                        //computeMelody();
+                    }
+                } else {
+                    // doc.data() will be undefined in this case
+                    //console.log('No such document! Creating an empty one...');
+
+                    // here initialize parameters to default
+                    updateParameters({
+                        tempo: 120,
+                        notePause: 0.5,
+                        complexityMode: complexityModes[0],
+                        melodySound: melodySounds[0],
+                        chordSound: chordSounds[0],
+                        color: {
+                            hsl: {
+                                h: 0,
+                                s: 1,
+                                l: 0.5,
+                                a: 1,
+                            },
+                            hex: '#FF0000',
+                        },
+                    });
+
+                    updateServer(docName);
+                }
+            })
+            .catch((error) => {
+                console.log('Error getting document:', error);
+            });
     };
 
     // update the currently selected song
     const updateServer = (docName = songName) => {
         if (debugDb) console.log('Aceess to db update');
-        const newState = { ...chords };
-        ref.doc(docName).delete();
-        ref.doc(docName).set(newState);
+        const newChordState = { ...chords };
+        refSongs.doc(docName).delete();
+        refSongs.doc(docName).set(newChordState);
+
+        const newParamsState = { ...parameters };
+
+        refParams.doc(docName).delete();
+        refParams.doc(docName).set(newParamsState);
         //updateMelody([]);
         computeMelody();
     };
@@ -102,10 +175,11 @@ function App() {
         if (debugDb) console.log('Aceess to db delete');
 
         const newAllSongs = allSongs.filter((song) => song !== docName);
-        console.log(newAllSongs);
+        //console.log(newAllSongs);
         updateAllSongs(newAllSongs);
 
-        ref.doc(docName).delete();
+        refSongs.doc(docName).delete();
+        refParams.doc(docName).delete();
     };
 
     // query the DB to obtain the list of available songs
@@ -138,7 +212,7 @@ function App() {
 
         if (isPlaying) {
             // Turn of our player if music is currently playing
-            console.log('...stop');
+            //console.log('...stop');
             setIsPlaying(false);
             await Tone.Transport.stop();
 
@@ -148,6 +222,19 @@ function App() {
         console.log('play...');
         setIsPlaying(true);
         await Tone.Transport.start();
+    };
+
+    // start/stop the transport
+    const stopContext = async () => {
+        if (isPlaying) {
+            // Turn of our player if music is currently playing
+            //console.log('...stop');
+            setIsPlaying(false);
+            await Tone.Transport.stop();
+
+            return;
+        }
+        return;
     };
 
     // * melody computation functions
@@ -180,26 +267,22 @@ function App() {
         }
     };
 
-    //* effects
-    useEffect(() => {
-        console.log('effect 1');
-        getAllSongs();
-        getSong(songName);
-
-        //computeMelody();
-    }, []); // execute only at start
-
     //* app structure
 
     return (
         <div className="app">
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
-                <Sound chords={chords} melody={melody} />
+                <Sound
+                    chords={chords}
+                    melody={melody}
+                    isPlaying={isPlaying}
+                    parameters={parameters}
+                />
                 <World
                     melody={melody}
                     chords={chords}
-                    color={color.hsl.h}
+                    color={parameters.color.hsl.h}
                     isPlaying={isPlaying}
                 />
 
@@ -225,13 +308,20 @@ function App() {
                     songName={songName}
                     isPlaying={isPlaying}
                     startStopContext={startStopContext}
+                    stopContext={stopContext}
                 />
                 <SongTitleMenu
+                    songName={songName}
+                    color={parameters.color}
                     showMenu={showMenu[0]}
                     toggleMenu={toggleMenu}
-                    onSubmit={submitSongName}
+                    onSubmit={(e) => {
+                        submitSongName(e);
+                        computeMelody();
+                    }}
                     onDelete={deleteSong}
                     allSongs={allSongs}
+                    stopContext={stopContext}
                 />
                 <ChordsMenu
                     showMenu={showMenu[1]}
@@ -239,12 +329,22 @@ function App() {
                     chords={chords}
                     updateChords={updateChords}
                     updateServer={updateServer}
+                    stopContext={stopContext}
                 />
                 <StyleMenu
                     showMenu={showMenu[2]}
                     toggleMenu={toggleMenu}
-                    color={color}
-                    setColor={setColor}
+                    color={parameters.color}
+                    setColor={(e) => {
+                        console.log(e);
+                        updateParameters({
+                            ...parameters,
+                            color: {
+                                hsl: e.hsl,
+                                hex: e.hex,
+                            },
+                        });
+                    }}
                     parameters={parameters}
                     changeChordSound={(e) =>
                         updateParameters({ ...parameters, chordSound: e })
@@ -254,11 +354,15 @@ function App() {
                     }
                     melodySounds={melodySounds}
                     chordSounds={chordSounds}
+                    updateServer={updateServer}
+                    stopContext={stopContext}
                 />
                 <ParametersMenu
                     showMenu={showMenu[3]}
+                    computeMelody={computeMelody}
                     toggleMenu={toggleMenu}
                     parameters={parameters}
+                    color={parameters.color}
                     changeTempo={(e) =>
                         updateParameters({ ...parameters, tempo: e })
                     }
@@ -269,6 +373,8 @@ function App() {
                         updateParameters({ ...parameters, complexityMode: e })
                     }
                     complexityModes={complexityModes}
+                    updateServer={updateServer}
+                    stopContext={stopContext}
                 />
             </ThemeProvider>
         </div>

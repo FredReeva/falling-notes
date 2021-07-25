@@ -24,6 +24,7 @@ const StyledSongName = styled.div`
     background: ${(props) => props.theme.buttonColor};
 
     border-radius: 10px;
+
     border: ${(props) => props.theme.border};
 
     margin-right: 10px;
@@ -75,6 +76,14 @@ const SongTitleMenu = (props) => {
                                 key={index}
                                 onClick={(e) => {
                                     setValue(e.target.innerText);
+                                }}
+                                style={{
+                                    background:
+                                        props.songName === song
+                                            ? props.color.hex
+                                            : null,
+                                    borderColor:
+                                        value === song ? props.color.hex : null,
                                 }}
                             >
                                 {song}

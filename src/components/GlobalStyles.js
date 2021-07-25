@@ -11,6 +11,7 @@ export const GlobalStyles = createGlobalStyle`
         'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
     user-select: none;
     border: none;
     outline: none;
@@ -98,6 +99,10 @@ p{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.ColorButton{
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
   `;

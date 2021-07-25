@@ -135,17 +135,17 @@ function generateStarField(num, radius) {
     let color = mainColor.clone();
 
     for (let i = 0; i < num; i++) {
-        let x = (Math.random() - 0.5) * radius;
-        let y = (Math.random() - 0.5) * radius;
-        let z = (Math.random() - 0.5) * radius;
+        let x = 2 * (Math.random() - 0.5) * radius;
+        let y = 2 * (Math.random() - 0.5) * radius;
+        let z = 2 * (Math.random() - 0.5) * radius;
         let r = Math.sqrt(
             Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)
         );
 
-        while (radius - r < 200) {
-            x = (Math.random() - 0.5) * radius;
-            y = (Math.random() - 0.5) * radius;
-            z = (Math.random() - 0.5) * radius;
+        while (r > radius*0.2) {
+            x = 2 * (Math.random() - 0.5) * radius;
+            y = 2 * (Math.random() - 0.5) * radius;
+            z = 2 * (Math.random() - 0.5) * radius;
             r = Math.sqrt(
                 Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)
             );
@@ -476,8 +476,8 @@ const Background = (props) => {
 
         // STAR FIELD
 
-        let numField = 500;
-        let starFieldRadius = 350;
+        let numField = 250;
+        let starFieldRadius = 300;
 
         let starField = generateStarField(numField, starFieldRadius);
         scene.add(starField);
@@ -621,11 +621,11 @@ const Background = (props) => {
     // TRIGGER STAR FALL
     useEffect(() => {
 
-        if (props.isPlaying == 0) {
-            triggerStarFall = -1;
-        } else if (props.isPlaying == 1) {
-            triggerStarFall = 1;
-        }
+        // if (props.isPlaying == 0) {
+        //     triggerStarFall = -1;
+        // } else if (props.isPlaying == 1) {
+        //     triggerStarFall = 1;
+        // }
 
     }, [props.isPlaying]); // update when prop changes
 

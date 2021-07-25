@@ -32,6 +32,7 @@ const StyledPointer = styled.div`
 const StyleMenu = (props) => {
     const toggleMenu = () => {
         props.toggleMenu(2);
+        props.updateServer();
     };
 
     return props.showMenu ? (
@@ -49,6 +50,7 @@ const StyleMenu = (props) => {
                         }}
                     ></StyledColorPicker>
                     <RadioButton
+                        color={props.color}
                         mode={props.parameters.chordSound}
                         buttons={props.chordSounds}
                         buttonPressed={(button) => {
@@ -57,6 +59,7 @@ const StyleMenu = (props) => {
                     ></RadioButton>
 
                     <RadioButton
+                        color={props.color}
                         mode={props.parameters.melodySound}
                         buttons={props.melodySounds}
                         buttonPressed={(button) => {

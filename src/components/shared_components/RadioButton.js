@@ -48,7 +48,7 @@ const RadioButton = (props) => {
                     }}
                     style={{
                         background:
-                            props.mode === button ? 'rgb(100,255,100)' : null,
+                            props.mode === button ? props.color.hex : null,
                     }}
                 >
                     {button}
