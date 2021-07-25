@@ -87,13 +87,6 @@ const MainMenu = (props) => {
                 onClick={() => {
                     props.toggleMenu(3);
                 }}
-                style={{
-                    background:
-                        props.melody.length === 0 || props.chords.length === 0
-                            ? 'rgb(130,130,130)'
-                            : null,
-                    pointerEvents: props.chords.length === 0 ? 'none' : null,
-                }}
             >
                 <IoDice className="Icon" />
             </MenuButton>

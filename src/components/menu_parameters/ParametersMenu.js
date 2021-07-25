@@ -16,7 +16,7 @@ const Container = styled.div`
 const ParametersMenu = (props) => {
     const toggleMenu = () => {
         props.toggleMenu(3);
-        props.computeMelody();
+        props.updateServer();
     };
 
     //var Toggle = require('react-toggle');
