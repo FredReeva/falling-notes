@@ -35,7 +35,7 @@ export function convert(notesArray){
     let numbers = {
         'C': 0, 'C#': 1, 'D': 2, 'D#': 3,  'E': 4, 'F': 5, 'F#': 6, 'G': 7, 'G#': 8, 'A': 9, 'A#': 10, 'B': 11,
         'Db': 1, 'Eb': 3, 'Gb': 6, 'Ab':8, 'Bb': 10,
-        'A##': 11, 'B##': 0, 'C##': 2, 'D##': 4, 'E##': 6, 'F##':7, 'G##': 9
+        'A##': 11, 'B##': 1, 'C##': 2, 'D##': 4, 'E##': 6, 'F##':7, 'G##': 9
     }
     let letters = {
         0: 'C', 1: 'C#', 2: 'D', 3: 'D#',  4: 'E', 5: 'F', 6: 'F#', 7: 'G', 8: 'G#', 9: 'A', 10: 'A#',11: 'B'
@@ -78,16 +78,23 @@ export function nearestNote(notesArray, note){
 //Return notes of a chord
 export function chordNotes(chord, octave=null){
     const music_chord = require('music-chord')
+    let sharpmap = {'A##': 'B', 'B##': 'C#', 'C##': 'D', 'D##': 'E', 'E##': 'F#', 'F##': 'G', 'G##': 'A'}
     let notes = music_chord(chord.color, chord.tonic)
     //Error: chord not recognized
     if(notes[0] == null){
         throw 'MelodyGen@Pitch Error: Chord [' + chord.tonic + chord.color + "] not recognized";
-    }else if(octave != null){
-        for(let i=0; i<notes.length; i++){
-            notes[i] += octave.toString()
-        }
-        return notes
     }else{
+
+        for(let i=0; i<notes.length; i++){
+            if(notes[i] in sharpmap){
+                notes[i] = sharpmap[notes[i]]
+            }
+            if(octave != null){
+                notes[i] += octave.toString()
+            }
+        }
+        
         return notes
+        
     }
 }
