@@ -1,3 +1,8 @@
+/*
+These funcitons are used as utilities by all the classes
+*/
+
+//Pick one component of array starting from its associated probabilities
 export function pickState(input){
     /* [
         [choice, probability<0...100>],
@@ -23,6 +28,7 @@ export function randItem(array){
     return array[random]
 }
 
+//Converts an array of note names (string) to MIDI numbers (int) or vice versa
 export function convert(notesArray){
 
     let converted = []
@@ -47,7 +53,7 @@ export function convert(notesArray){
 }
 
 
-//return nearest element of an array
+//Return nearest element of an array
 export function nearestNote(notesArray, note){
     let difference = null
     let nearestNote = null
@@ -68,7 +74,7 @@ export function nearestNote(notesArray, note){
     return nearestNote
 }
 
-//return notes of a chord
+//Return notes of a chord
 export function chordNotes(chord, octave=null){
     const music_chord = require('music-chord')
     let notes = music_chord(chord.color, chord.tonic)

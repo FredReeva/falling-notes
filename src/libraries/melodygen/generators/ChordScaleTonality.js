@@ -2,10 +2,18 @@ import * as Utils from '../utils.js';
 import * as pieceProto from '../piece.prototype.js';
 import * as Const from './Pitch/pitch.constants.js';
 
+//Module calc feature
 Number.prototype.mod = function (n) {
     return ((this % n) + n) % n;
 };
 
+/*
+Compute for each temporal window (also called "segment") the undelying chord and 
+the associated diatonic modal scale. This is carried out by mode detection (we pick 
+the scale associated to the closest tonality with respect to the previous one). 
+Finally generate an array with subsampled MIDI numbers, only those within the picked modal scale.
+This array (called "Diatonic array") will be used to pick the pitches to be generated.
+*/
 export class ChordScaleTonality {
     constructor(piece, chords) {
         this.piece = piece;
@@ -112,7 +120,7 @@ export class ChordScaleTonality {
         return diatonicScale;
     }
 
-    //chord-segment association
+    //Chord-segment association
     calcSegmentChordData(staticScaleAssociation = false) {
         let segmentChords = [];
         for (let i = 0; i < this.chords.length; i++) {
@@ -126,13 +134,16 @@ export class ChordScaleTonality {
 
             let diatonicScaleObj = null;
 
+            
             if(staticScaleAssociation){
+                //Classic mode: static table look-up
                 diatonicScaleObj = this.calcDiatonicScale(
                     this.chords[i],
                     null,
                     Const.colorToStaticScale[this.chords[i].color]
                 );
             }else{
+                //Pro jazz mode: mode detection
                 diatonicScaleObj = this.calcDiatonicScale(
                     this.chords[i],
                     previousScale,
@@ -141,7 +152,7 @@ export class ChordScaleTonality {
             }
 
             
-
+            //Assigns each segments to its own chord
             for (let j = 0; j < chordSegs; j++) {
                 let chordObj = pieceProto.chord();
                 chordObj.tonic = this.chords[i].tonic;

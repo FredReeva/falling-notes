@@ -1,19 +1,19 @@
 import * as Utils from '../../utils.js';
-import * as Const from '../Pitch/pitch.constants.js';
 import Repetition from './transform.repetition.js';
 import Retrogradation from './transform.retrogradation.js';
 import PitchVariation from './transform.pitchvariation.js';
 import TemporalVariation from './transform.temporalvariation.js';
 import Contrast from './transform.contrast.js';
-
 import * as Filters from '../Pitch/pitch.filters.js';
-import { Pitch } from '../Pitch/Pitch.js';
+
+/* Pick musical transformation and apply transformation
+*/
 
 export class Transform {
     constructor(piece) {
         this.piece = piece;
     }
-
+    //Applies transformation to segment
     applyTransformations() {
         let motif = null;
         for (let i = 0; i < this.piece.segments.length; i++) {
@@ -82,6 +82,7 @@ export class Transform {
             Utils.nearestNote(filteredNotes, lastObj.pitch);
     }
 
+    //Assigns one transformation to each segment (with respect to constraints)
     pickTransformations() {
         let motif = null;
         for (let i = 0; i < this.piece.segments.length; i++) {

@@ -1,6 +1,7 @@
 import { Pitch } from '../Pitch/Pitch.js';
 import * as pieceProto from '../../piece.prototype.js';
 
+//Pitch variation transformation. Same temporal features, new generated pitches
 export default class PitchVariation {
     constructor(piece, segmentIndex, motif) {
         this.piece = piece;

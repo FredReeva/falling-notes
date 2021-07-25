@@ -1,3 +1,4 @@
+//Computation of pitches and rhythms in reverse
 export default class Retrogradation{
     constructor(piece, segmentIndex, motif){
         this.piece = piece

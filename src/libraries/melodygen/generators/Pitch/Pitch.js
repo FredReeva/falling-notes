@@ -2,6 +2,11 @@ import * as Utils from '../../utils.js';
 import * as Filters from './pitch.filters.js';
 import * as Const from './pitch.constants.js';
 
+
+/* Picks and applies pitch filters in order to obtain pitches elegible for melody generation
+Filters are declared in pitch.filter.js
+*/
+
 export class Pitch {
     constructor(segment) {
         this.segment = segment;

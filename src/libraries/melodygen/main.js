@@ -3,17 +3,13 @@ import {Segmentation} from './generators/Segmentation.js'
 import {Directionality} from './generators/Directionality.js'
 import {ChordScaleTonality} from './generators/ChordScaleTonality.js'
 import {Transform} from './generators/Transform/Transform.js'
-import * as Utils from './utils.js'
 
-import * as Tone from 'tone'
-
+//The melody generation is managed entirely by this class
 export class MelodyGen{
     
-    constructor(){
-        this.utils = Utils
-    }
-    
-    generate(chords, pausePresence = 0.1, classicMode = false){
+    //This method is used to generate the melody, given chords, pauses probability and music mode as arguments
+    //passed by GUI (the last two arguments are optional)
+    generate(chords, pausePresence = 0.2, classicMode = false){
         /**
           chords = [
                {
@@ -26,21 +22,29 @@ export class MelodyGen{
             pausePresence = <0.00 - 1.00>
             classicMode = <true/false>
          */
+
+        //Create piece empty prototype scheme to be elaborated. Our goal will be filling this prototype up.
         let piece = pieceProto.piece()
+
         piece.pausePresence = pausePresence
         piece.staticScaleAssociation = classicMode
 
+        //Piece segments generation
         piece = new Segmentation(piece, chords).generate()
         piece = new Directionality(piece).generate()
         piece = new ChordScaleTonality(piece, chords).generate()
         piece = new Transform(piece).pickTransformations()
         piece = new Transform(piece).applyTransformations()
+        
+        //Prints piece object
+        console.log(piece)
 
-        this.piece = piece
-        //return piece
+        //Render final object to be used by GUI
         return this.export(piece)       
     }
 
+
+    //Final output object rendering
     export(piece){
         piece = Object.assign({}, piece);
         let out = []

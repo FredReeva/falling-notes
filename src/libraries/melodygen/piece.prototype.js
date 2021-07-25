@@ -1,9 +1,9 @@
 const map = function(){
     return {
-        pieceDuration: Number,
-        segmentDuration: Number,
-        pausePresence: Number,
-        staticScaleAssociation: Boolean,
+        pieceDuration: Number, //Total piece duration
+        segmentDuration: Number, //Total segment duration
+        pausePresence: Number, //Pause probability (0.00 - 1.00)
+        staticScaleAssociation: Boolean, //Classic (true) or jazzy (false) modes
         segments: [
             {
                 directionality: String,

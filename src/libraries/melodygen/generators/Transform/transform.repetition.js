@@ -1,3 +1,4 @@
+//Repetition of same segment
 export default class Repetition{
     constructor(piece, segmentIndex, motif){
         this.motif = motif

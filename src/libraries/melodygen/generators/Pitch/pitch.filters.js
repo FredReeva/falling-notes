@@ -1,5 +1,9 @@
 import * as Utils from '../../utils.js';
 
+/*
+Pitch filters are defined in this section. 
+*/
+
 //Filter 4th octave (computing the 1st note)
 export function startingOctave(diatonicArray) {
     let output = [];
@@ -77,6 +81,7 @@ export function melodicCountour(diatonicArray, precNotes, direction) {
     return output;
 }
 
+//Max local range filter
 export function localRange(diatonicArray, note, direction) {
     let output = [];
     let steps = 4;
@@ -108,6 +113,7 @@ export function localRange(diatonicArray, note, direction) {
     }
 }
 
+//Max global range filter
 export function globalRange(diatonicArray, min, max, offset = 16) {
     let output = [];
     for (let i = 0; i < diatonicArray.length; i++) {

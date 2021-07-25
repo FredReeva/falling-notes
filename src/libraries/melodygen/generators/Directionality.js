@@ -1,5 +1,10 @@
 import * as Utils from '../utils.js';
 
+/*This class computes a sign (+,-,0) assiciated to each window with some probabilities. 
+A sign describes the melodic contour of each window. For a positive sign, a pitch greater than 
+a moving average is allowed (for negative, vice versa). For a neutral sign, a pitch has to
+be within a range of +2/-2 diatonic steps.
+*/
 export class Directionality {
     constructor(piece) {
         this.piece = piece;
@@ -18,13 +23,13 @@ export class Directionality {
 
             let directions = ['+', '-', '0'];
 
-            //get difference between directions and queue
+            //Get difference between directions and queue
             let availableChoices = directions.filter((x) => !queue.includes(x));
 
             let choice = null;
 
             while (!availableChoices.includes(choice)) {
-                //If first segment
+                //If first window
                 if (i === 0) {
                     choice = Utils.pickState([
                         ['+', 60],

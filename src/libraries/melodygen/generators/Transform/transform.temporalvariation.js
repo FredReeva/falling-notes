@@ -1,5 +1,6 @@
 import * as pieceProto from '../../piece.prototype.js';
 
+//Shuffles temporal features, keeps the same pitches.
 export default class TemporalVariation {
     constructor(piece, segmentIndex, motif) {
         this.piece = piece;
@@ -22,7 +23,7 @@ export default class TemporalVariation {
             durations.push(this.motif.objects[i].duration);
         }
 
-        /* Shuffle duration in-place using Durstenfeld shuffle algorithm */
+        //Shuffle duration in-place using Durstenfeld shuffle algorithm 
         for (var i = durations.length - 1; i > 0; i--) {
             var j = Math.floor(Math.random() * (i + 1));
             var temp = durations[i];

@@ -1,3 +1,5 @@
+//Constants and mappings used for melody generation
+
 export const colorToScale = {
     'Major': ['ionian', 'lydian', 'mixolydian'],
     'minor': ['dorian', 'phrygian', 'aeolian'],

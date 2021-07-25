@@ -2,6 +2,9 @@ import * as pieceProto from '../../piece.prototype.js';
 import * as Utils from '../../utils.js';
 import { Pitch } from '../Pitch/Pitch.js';
 
+/*Contrast transformation
+Generate completely new random notes with respect to the previous ones
+*/
 export default class Contrast {
     constructor(piece, segmentIndex) {
         this.piece = piece;
