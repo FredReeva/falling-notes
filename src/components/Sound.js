@@ -1,5 +1,6 @@
 import * as Tone from 'tone';
 import React, { useState, useEffect } from 'react';
+import { convert, chordNotes } from '../libraries/melodygen/utils.js';
 
 // INIT
 
@@ -11,117 +12,152 @@ const analyserBus = new Tone.Channel(0, 0);
 let baseVolume = -15.0;
 Tone.Transport.bpm.value = 60;
 
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 function connectEffectsChain(chain) {
     for (let i = 0; i < chain.length - 1; i += 1) {
         chain[i].connect(chain[i + 1]);
     }
     // let pingPong = new Tone.PingPongDelay("8n", 0.7);
-    let verb = new Tone.Freeverb(0.8, 6000);
-    chain[chain.length - 1].connect(verb);
-    verb.connect(analyserBus);
+    // let verb = new Tone.Freeverb(0.8, 6000);
+    // chain[chain.length - 1].connect(verb);
+    // verb.connect(analyserBus);
+    // analyserBus.connect(Tone.getDestination());
+    chain[chain.length - 1].connect(analyserBus);
     analyserBus.connect(Tone.getDestination());
-    // chain[chain.length - 1].connect(analyserBus);
-    // analyserBus.connect(Tone.Master);
 }
 
-// let sequence = [
-//     { type: 'note', onsetTime: 0.25, duration: 0.125, pitch: "C4"},
-//     { type: 'note', onsetTime: 0.375, duration: 0.25, pitch: "E4"},
-//     { type: 'note', onsetTime: 0.625, duration: 0.125, pitch: "G4"},
-// ];
-
-// let i=0;
-
-// function createLoop(instrument) {
-//     let loop = new Tone.Loop(function (time) {
-//         // let sequence = ChordsMenu.melody;
-//         for (let i = 0; i < sequence.length; i++) {
-//             if (sequence[i].type == 'note') {
-//                 instrument['synth'].triggerAttackRelease(
-//                     sequence[i].pitch,
-//                     sequence[i].duration,
-//                     sequence[i].onsetTime
-//                 );
-//             }
-//         }
-//     }, 1);
-//     //loop.humanize = instrument['humanize'];
-//     // loop.probability = instrument['probability'];
-//     loop.start();
-// }
-
-function createLoop(instrument) {
-    let loop = new Tone.Loop(function (time) {
-        let notes = instrument['notes'];
-        let note = notes[getRandomInt(0, notes.length)];
-        instrument['synth'].triggerAttackRelease(
-            note,
-            instrument['timeDelay'],
-            time
-        );
-    }, instrument['timeDelay']);
-    loop.humanize = instrument['humanize'];
-    loop.probability = instrument['probability'];
-    loop.start();
+function createSynthParams(chain) {
+    let lastSignalChain = chain[chain.length - 1];
+    return {
+        enabled: true,
+        stop: function () {
+            if (this.enabled !== false) {
+                this.enabled = false;
+                lastSignalChain.disconnect(Tone.getDestination());
+            }
+        },
+        start: function () {
+            if (this.enabled !== true) {
+                this.enabled = true;
+                lastSignalChain.connect(Tone.getDestination());
+            }
+        },
+    };
 }
 
-// function createLoop(instrument, values) {
-//     const part = new Tone.Part(((time, values) => {
-//         // the value is an object which contains both the note and the velocity
-//         instrument['synth'].triggerAttackRelease(values.pitch, velues.duration, values.onset, value.velocity);
-//     }), [{ time: 0, note: "C3", velocity: 0.9 },
-//         { time: "0:2", note: "C4", velocity: 0.5 }
-//     ])
-// }
+let melodyLoop = [];
+let melodySequence = [];
+let chordLoop = [];
+let chordSequence = [];
+let loopDuration = 0;
+
+function createChordLoop(instrument) {
+    if (chordSequence != []) {
+        let loop = new Tone.Loop(function (time) {
+            chordSequence.forEach((chord) => {
+                instrument['synth'].triggerAttackRelease(
+                    chord.notes,
+                    parseInt(chord.duration),
+                    time+chord.time,
+                    1
+                );
+            });
+        }, loopDuration);
+        // loop.humanize = instrument['humanize'];
+        // loop.probability = instrument['probability'];
+        loop.start();
+        return loop
+    }
+}
+
+function createMelodyLoop(instrument) {
+    if (melodySequence != []) {
+        let loop = new Tone.Loop(function (time) {
+            melodySequence.forEach((note) => {
+                if (note.type == 'note') {
+                    let m = note.pitch;
+                    let f = Math.pow( 2, (m-69)/12 ) * 440;
+                    instrument['synth'].triggerAttackRelease(
+                        f,
+                        note.duration,
+                        time+note.onsetTime,
+                        1
+                    );
+                } else { //pause = note with 0 velocity and random pitch
+                    instrument['synth'].triggerAttackRelease(
+                        60,
+                        note.duration,
+                        time+note.onsetTime,
+                        0
+                    );
+                }
+            });
+        }, loopDuration);
+        // loop.humanize = instrument['humanize'];
+        // loop.probability = instrument['probability'];
+        loop.start();
+        return loop
+    }
+}
+
+
 
 // INSTRUMENTS
 
 function createSynthPad() {
-    let synth = new Tone.DuoSynth();
-    synth.set({
-        volume: baseVolume - 10.0,
-        portamento: 0.7,
-        harmonicity: 1.5,
-        vibratoAmount: 0.1,
-        vibratoRate: '4n',
 
-        voice0: {
-            oscillator: {
-                type: 'fatsawtooth8',
-            },
-            envelope: {
-                attack: 2,
-                decay: 1,
-                sustain: 0.8,
-                release: 0,
-            },
+    // let synth = new Tone.DuoSynth();
+    // synth.set({
+    //     volume: baseVolume - 10.0,
+    //     portamento: 0.7,
+    //     harmonicity: 1.5,
+    //     vibratoAmount: 0.1,
+    //     vibratoRate: '4n',
+
+    //     voice0: {
+    //         oscillator: {
+    //             type: 'fatsawtooth8',
+    //         },
+    //         envelope: {
+    //             attack: 2,
+    //             decay: 1,
+    //             sustain: 0.8,
+    //             release: 0,
+    //         },
+    //     },
+    //     voice1: {
+    //         oscillator: {
+    //             type: 'fatsawtooth10',
+    //         },
+    //         envelope: {
+    //             attack: 2,
+    //             decay: 1,
+    //             sustain: 0.8,
+    //             release: 0,
+    //         },
+    //     }
+    // });
+
+    let pad = {
+        oscillator: {
+            type: 'fatsine8',
         },
-        voice1: {
-            oscillator: {
-                type: 'fatsawtooth10',
-            },
-            envelope: {
-                attack: 2,
-                decay: 1,
-                sustain: 0.8,
-                release: 0,
-            },
-        },
+        envelope: {
+            attack: 0.005,
+            decay: 0,
+            sustain: 1,
+            release: 0.2,
+        }
+    }
+
+    let polySynth = new Tone.PolySynth(pad);
+    polySynth.set({
+        volume: baseVolume - 15.0,
     });
 
-    // let dist = new Tone.Chebyshev(7);
-    // let filter = new Tone.Filter(800, 'lowpass');
-    // let chorus = new Tone.Chorus('3n', 35, 0.65);
-    // let delay = new Tone.PingPongDelay("8n", 0.2);
-    // let verb = new Tone.Freeverb(0.80, 6000);
+    // let eq = new Tone.EQ3(3, -3, -6)
+    // let chorus = new Tone.Chorus(5, 7, 1);
 
-    let chain = [synth];
+    let chain = [polySynth];
 
     connectEffectsChain(chain);
 
@@ -129,7 +165,7 @@ function createSynthPad() {
     let probability = 1;
 
     return {
-        synth: synth,
+        synth: polySynth,
         humanize: humanize,
         probability: probability,
     };
@@ -220,68 +256,107 @@ function createSynthBell() {
     };
 }
 
-// function createSynthFX() {
-//     let synth = new Tone.FMSynth();
-//     synth.set({
-//         volume: baseVolume + 10.0,
-//         //"portamento": 0.1,
-//         harmonicity: 1.5,
-//         oscillator: {
-//             type: 'square4',
-//         },
-//         envelope: {
-//             attack: 0.01,
-//             decay: 0.1,
-//             sustain: 0.1,
-//             release: 0.5,
-//         },
-//     });
-//     //synth.sync();
+function createSynthFX() {
+    let synth = new Tone.FMSynth();
+    synth.set({
+        volume: baseVolume + 10.0,
+        //"portamento": 0.1,
+        harmonicity: 1.5,
+        oscillator: {
+            type: 'square4',
+        },
+        envelope: {
+            attack: 0.01,
+            decay: 0.1,
+            sustain: 0.1,
+            release: 0.5,
+        },
+    });
+    //synth.sync();
 
-//     // let dist = new Tone.Chebyshev(4);
-//     // let chorus = new Tone.Chorus("8n", 30, 1);
-//     // let delay = new Tone.PingPongDelay("16n", 0.6);
-//     // let verb = new Tone.Freeverb(0.60, 8000);
-//     // let filter = new Tone.Filter(300, "highpass")
+    // let dist = new Tone.Chebyshev(4);
+    // let chorus = new Tone.Chorus("8n", 30, 1);
+    // let delay = new Tone.PingPongDelay("16n", 0.6);
+    // let verb = new Tone.Freeverb(0.60, 8000);
+    // let filter = new Tone.Filter(300, "highpass")
 
-//     let chain = [synth];
-//     connectEffectsChain(chain);
-//     let synthParams = createSynthParams(chain);
+    let chain = [synth];
+    connectEffectsChain(chain);
+    let synthParams = createSynthParams(chain);
 
-//     let notes = ['C4', 'D4', 'E4', 'A4', 'C5', 'D5', 'E5', 'A5'];
-//     let timeDelay = '8n';
-//     let humanize = 0.2;
-//     let probability = 0.1;
+    let notes = ['C4', 'D4', 'E4', 'A4', 'C5', 'D5', 'E5', 'A5'];
+    let timeDelay = '8n';
+    let humanize = 0.2;
+    let probability = 0.1;
 
-//     return {
-//         synth: synth,
-//         synthParams: synthParams,
-//         notes: notes,
-//         timeDelay: timeDelay,
-//         humanize: humanize,
-//         probability: probability,
-//     };
-// }
+    return {
+        synth: synth,
+        synthParams: synthParams,
+        notes: notes,
+        timeDelay: timeDelay,
+        humanize: humanize,
+        probability: probability,
+    };
+}
 
 var pad = createSynthPad();
 var lead = createSynthLead();
 var bell = createSynthBell();
+var fx = createSynthFX();
 
 const Sound = (props) => {
     // useEffect(() => {
 
     // }, []); // never update
 
-    // useEffect(() => {
-    //     console.log(props.chords, props.melody);
-    // }, [props.melody]); // update when prop changes
+    useEffect(() => {
 
+        // CHORDS
+        // delete previous chords sequence(s)
+        chordLoop.forEach((loop) => {
+            loop.dispose();
+            chordLoop.pop(loop);
+        });
+        // init sequence and determine chord notes
+        chordSequence = [];
+        loopDuration = 0;
+        let chordOnSet = 0;
+        props.chords.forEach((chord) => {
+            let input = { tonic: chord['tonic'] , color: chord['quality'] };
+            let notes = chordNotes(input, 4);
+            chordSequence.push({ time: chordOnSet, notes: notes, duration: chord['duration'] });
+            chordOnSet += parseInt(chord['duration']);
+            loopDuration = chordOnSet;
+        });
+        // create chord loop(s) and handle to delete it
+        let chords = createChordLoop(pad);
+        chordLoop.push(chords);
+
+        // MELODY
+        // delete previous melody sequence(s)
+        melodyLoop.forEach((loop) => {
+            loop.dispose();
+            melodyLoop.pop(loop);
+        });
+        // init sequence and determine chord notes
+        melodySequence = [];
+        props.melody.forEach((note) => {
+            melodySequence.push(note);
+        });
+        // create melody loop(s) and handle to delete it
+        let melody = createMelodyLoop(bell);
+        melodyLoop.push(melody);
+        
+    }, [props.melody]); // update when prop changes
+    
     return <></>;
 };
 
 export default Sound;
 
-export const generateSounds = () => {};
+export const generateSounds = () => {
+};
+
 export var context = Tone.getContext();
 export var bus = analyserBus;
 

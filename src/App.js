@@ -208,7 +208,11 @@ function App() {
         <div className="app">
             <ThemeProvider theme={themes.dark}>
                 <GlobalStyles />
-                <Sound chords={chords} melody={melody} />
+                <Sound 
+                    chords={chords} 
+                    melody={melody}
+                    isPlaying={isPlaying}
+                />
                 <World
                     melody={melody}
                     chords={chords}

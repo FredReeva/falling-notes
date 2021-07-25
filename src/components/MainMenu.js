@@ -53,11 +53,11 @@ const MenuButton = styled.button`
 `;
 
 const MainMenu = (props) => {
-    useEffect(() => {}, [props.chords, props.melody]);
+    // useEffect(() => {}, [props.chords, props.melody]);
 
-    useEffect(() => {
-        generateSounds();
-    }, [props.isPlaying]);
+    // useEffect(() => {
+    //     generateSounds();
+    // }, [props.isPlaying]);
 
     // return pulsanti
     return (
