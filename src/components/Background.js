@@ -39,7 +39,6 @@ scene.background = new THREE.Color('#000000');
 let triggerStarFall = 0;
 
 function generateWorld(color, width, depth) {
-
     let geometry = new THREE.BufferGeometry();
     let numPoints = width * depth;
     let positions = new Float32Array(numPoints * 3);
@@ -70,15 +69,11 @@ function generateWorld(color, width, depth) {
 
     geometry.setAttribute(
         'position',
-        new THREE.BufferAttribute(positions, 3).setUsage(
-            THREE.DynamicDrawUsage
-        )
+        new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage)
     );
     geometry.setAttribute(
         'color',
-        new THREE.BufferAttribute(colors, 3).setUsage(
-            THREE.DynamicDrawUsage
-        )
+        new THREE.BufferAttribute(colors, 3).setUsage(THREE.DynamicDrawUsage)
     );
     geometry.computeBoundingBox();
 
@@ -92,7 +87,6 @@ function generateWorld(color, width, depth) {
 }
 
 function updateWorld(world, color, width, depth, data) {
-
     let numPoints = width * depth;
     let positions = world.geometry.attributes.position.array;
     let colors = world.geometry.attributes.color.array;
@@ -126,7 +120,6 @@ function updateWorld(world, color, width, depth, data) {
 }
 
 function generateStarField(num, radius) {
-
     let geom = new THREE.BufferGeometry();
 
     let pos = new Float32Array(3 * num);
@@ -138,17 +131,13 @@ function generateStarField(num, radius) {
         let x = 2 * (Math.random() - 0.5) * radius;
         let y = 2 * (Math.random() - 0.5) * radius;
         let z = 2 * (Math.random() - 0.5) * radius;
-        let r = Math.sqrt(
-            Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)
-        );
+        let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
 
-        while (r > radius*0.2) {
+        while (r > radius * 0.2) {
             x = 2 * (Math.random() - 0.5) * radius;
             y = 2 * (Math.random() - 0.5) * radius;
             z = 2 * (Math.random() - 0.5) * radius;
-            r = Math.sqrt(
-                Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)
-            );
+            r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
         }
 
         pos[3 * i] = x;
@@ -156,24 +145,16 @@ function generateStarField(num, radius) {
         pos[3 * i + 2] = z;
 
         color = color.getHSL(color);
-        let hueOffset = (Math.random()-0.5)*0.05;
+        let hueOffset = (Math.random() - 0.5) * 0.05;
         if (color.h + hueOffset < 0) {
             hueOffset = -hueOffset;
         } else if (color.h + hueOffset > 1) {
             hueOffset = -hueOffset;
         }
 
-        color = color.offsetHSL(
-            hueOffset,
-            (Math.random()-0.5)*0.1,
-            0
-        );
+        color = color.offsetHSL(hueOffset, (Math.random() - 0.5) * 0.1, 0);
         color = color.getHSL(color);
-        color = color.setHSL(
-            color.h,
-            color.s,
-            0.5 + Math.random() * 0.3
-        );
+        color = color.setHSL(color.h, color.s, 0.5 + Math.random() * 0.3);
 
         col[3 * i] = color.r;
         col[3 * i + 1] = color.g;
@@ -182,15 +163,11 @@ function generateStarField(num, radius) {
 
     geom.setAttribute(
         'position',
-        new THREE.BufferAttribute(pos, 3).setUsage(
-            THREE.DynamicDrawUsage
-        )
+        new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage)
     );
     geom.setAttribute(
         'color',
-        new THREE.BufferAttribute(col, 3).setUsage(
-            THREE.DynamicDrawUsage
-        )
+        new THREE.BufferAttribute(col, 3).setUsage(THREE.DynamicDrawUsage)
     );
     geom.computeBoundingBox();
 
@@ -203,28 +180,22 @@ function generateStarField(num, radius) {
 }
 
 function updateStarField(num, radius, field) {
-
-    let pos = field.geometry.attributes.position.array
+    let pos = field.geometry.attributes.position.array;
     let col = field.geometry.attributes.color.array;
 
     let color = mainColor.clone();
 
     for (let i = 0; i < num; i++) {
-
         let x = (Math.random() - 0.5) * radius;
         let y = (Math.random() - 0.5) * radius;
         let z = (Math.random() - 0.5) * radius;
-        let r = Math.sqrt(
-            Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)
-        );
+        let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
 
         while (radius - r < 200) {
             x = (Math.random() - 0.5) * radius;
             y = (Math.random() - 0.5) * radius;
             z = (Math.random() - 0.5) * radius;
-            r = Math.sqrt(
-                Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)
-            );
+            r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
         }
 
         pos[3 * i] = x;
@@ -232,24 +203,16 @@ function updateStarField(num, radius, field) {
         pos[3 * i + 2] = z;
 
         color = color.getHSL(color);
-        let hueOffset = (Math.random()-0.5)*0.05;
+        let hueOffset = (Math.random() - 0.5) * 0.05;
         if (color.h + hueOffset < 0) {
             hueOffset = -hueOffset;
         } else if (color.h + hueOffset > 1) {
             hueOffset = -hueOffset;
         }
 
-        color = color.offsetHSL(
-            hueOffset,
-            (Math.random()-0.5)*0.1,
-            0
-        );
+        color = color.offsetHSL(hueOffset, (Math.random() - 0.5) * 0.1, 0);
         color = color.getHSL(color);
-        color = color.setHSL(
-            color.h,
-            color.s,
-            0.5 + Math.random() * 0.3
-        );
+        color = color.setHSL(color.h, color.s, 0.5 + Math.random() * 0.3);
 
         col[3 * i] = color.r;
         col[3 * i + 1] = color.g;
@@ -258,8 +221,7 @@ function updateStarField(num, radius, field) {
 }
 
 function generateStar(radius) {
-
-    let timer = new THREE.Clock( {autoStart : false });
+    let timer = new THREE.Clock({ autoStart: false });
 
     let geom = new THREE.BufferGeometry();
 
@@ -286,15 +248,11 @@ function generateStar(radius) {
 
     geom.setAttribute(
         'position',
-        new THREE.BufferAttribute(position, 3).setUsage(
-            THREE.DynamicDrawUsage
-        )
+        new THREE.BufferAttribute(position, 3).setUsage(THREE.DynamicDrawUsage)
     );
     geom.setAttribute(
         'velocity',
-        new THREE.BufferAttribute(velocity, 3).setUsage(
-            THREE.DynamicDrawUsage
-        )
+        new THREE.BufferAttribute(velocity, 3).setUsage(THREE.DynamicDrawUsage)
     );
     geom.computeBoundingBox();
 
@@ -304,7 +262,6 @@ function generateStar(radius) {
 }
 
 function resetStar(star, timer, radius) {
-
     let position = star.geometry.attributes.position.array;
     let velocity = star.geometry.attributes.velocity.array;
 
@@ -340,7 +297,6 @@ function resetStar(star, timer, radius) {
 }
 
 function updateStar(star, timer, radius) {
-
     let positions = star.geometry.attributes.position.array;
     let velocity = star.geometry.attributes.velocity.array;
 
@@ -381,14 +337,14 @@ let analyserLeft = audioCtx.createAnalyser();
 let analyserRight = audioCtx.createAnalyser();
 let analyserSplitter = audioCtx.createChannelSplitter(2);
 
-analyserLeft.fftSize = 128;
-analyserLeft.smoothingTimeConstant = 0.7;
-analyserLeft.minDecibels = -110;
+analyserLeft.fftSize = 256;
+analyserLeft.smoothingTimeConstant = 0.5;
+analyserLeft.minDecibels = -150;
 analyserLeft.maxDecibels = -10;
 
-analyserRight.fftSize = 128;
-analyserRight.smoothingTimeConstant = 0.7;
-analyserRight.minDecibels = -110;
+analyserRight.fftSize = 256;
+analyserRight.smoothingTimeConstant = 0.5;
+analyserRight.minDecibels = -150;
 analyserRight.maxDecibels = -10;
 
 let bufferLength = analyserLeft.frequencyBinCount;
@@ -414,14 +370,11 @@ function updateSpectrum(world, width, depth) {
     updateWorld(world, mainColor, width, depth, spectrum);
 }
 
-
 const Background = (props) => {
-
     let mount = useRef(null);
 
     // INITIALIZATION
     useEffect(() => {
-
         // THREE RENDERER
 
         let winWidth = mount.current.clientWidth;
@@ -518,7 +471,6 @@ const Background = (props) => {
         window.addEventListener('resize', handleResize);
 
         function animate() {
-
             audioCtx.resume();
             camera.lookAt(target);
 
@@ -539,7 +491,7 @@ const Background = (props) => {
                 triggerStarFall = 0;
             } else if (triggerStarFall == -1) {
                 async function endStarFall() {
-                    await sleep(2600);        
+                    await sleep(2600);
                     scene.remove(star1);
                     scene.remove(star2);
                     scene.remove(star3);
@@ -558,7 +510,6 @@ const Background = (props) => {
                 updateStar(star2, timer2, starFallRadius);
                 updateStar(star3, timer3, starFallRadius);
             }
-
 
             if (colorNeedsUpdate == 1) {
                 updateStarField(numField, starFieldRadius, starField);
@@ -610,23 +561,19 @@ const Background = (props) => {
 
     // COLOR PALETTE MANAGEMENT
     useEffect(() => {
-
         prevColor = mainColor;
         mainColor = mainColor.getHSL(mainColor);
-        mainColor = mainColor.setHSL((props.color +0.1)/ 360, 0.7, 0.5);
+        mainColor = mainColor.setHSL((props.color + 0.1) / 360, 0.7, 0.5);
         colorNeedsUpdate = 1;
-
     }, [props.color]); // update when prop changes
 
     // TRIGGER STAR FALL
     useEffect(() => {
-
         // if (props.isPlaying == 0) {
         //     triggerStarFall = -1;
         // } else if (props.isPlaying == 1) {
         //     triggerStarFall = 1;
         // }
-
     }, [props.isPlaying]); // update when prop changes
 
     return <StyledBackground className={props.className} ref={mount} />;

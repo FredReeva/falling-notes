@@ -64,7 +64,7 @@ const ParametersMenu = (props) => {
                 </Container>
                 <p>
                     🎼 Select the level of complexity | notes vs pauses balance
-                    of the generated melody
+                    for the generated melody
                 </p>
                 <Container>
                     <div
