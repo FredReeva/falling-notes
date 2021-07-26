@@ -5,7 +5,6 @@ import HeaderMenu from '../shared_components/HeaderMenu';
 import ModalMenu from '../shared_components/ModalMenu';
 import RadioButton from '../shared_components/RadioButton';
 import Slider from '../shared_components/Slider';
-import Paragraph from '../shared_components/Paragraph';
 
 const Container = styled.div`
     display: flex;
@@ -26,7 +25,7 @@ const Select = styled.div`
     font-size: 1.2em;
     background: ${(props) => props.theme.buttonColor};
     padding: 5px;
-    margin: 10px;
+    margin-top: 20px;
     cursor: pointer;
     overflow: hidden;
     transition: 0.5s;
@@ -50,7 +49,7 @@ const ParametersMenu = (props) => {
                     titleMenu={'Parameters Lab'}
                     toggleMenu={toggleMenu}
                 />
-                <Paragraph text="⏲ Select the BPM of the generated melody" />
+                <p>⏲ Select the BPM of the generated melody</p>
                 <Container>
                     <Slider
                         color={props.color}
@@ -63,8 +62,12 @@ const ParametersMenu = (props) => {
                         }}
                     ></Slider>
                 </Container>
-                <Paragraph text="🎼 Select the balance between notes and pauses" />
-                <Container>
+                <p>
+                    🎼 Select the balance between notes and pauses... and the
+                    level of complexity
+                </p>
+
+                <Container style={{ flexDirection: 'row' }}>
                     <Slider
                         color={props.color}
                         title={'Pauses ↔ Notes'}
@@ -76,9 +79,7 @@ const ParametersMenu = (props) => {
                             props.changeNotePause(value);
                         }}
                     ></Slider>
-                </Container>
-                <Paragraph text="🎼 Select the level of complexity" />
-                <Container>
+
                     <RadioButton
                         color={props.color}
                         mode={props.parameters.complexityMode}
@@ -88,12 +89,14 @@ const ParametersMenu = (props) => {
                         }}
                     ></RadioButton>
                 </Container>
-                <Paragraph text="🎼 Compute a new melody (old one will be overwritted)" />
+                <p>💻 Compute a new melody (the old one will be overwritten)</p>
                 <Container>
                     <Select
                         onClick={props.computeMelody}
                         style={{ background: props.color.hex }}
-                    > Compute New Melody
+                    >
+                        {' '}
+                        Compute New Melody
                     </Select>
                 </Container>
             </ModalMenu>

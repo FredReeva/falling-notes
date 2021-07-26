@@ -4,7 +4,6 @@ import Form from '../shared_components/Form';
 import HeaderMenu from '../shared_components/HeaderMenu';
 import ModalMenu from '../shared_components/ModalMenu';
 import styled from 'styled-components';
-import Paragraph from '../shared_components/Paragraph';
 
 const Container = styled.div`
     display: flex;
@@ -59,8 +58,10 @@ const SongTitleMenu = (props) => {
                     titleMenu={'Song Selection'}
                     toggleMenu={toggleMenu}
                 />
-                <Paragraph text="✍🏼 Enter the name of the song you want to modify or create a
-                    new one" />
+                <p>
+                    ✍🏼 Enter the name of the song you want to modify or create a
+                    new one
+                </p>
                 <Container>
                     <div
                         style={{
@@ -69,19 +70,19 @@ const SongTitleMenu = (props) => {
                             alignItems: 'center',
                         }}
                     >
-                    <Form
-                        onSubmit={props.onSubmit}
-                        onChange={(e) => setValue(e.target.value)}
-                        value={value}
-                        allSongs={props.allSongs}
-                        onDelete={() => {
-                            props.onDelete(value);
-                            setValue('');
-                        }}
-                    />
+                        <Form
+                            onSubmit={props.onSubmit}
+                            onChange={(e) => setValue(e.target.value)}
+                            value={value}
+                            allSongs={props.allSongs}
+                            onDelete={() => {
+                                props.onDelete(value);
+                                setValue('');
+                            }}
+                        />
                     </div>
                 </Container>
-                <Paragraph text="🧾 List of available songs" />
+                <p>🧾 List of all the available songs</p>
                 <Container>
                     <div
                         style={{
@@ -90,28 +91,30 @@ const SongTitleMenu = (props) => {
                             alignItems: 'center',
                         }}
                     >
-                    <StyledSongSection>
-                        {props.allSongs
-                            .filter((song) => song !== 'default')
-                            .map((song, index) => (
-                                <StyledSongName
-                                    key={index}
-                                    onClick={(e) => {
-                                        setValue(e.target.innerText);
-                                    }}
-                                    style={{
-                                        background:
-                                            props.songName === song
-                                                ? props.color.hex
-                                                : null,
-                                        borderColor:
-                                            value === song ? props.color.hex : null,
-                                    }}
-                                >
-                                    {song}
-                                </StyledSongName>
-                            ))}
-                    </StyledSongSection>
+                        <StyledSongSection>
+                            {props.allSongs
+                                .filter((song) => song !== 'default')
+                                .map((song, index) => (
+                                    <StyledSongName
+                                        key={index}
+                                        onClick={(e) => {
+                                            setValue(e.target.innerText);
+                                        }}
+                                        style={{
+                                            background:
+                                                props.songName === song
+                                                    ? props.color.hex
+                                                    : null,
+                                            borderColor:
+                                                value === song
+                                                    ? props.color.hex
+                                                    : null,
+                                        }}
+                                    >
+                                        {song}
+                                    </StyledSongName>
+                                ))}
+                        </StyledSongSection>
                     </div>
                 </Container>
             </ModalMenu>

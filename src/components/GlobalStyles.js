@@ -42,6 +42,25 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
+  .pulsate {
+    animation: pulsate 4s ease-out;
+    -webkit-animation: pulsate 4s ease-out;
+    animation-iteration-count: infinite;
+    -webkit-animation-iteration-count: infinite; 
+    
+}
+@-webkit-keyframes pulsate {
+    0% { 
+        opacity: 0.3;
+    }
+    50% { 
+        opacity: 1.0;
+    }
+    100% { 
+        opacity: 0.3;
+    }
+}
+
   h2 {
     
     display: block;
@@ -87,6 +106,9 @@ form{
 }
 
 p{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   font-size: 1.1em;
 }
 

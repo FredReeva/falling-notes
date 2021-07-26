@@ -10,14 +10,21 @@ import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 import ParametersMenu from './components/menu_parameters/ParametersMenu';
+import HelpMenu from './components/HelpMenu';
+import { IoInformationCircle } from 'react-icons/io5';
 
 import * as Tone from 'tone';
 import Sound from './components/Sound';
 
 function App() {
-
     // states of the app, passed to the components
-    const [showMenu, setShowMenu] = useState([true, false, false, false]);
+    const [showMenu, setShowMenu] = useState([
+        false,
+        false,
+        false,
+        false,
+        true,
+    ]);
     const [songName, updateSongName] = useState('default');
     const [allSongs, updateAllSongs] = useState([]);
     const [chords, updateChords] = useState([]);
@@ -54,7 +61,7 @@ function App() {
 
     // Toogle Menu when pressed
     const toggleMenu = (i) => {
-        let newMenuState = [false, false, false, false];
+        let newMenuState = [false, false, false, false, false];
         let changeMenu = !showMenu[i];
         newMenuState[i] = changeMenu;
         setShowMenu(newMenuState);
@@ -260,6 +267,7 @@ function App() {
                     isPlaying={isPlaying}
                     parameters={parameters}
                 />
+
                 <World
                     melody={melody}
                     chords={chords}
@@ -272,8 +280,8 @@ function App() {
                     style={{
                         color: 'white',
                         position: 'fixed',
-                        top: '5vh',
-                        right: '2vw',
+                        bottom: '15px',
+                        right: '15px',
                         zIndex: '100',
                     }}
                 >
@@ -290,6 +298,18 @@ function App() {
                     startStopContext={startStopContext}
                     stopContext={stopContext}
                 />
+                <HelpMenu toggleMenu={toggleMenu} showMenu={showMenu[4]} />
+                <IoInformationCircle
+                    style={{
+                        color: 'white',
+                        fontSize: '2.5em',
+                        position: 'fixed',
+                        top: '15px',
+                        right: '15px',
+                        cursor: 'pointer',
+                    }}
+                    onClick={() => toggleMenu(4)}
+                ></IoInformationCircle>
                 <SongTitleMenu
                     songName={songName}
                     color={parameters.color}
