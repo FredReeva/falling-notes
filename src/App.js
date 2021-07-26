@@ -21,6 +21,7 @@ function App() {
     const [allSongs, updateAllSongs] = useState([]);
     const [chords, updateChords] = useState([]);
     const [melody, updateMelody] = useState([]);
+    const [melody2, updateMelody2] = useState([]);
     // const [color, setColor] = useState({
     //     hsl: {
     //         h: 0,
@@ -92,6 +93,7 @@ function App() {
                         }
                         updateChords(loadSong);
                         updateMelody([]);
+                        updateMelody2([]);
                         //computeMelody();
                     }
                 } else {
@@ -99,6 +101,7 @@ function App() {
                     //console.log('No such document! Creating an empty one...');
                     updateChords([]);
                     updateMelody([]);
+                    updateMelody2([]);
                     updateServer(docName);
                     const newAllSongs = [...allSongs, docName];
                     updateAllSongs(newAllSongs);
@@ -264,8 +267,11 @@ function App() {
             let generator = new MelodyGen();
             //Genero la linea melodica dando in input gli accordi dell'utente
             let generatedMelody = generator.generate(chordList);
+            let generatedMelody2 = generator.generate(chordList);
             updateMelody(generatedMelody);
+            updateMelody2(generatedMelody2);
             console.log('New melody: ', generatedMelody);
+            console.log('New melody 2: ', generatedMelody2);
         }
     };
 
@@ -278,11 +284,13 @@ function App() {
                 <Sound
                     chords={chords}
                     melody={melody}
+                    melody2={melody2}
                     isPlaying={isPlaying}
                     parameters={parameters}
                 />
                 <World
                     melody={melody}
+                    melody2={melody2}
                     chords={chords}
                     color={parameters.color.hsl.h}
                     isPlaying={isPlaying}
