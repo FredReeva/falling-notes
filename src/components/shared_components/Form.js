@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { IoPlay } from 'react-icons/io5';
 
 const StyledForm = styled.form`
     display: flex;
