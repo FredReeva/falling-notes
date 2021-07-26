@@ -16,7 +16,7 @@ Select the song [foto]
 
 #### Chords Menu 🎵
 
-![Chords modification example](../falling-notes/documentation/ChordModAnimation.gif)
+![Chords modification example](https://github.com/FredReeva/falling-notes/blob/master/documentation/ChordModAnimation.gif?raw=true)
 
 #### Style Menu 🎨
 
