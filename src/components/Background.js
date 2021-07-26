@@ -38,13 +38,17 @@ scene.background = new THREE.Color('#000000');
 
 let triggerStarFall = 0;
 
+// function to generate and update the visualizer
 function generateWorld(color, width, depth) {
+
     let geometry = new THREE.BufferGeometry();
     let numPoints = width * depth;
     let positions = new Float32Array(numPoints * 3);
     let colors = new Float32Array(numPoints * 3);
 
     let k = 0;
+    
+    // for each point in the geometry, determine position and color
     for (let i = 0; i < width; i++) {
         for (let j = 0; j < depth; j++) {
             let u = i / width;
@@ -83,6 +87,7 @@ function generateWorld(color, width, depth) {
         transparent: true,
     });
 
+    // return the visualizer
     return new THREE.Line(geometry, material);
 }
 
@@ -92,6 +97,8 @@ function updateWorld(world, color, width, depth, data) {
     let colors = world.geometry.attributes.color.array;
 
     let k = numPoints;
+
+    // determine the position and color of all the points by the previous row value
     for (let i = width; i > 1; i--) {
         for (let j = depth; j > 0; j--) {
             let y = positions[3 * (k - depth) + 1];
@@ -106,6 +113,7 @@ function updateWorld(world, color, width, depth, data) {
         }
     }
 
+    // determine the postion and color of the first row by the value analized
     for (let m = 0; m < depth; m++) {
         let num = data[m] / 255;
 
@@ -119,6 +127,7 @@ function updateWorld(world, color, width, depth, data) {
     }
 }
 
+// functions to generate and update the starfield
 function generateStarField(num, radius) {
     let geom = new THREE.BufferGeometry();
 
@@ -126,13 +135,15 @@ function generateStarField(num, radius) {
     let col = new Float32Array(3 * num);
 
     let color = mainColor.clone();
-
+    
+    // for each point, determine position and color
     for (let i = 0; i < num; i++) {
         let x = 2 * (Math.random() - 0.5) * radius;
         let y = 2 * (Math.random() - 0.5) * radius;
         let z = 2 * (Math.random() - 0.5) * radius;
         let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
 
+        // stop when point is outside the smaller sphere
         while (r > radius * 0.2) {
             x = 2 * (Math.random() - 0.5) * radius;
             y = 2 * (Math.random() - 0.5) * radius;
@@ -144,6 +155,7 @@ function generateStarField(num, radius) {
         pos[3 * i + 1] = y;
         pos[3 * i + 2] = z;
 
+        // random color palette generator
         color = color.getHSL(color);
         let hueOffset = (Math.random() - 0.5) * 0.05;
         if (color.h + hueOffset < 0) {
@@ -151,7 +163,6 @@ function generateStarField(num, radius) {
         } else if (color.h + hueOffset > 1) {
             hueOffset = -hueOffset;
         }
-
         color = color.offsetHSL(hueOffset, (Math.random() - 0.5) * 0.1, 0);
         color = color.getHSL(color);
         color = color.setHSL(color.h, color.s, 0.5 + Math.random() * 0.3);
@@ -176,6 +187,7 @@ function generateStarField(num, radius) {
         vertexColors: true,
     });
 
+    // return the starfield
     return new THREE.Points(geom, starFieldMaterial);
 }
 
@@ -185,12 +197,14 @@ function updateStarField(num, radius, field) {
 
     let color = mainColor.clone();
 
+    // for each point, determine position and color
     for (let i = 0; i < num; i++) {
         let x = (Math.random() - 0.5) * radius;
         let y = (Math.random() - 0.5) * radius;
         let z = (Math.random() - 0.5) * radius;
         let r = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
 
+        // stop when point is outside the smaller sphere
         while (radius - r < 200) {
             x = (Math.random() - 0.5) * radius;
             y = (Math.random() - 0.5) * radius;
@@ -202,6 +216,7 @@ function updateStarField(num, radius, field) {
         pos[3 * i + 1] = y;
         pos[3 * i + 2] = z;
 
+        // random color palette generator
         color = color.getHSL(color);
         let hueOffset = (Math.random() - 0.5) * 0.05;
         if (color.h + hueOffset < 0) {
@@ -209,7 +224,6 @@ function updateStarField(num, radius, field) {
         } else if (color.h + hueOffset > 1) {
             hueOffset = -hueOffset;
         }
-
         color = color.offsetHSL(hueOffset, (Math.random() - 0.5) * 0.1, 0);
         color = color.getHSL(color);
         color = color.setHSL(color.h, color.s, 0.5 + Math.random() * 0.3);
@@ -220,6 +234,7 @@ function updateStarField(num, radius, field) {
     }
 }
 
+// functions to generate, update and reset the falling stars
 function generateStar(radius) {
     let timer = new THREE.Clock({ autoStart: false });
 
@@ -228,6 +243,7 @@ function generateStar(radius) {
     let position = new Float32Array(6);
     let velocity = new Float32Array(6);
 
+    // random starting position
     // line start
     position[0] = radius * 2 * (Math.random() - 0.5);
     position[1] = radius * Math.random();
@@ -258,6 +274,7 @@ function generateStar(radius) {
 
     let material = new THREE.LineBasicMaterial({ color: mainColor });
 
+    // return the star
     return [new THREE.Line(geom, material), timer];
 }
 
@@ -265,6 +282,7 @@ function resetStar(star, timer, radius) {
     let position = star.geometry.attributes.position.array;
     let velocity = star.geometry.attributes.velocity.array;
 
+    // random starting position
     // line start
     position[0] = radius * 4 * (Math.random() - 0.5);
     position[1] = 20 + (Math.random() - 0.5) * 5;
@@ -274,6 +292,7 @@ function resetStar(star, timer, radius) {
     position[4] = position[1];
     position[5] = position[2];
 
+    // fixed target with random offset to determine trajectory and velocity
     let targetX = (Math.random() - 0.5) * 100;
     let targetY = (Math.random() + 0.5) * 5;
     let targetZ = (Math.random() + 0.5) * 100;
@@ -304,6 +323,7 @@ function updateStar(star, timer, radius) {
     let resetTime = 2;
     let progress = life / resetTime;
 
+    // tail disappears
     if (progress < 0.75) {
         // line start
         positions[0] += velocity[0];
@@ -311,6 +331,7 @@ function updateStar(star, timer, radius) {
         positions[2] += velocity[2];
     }
 
+    // color ramp to death color
     let color = mainColor.clone();
     let deathColor = mainColor.clone();
     deathColor = deathColor.getHSL(deathColor);
@@ -323,6 +344,7 @@ function updateStar(star, timer, radius) {
     positions[4] += velocity[4];
     positions[5] += velocity[5];
 
+    // reset call
     if (progress > 1) {
         resetStar(star, timer, radius);
     }
@@ -350,8 +372,6 @@ let bufferLength = analyserLeft.frequencyBinCount;
 
 Tone.connect(sound.busLeft, analyserLeft);
 Tone.connect(sound.busRight, analyserRight);
-
-
 
 // AUDIO VISUALIZER UPDATE
 
@@ -460,7 +480,7 @@ const Background = (props) => {
         });
         let floor = new THREE.Mesh(floorGeom, floorMat);
         floor.rotateX(-Math.PI / 2);
-        floor.position.set(0, -7, 0);
+        floor.position.set(0, -8, 0);
 
         scene.add(floor);
 
@@ -475,6 +495,7 @@ const Background = (props) => {
 
             updateSpectrum(world, worldWidth, worldDepth);
 
+            // star fall handler
             if (triggerStarFall == 1) {
                 async function startStarFall() {
                     timer1.start();
@@ -510,11 +531,13 @@ const Background = (props) => {
                 updateStar(star3, timer3, starFallRadius);
             }
 
+            // color update handler
             if (colorNeedsUpdate == 1) {
                 updateStarField(numField, starFieldRadius, starField);
                 colorNeedsUpdate = 0;
             }
 
+            // controls
             if (mouseY > 0) {
                 starField.rotation.x =
                     starField.rotation.x - mouseY * 0.0002 + 0.0001;
@@ -556,7 +579,7 @@ const Background = (props) => {
             renderer.render(scene, camera);
         }
         animate();
-    }, []); // never update
+    }, []); // never update, executed one time only
 
     // COLOR PALETTE MANAGEMENT
     useEffect(() => {

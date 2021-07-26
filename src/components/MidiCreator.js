@@ -23,7 +23,6 @@ export const createMidi = (melody, chords, tempo, songName) => {
 
         if (note['type'] === 'note') {
             pause = convertDurationValues(pause);
-            //console.log(pause);
 
             melodyMidi.addEvent(
                 [

@@ -15,24 +15,14 @@ import * as Tone from 'tone';
 import Sound from './components/Sound';
 
 function App() {
-    //* state of the app, passed to the components
+
+    // states of the app, passed to the components
     const [showMenu, setShowMenu] = useState([true, false, false, false]);
     const [songName, updateSongName] = useState('default');
     const [allSongs, updateAllSongs] = useState([]);
     const [chords, updateChords] = useState([]);
     const [melody, updateMelody] = useState([]);
-
-    // const [color, setColor] = useState({
-    //     hsl: {
-    //         h: 0,
-    //         s: 1,
-    //         l: 0.5,
-    //         a: 1,
-    //     },
-    //     hex: '#FF0000',
-    // });
     const [isPlaying, setIsPlaying] = useState(false);
-
     const complexityModes = ['Classical', 'Pro Jazz'];
     const melodySounds = ['Bells', 'Synth'];
     const chordSounds = ['Pad', 'Piano'];
@@ -53,15 +43,16 @@ function App() {
         },
     });
 
-    //* effects
+    // Get songs from DB
     useEffect(() => {
         getAllSongs();
         getSong('default');
         //computeMelody();
     }, []); // execute only at start
 
-    //* Visual and menu functions
+    // Visual and menu functions
 
+    // Toogle Menu when pressed
     const toggleMenu = (i) => {
         let newMenuState = [false, false, false, false];
         let changeMenu = !showMenu[i];
@@ -80,6 +71,8 @@ function App() {
     // Given the name of the song, get it from the DB or create a new one
     const getSong = (docName) => {
         if (debugDb) console.log('Aceess to db get song');
+
+        // get the song
         refSongs
             .doc(docName)
             .get()
@@ -93,11 +86,9 @@ function App() {
                         }
                         updateChords(loadSong);
                         updateMelody([]);
-                        //computeMelody();
                     }
                 } else {
                     // doc.data() will be undefined in this case
-                    //console.log('No such document! Creating an empty one...');
                     updateChords([]);
                     updateMelody([]);
                     updateServer(docName);
@@ -109,6 +100,7 @@ function App() {
                 console.log('Error getting document:', error);
             });
 
+        // get the parameters
         refParams
             .doc(docName)
             .get()
@@ -117,7 +109,6 @@ function App() {
                     const items = doc.data();
                     if (items) {
                         // here save parameters in state
-
                         updateParameters({
                             tempo: items.tempo,
                             notePause: items.notePause,
@@ -126,12 +117,9 @@ function App() {
                             chordSound: items.chordSound,
                             color: items.color,
                         });
-                        //computeMelody();
                     }
                 } else {
                     // doc.data() will be undefined in this case
-                    //console.log('No such document! Creating an empty one...');
-
                     // here initialize parameters to default
                     updateParameters({
                         tempo: 120,
@@ -149,7 +137,6 @@ function App() {
                             hex: '#FF0000',
                         },
                     });
-
                     updateServer(docName);
                 }
             })
@@ -169,8 +156,6 @@ function App() {
 
         refParams.doc(docName).delete();
         refParams.doc(docName).set(newParamsState);
-        //updateMelody([]);
-        //computeMelody();
     };
 
     // delete the provided song from the DB
@@ -178,7 +163,6 @@ function App() {
         if (debugDb) console.log('Aceess to db delete');
 
         const newAllSongs = allSongs.filter((song) => song !== docName);
-        //console.log(newAllSongs);
         updateAllSongs(newAllSongs);
 
         refSongs.doc(docName).delete();
@@ -207,7 +191,7 @@ function App() {
         getSong(text);
     };
 
-    //* Sound-related functions
+    // Sound-related functions
 
     // start/stop the transport
     const startStopContext = async () => {
@@ -240,14 +224,12 @@ function App() {
         return;
     };
 
-    // * melody computation functions
+    // melody computation functions
 
     // given a list of chords, generate the melody
 
     const computeMelody = () => {
-        // adapter dell'interfaccia
-
-        //console.log(chords);
+        // convert values
         var chordList = [];
         chords.forEach((element) => {
             const tonic = element['tonic'];
@@ -257,20 +239,16 @@ function App() {
 
             chordList = [...chordList, readChord];
         });
-        //console.log(chordList);
 
-        // genero melodia se ci sono accordi:
+        // if there are chords, generate the melody
         if (chordList.length > 0) {
-            //Istanzio l'oggetto generatore
             let generator = new MelodyGen();
-            //Genero la linea melodica dando in input gli accordi dell'utente
             let generatedMelody = generator.generate(chordList);
             updateMelody(generatedMelody);
-            console.log('New melody: ', generatedMelody);
         }
     };
 
-    //* app structure
+    // app structure
 
     return (
         <div className="app">

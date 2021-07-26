@@ -4,26 +4,27 @@ import { convert, chordNotes } from '../libraries/melodygen/utils.js';
 
 // INIT
 
-// NON FUNZIONA
-// const toneContext = new Tone.Context({ latencyHint: "playback" });
-// Tone.setContext(toneContext);
-
 let baseVolume = -3.0;
+let songTempo = 120;
 
+// connect the premaster signal to two bus for analyzing the signal
 const analyserBusLeft = new Tone.Channel(0, 0);
 const analyserBusRight = new Tone.Channel(0, 0);
 const split = new Tone.Split(2);
 split.connect(analyserBusLeft, 0);
 split.connect(analyserBusRight, 1);
 
+// enhance hi freq component for analyzer
 const eq = new Tone.EQ3(0,0,0);
 eq.set({
-    high: 8,
-    highFrequency: 2000,
+    high: 18,
+    highFrequency: 800,
     mid: 3,
-    midFrequency: 400
+    midFrequency: 300
 })
 eq.connect(split);
+
+// master fxs for loudness
 const comp = new Tone.Compressor(baseVolume-6, 3);
 comp.set({
     attack: 0.01,
@@ -31,40 +32,19 @@ comp.set({
     knee: 40,
 })
 const limiter = new Tone.Limiter(baseVolume);
-
 comp.connect(limiter);
 limiter.connect(Tone.getDestination());
 
-
+// function for chaining the instruments to the master bus and the analyzer busses
 function connectEffectsChain(chain) {
     for (let i = 0; i < chain.length - 1; i += 1) {
         chain[i].connect(chain[i + 1]);
     }
     chain[chain.length - 1].connect(eq);
     chain[chain.length - 1].connect(comp);
-    //analyserBus.connect(Tone.getDestination());
 }
 
-function createSynthParams(chain) {
-    let lastSignalChain = chain[chain.length - 1];
-    return {
-        enabled: true,
-        stop: function () {
-            if (this.enabled !== false) {
-                this.enabled = false;
-                lastSignalChain.disconnect(Tone.getDestination());
-            }
-        },
-        start: function () {
-            if (this.enabled !== true) {
-                this.enabled = true;
-                lastSignalChain.connect(Tone.getDestination());
-            }
-        },
-    };
-}
-
-let songTempo = 120;
+// melody and chords sequence init
 
 let melodyInstrument = [];
 let melodyLoop = [];
@@ -75,9 +55,11 @@ let chordLoop = [];
 let chordSequence = [];
 let loopDuration = 0;
 
+// function to create the chord loop
 function createChordLoop(instrument) {
     if (chordSequence != []) {
         let loop = new Tone.Loop(function (time) {
+            
             chordSequence.forEach((chord) => {
                 instrument['synth'].triggerAttackRelease(
                     chord.notes,
@@ -87,19 +69,20 @@ function createChordLoop(instrument) {
                 );
             });
         }, loopDuration*(120/songTempo));
-        // loop.humanize = instrument['humanize'];
-        // loop.probability = instrument['probability'];
         loop.start();
         return loop
     }
 }
 
+// function to create the melody loop
 function createMelodyLoop(instrument, transposition) {
     if (melodySequence != []) {
         let loop = new Tone.Loop(function (time) {
+            // for each element, if it's a note, trigger it
             melodySequence.forEach((note) => {
                 if (note.type == 'note') {
                     let m = note.pitch;
+                    // midi to freq conversion + transposition
                     let f = Math.pow( 2, (m-69+(transposition*12))/12 ) * 440;
                     instrument['synth'].triggerAttackRelease(
                         f,
@@ -111,7 +94,6 @@ function createMelodyLoop(instrument, transposition) {
             });
         }, loopDuration*(120/songTempo));
         loop.humanize = instrument['humanize'];
-        // loop.probability = instrument['probability'];
         loop.start();
         return loop
     }
@@ -119,6 +101,7 @@ function createMelodyLoop(instrument, transposition) {
 
 // INSTRUMENTS
 
+// electric piano type of synth, made with a distorted sine wave, tremolo and chorus
 function createSynthPiano() {
 
     let polySynthPiano = new Tone.PolySynth();
@@ -127,7 +110,6 @@ function createSynthPiano() {
         oscillator: {
             type: "fatsine",
             spread: Math.random()*20
-            //detune: Math.random()*25
         },
         envelope: {
             attack: 0.075,
@@ -136,7 +118,6 @@ function createSynthPiano() {
             release: 0.1,
         }
     });
-    //polySynthPiano.sync();
 
     let eq = new Tone.EQ3(-3, 0, 0);
     let tremolo = new Tone.Tremolo(10, 0.5).start();
@@ -146,16 +127,12 @@ function createSynthPiano() {
 
     connectEffectsChain(chain);
 
-    let humanize = 0;
-    let probability = 1;
-
     return {
         synth: polySynthPiano,
-        humanize: humanize,
-        probability: probability,
     };
 }
 
+// pad type of synth, made with pwm oscillator and a LFO controlled filter
 function createSynthPad() {
 
     let polySynthPad = new Tone.PolySynth();
@@ -173,7 +150,6 @@ function createSynthPad() {
             release: 0.9,
         }
     });
-    //polySynthPad.sync();
 
     let eq = new Tone.EQ3(6, 0, 0);
     let vibrato = new Tone.Vibrato(20, 0.07);
@@ -186,16 +162,12 @@ function createSynthPad() {
 
     connectEffectsChain(chain);
 
-    let humanize = 0;
-    let probability = 1;
-
     return {
         synth: polySynthPad,
-        humanize: humanize,
-        probability: probability,
     };
 }
 
+// lead synth, with chorus and ping pong delay to exploit spatialization, broadband
 function createSynthLead() {
     let lead = new Tone.Synth({
         volume: baseVolume - 25.0,
@@ -204,7 +176,7 @@ function createSynthLead() {
             type: 'amsine',
         },
         envelope: {
-            attack: 0.8,
+            attack: 0.3,
             decay: 2,
             sustain: 0.2,
             release: 2,
@@ -212,7 +184,6 @@ function createSynthLead() {
 
         detune: 0.5,
     });
-    //synth.sync();
 
     let chorus = new Tone.Chorus(0.5, 10, 0.3);
     let pingPong = new Tone.PingPongDelay(1/8*(120/songTempo), 0.4);
@@ -224,15 +195,14 @@ function createSynthLead() {
     connectEffectsChain(chain);
 
     let humanize = 0.2;
-    let probability = 1;
 
     return {
         synth: lead,
         humanize: humanize,
-        probability: probability,
     };
 }
 
+// percussive synth, with autopanner and delay to exploit spatialization, narrowband
 function createSynthBell() {
     let bells = new Tone.Synth();
     bells.set({
@@ -258,7 +228,6 @@ function createSynthBell() {
         },
         volume: baseVolume - 16.0,
     });
-    //synth.sync();
 
     let autoPanner = new Tone.AutoPanner(0.25*(120/songTempo));
     autoPanner.set({
@@ -273,15 +242,13 @@ function createSynthBell() {
     connectEffectsChain(chain);
 
     let humanize = 0.5;
-    let probability = 0.2;
-
     return {
         synth: bells,
         humanize: humanize,
-        probability: probability,
     };
 }
 
+// instantiate the synths
 var piano = createSynthPiano();
 var pad = createSynthPad();
 var lead = createSynthLead();
@@ -293,7 +260,7 @@ const Sound = (props) => {
 
         songTempo = props.parameters.tempo;
 
-    }, [props.parameters.tempo]); // update when prop changes
+    }, [props.parameters.tempo]); // update when tempo changes
 
     useEffect(() => {
 
@@ -355,61 +322,14 @@ const Sound = (props) => {
         let melody = createMelodyLoop(melodyInstrument, transpose);
         melodyLoop.push(melody);
         
-    }, [props.melody, props.parameters.melodySound, props.parameters.chordSound]); // update when prop changes
+    }, [props.melody, props.parameters.melodySound, props.parameters.chordSound]); // update when melody or parameters change
     
     return <></>;
 };
 
 export default Sound;
 
-export const generateSounds = () => {
-};
-
+// exports to make the visualizer work
 export var context = Tone.getContext();
 export var busLeft = analyserBusLeft;
 export var busRight = analyserBusRight;
-
-// TEST LATENCY HINT
-
-// import * as Tone from 'tone';
-
-// const toneContext = new Tone.Context({ latencyHint: "playback" });
-// Tone.setContext(toneContext);
-
-// let baseVolume = -10.0;
-// const analyserBus = new Tone.Channel(0, 0);
-// Tone.Transport.bpm.value = 60;
-
-// function getRandomInt(min, max) {
-//     min = Math.ceil(min);
-//     max = Math.floor(max);
-//     return Math.floor(Math.random() * (max - min + 1)) + min;
-// }
-
-// function createLoop(instrument) {
-//     let loop = new Tone.Loop(function (time) {
-//         let notes = instrument['notes'];
-//         let note = notes[getRandomInt(0, notes.length)];
-//         instrument['synth'].triggerAttackRelease(
-//             note,
-//             instrument['timeDelay'],
-//             time
-//         );
-//     }, instrument['timeDelay']);
-//     loop.humanize = instrument['humanize'];
-//     loop.probability = instrument['probability'];
-//     loop.start();
-// }
-
-// var duoSynth = new Tone.DuoSynth();
-// duoSynth.connect(analyserBus);
-// analyserBus.connect(Tone.getDestination());
-
-// export var context = Tone.getContext();
-// export var bus = analyserBus;
-
-// const generateSounds = () => {
-//     duoSynth.triggerAttackRelease("C4", "2n");
-// };
-
-// export default generateSounds;

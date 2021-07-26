@@ -53,13 +53,7 @@ const MenuButton = styled.button`
 `;
 
 const MainMenu = (props) => {
-    // useEffect(() => {}, [props.chords, props.melody]);
 
-    // useEffect(() => {
-    //     generateSounds();
-    // }, [props.isPlaying]);
-
-    // return pulsanti
     return (
         <StyledMainMenu className={props.className}>
             <MenuButton
@@ -82,7 +76,6 @@ const MainMenu = (props) => {
             <MenuButton
                 onClick={() => {
                     props.toggleMenu(2);
-                    props.stopContext();
                 }}
             >
                 <IoColorPalette className="Icon" />
