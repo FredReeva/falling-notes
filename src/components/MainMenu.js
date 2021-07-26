@@ -79,10 +79,12 @@ const MainMenu = (props) => {
                 <IoMusicalNotes className="Icon" />
             </MenuButton>
 
-            <MenuButton onClick={() => {
-                props.toggleMenu(2);
-                props.stopContext();
-                }}>
+            <MenuButton
+                onClick={() => {
+                    props.toggleMenu(2);
+                    props.stopContext();
+                }}
+            >
                 <IoColorPalette className="Icon" />
             </MenuButton>
 
@@ -90,6 +92,11 @@ const MainMenu = (props) => {
                 onClick={() => {
                     props.toggleMenu(3);
                     props.stopContext();
+                }}
+                style={{
+                    background:
+                        props.chords.length === 0 ? 'rgb(130,130,130)' : null,
+                    pointerEvents: props.chords.length === 0 ? 'none' : null,
                 }}
             >
                 <IoDice className="Icon" />

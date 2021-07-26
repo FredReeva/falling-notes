@@ -37,6 +37,7 @@ const ChordsMenu = (props) => {
             <BlurredPage onClick={toggleMenu} />
             <ModalMenu className="ChordsMenu">
                 <HeaderMenu titleMenu={'Chords Lab'} toggleMenu={toggleMenu} />
+                <p>🎶 Insert, modify and delete the chords of the song</p>
 
                 <ChordsDnDSection
                     chords={props.chords}

@@ -3,14 +3,15 @@ import styled from 'styled-components';
 
 const StyledRadioButton = styled.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    height: 75px;
+    align-items: center;
+    min-height: 90px;
     width: fit-content;
     background: ${(props) => props.theme.panelColor};
     box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.37);
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px;
+    font-size: 1.1em;
     border-radius: 15px;
     border: ${(props) => props.theme.border};
     padding: 5px;
@@ -25,7 +26,7 @@ const StyledButton = styled.button`
     height: 55px;
     border: ${(props) => props.theme.border};
     border-radius: 15px;
-    font-size: 1.2em;
+    font-size: 1.1em;
     background: ${(props) => props.theme.buttonColor};
 
     margin: 5px;
@@ -40,20 +41,29 @@ const StyledButton = styled.button`
 const RadioButton = (props) => {
     return (
         <StyledRadioButton className={props.className}>
-            {props.buttons.map((button, id) => (
-                <StyledButton
-                    key={id}
-                    onClick={() => {
-                        props.buttonPressed(button);
-                    }}
-                    style={{
-                        background:
-                            props.mode === button ? props.color.hex : null,
-                    }}
-                >
-                    {button}
-                </StyledButton>
-            ))}
+            {props.title}
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'center',
+                    alignItems: 'center',
+                }}
+            >
+                {props.buttons.map((button, id) => (
+                    <StyledButton
+                        key={id}
+                        onClick={() => {
+                            props.buttonPressed(button);
+                        }}
+                        style={{
+                            background:
+                                props.mode === button ? props.color.hex : null,
+                        }}
+                    >
+                        {button}
+                    </StyledButton>
+                ))}
+            </div>
         </StyledRadioButton>
     );
 };

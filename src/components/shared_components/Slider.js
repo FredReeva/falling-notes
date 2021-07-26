@@ -10,8 +10,8 @@ const StyledSliderSection = styled.div`
     width: fit-content;
     background: ${(props) => props.theme.panelColor};
     box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.37);
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin: 10px;
+
     border-radius: 15px;
     border: ${(props) => props.theme.border};
     padding: 5px;

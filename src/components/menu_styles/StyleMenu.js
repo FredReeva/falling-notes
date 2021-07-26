@@ -40,6 +40,7 @@ const StyleMenu = (props) => {
             <BlurredPage onClick={toggleMenu} />
             <ModalMenu className="StyleMenu">
                 <HeaderMenu titleMenu={'Style Lab'} toggleMenu={toggleMenu} />
+                <p>🎨 Select the accent color of the application</p>
                 <Container>
                     <StyledColorPicker
                         height={30}
@@ -49,23 +50,39 @@ const StyleMenu = (props) => {
                             props.setColor(color);
                         }}
                     ></StyledColorPicker>
-                    <RadioButton
-                        color={props.color}
-                        mode={props.parameters.chordSound}
-                        buttons={props.chordSounds}
-                        buttonPressed={(button) => {
-                            props.changeChordSound(button);
+                </Container>
+                <p>
+                    🎹 Select the sound of the chord instrument and the melodic
+                    instrument
+                </p>
+                <Container>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'center',
+                            alignItems: 'center',
                         }}
-                    ></RadioButton>
+                    >
+                        <RadioButton
+                            title={'Chords'}
+                            color={props.color}
+                            mode={props.parameters.chordSound}
+                            buttons={props.chordSounds}
+                            buttonPressed={(button) => {
+                                props.changeChordSound(button);
+                            }}
+                        ></RadioButton>
 
-                    <RadioButton
-                        color={props.color}
-                        mode={props.parameters.melodySound}
-                        buttons={props.melodySounds}
-                        buttonPressed={(button) => {
-                            props.changeMelodySound(button);
-                        }}
-                    ></RadioButton>
+                        <RadioButton
+                            title={'Melody'}
+                            color={props.color}
+                            mode={props.parameters.melodySound}
+                            buttons={props.melodySounds}
+                            buttonPressed={(button) => {
+                                props.changeMelodySound(button);
+                            }}
+                        ></RadioButton>
+                    </div>
                 </Container>
             </ModalMenu>
         </div>

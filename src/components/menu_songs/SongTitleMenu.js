@@ -53,8 +53,8 @@ const SongTitleMenu = (props) => {
                     toggleMenu={toggleMenu}
                 />
                 <p>
-                    Please, enter the name of the song you want to modify ✍🏼 or
-                    create a new one 🆕
+                    ✍🏼 Enter the name of the song you want to modify or create a
+                    new one
                 </p>
                 <Form
                     onSubmit={props.onSubmit}
@@ -67,7 +67,7 @@ const SongTitleMenu = (props) => {
                     }}
                 />
 
-                <p>List of available songs 🎶</p>
+                <p>🧾 List of available songs</p>
                 <StyledSongSection>
                     {props.allSongs
                         .filter((song) => song !== 'default')

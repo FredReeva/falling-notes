@@ -56,7 +56,7 @@ function App() {
     useEffect(() => {
         getAllSongs();
         getSong('default');
-        computeMelody();
+        //computeMelody();
     }, []); // execute only at start
 
     //* Visual and menu functions
@@ -91,12 +91,14 @@ function App() {
                             loadSong = [...loadSong, items[key]];
                         }
                         updateChords(loadSong);
-                        computeMelody();
+                        updateMelody([]);
+                        //computeMelody();
                     }
                 } else {
                     // doc.data() will be undefined in this case
                     //console.log('No such document! Creating an empty one...');
                     updateChords([]);
+                    updateMelody([]);
                     updateServer(docName);
                     const newAllSongs = [...allSongs, docName];
                     updateAllSongs(newAllSongs);
@@ -167,7 +169,7 @@ function App() {
         refParams.doc(docName).delete();
         refParams.doc(docName).set(newParamsState);
         //updateMelody([]);
-        computeMelody();
+        //computeMelody();
     };
 
     // delete the provided song from the DB
@@ -240,7 +242,7 @@ function App() {
     // * melody computation functions
 
     // given a list of chords, generate the melody
-    //! add parameters
+
     const computeMelody = () => {
         // adapter dell'interfaccia
 
@@ -301,7 +303,6 @@ function App() {
 
                 <MainMenu
                     toggleMenu={toggleMenu}
-                    computeMelody={computeMelody}
                     melody={melody}
                     chords={chords}
                     tempo={parameters.tempo}
@@ -317,7 +318,7 @@ function App() {
                     toggleMenu={toggleMenu}
                     onSubmit={(e) => {
                         submitSongName(e);
-                        computeMelody();
+                        //computeMelody();
                     }}
                     onDelete={deleteSong}
                     allSongs={allSongs}
@@ -336,7 +337,6 @@ function App() {
                     toggleMenu={toggleMenu}
                     color={parameters.color}
                     setColor={(e) => {
-                        console.log(e);
                         updateParameters({
                             ...parameters,
                             color: {
