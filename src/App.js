@@ -10,7 +10,6 @@ import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 import ParametersMenu from './components/menu_parameters/ParametersMenu';
-import VolumeCtrl from './components/Volume Ctrl';
 
 import * as Tone from 'tone';
 import Sound from './components/Sound';
