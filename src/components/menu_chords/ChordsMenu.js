@@ -4,6 +4,7 @@ import AddChordSection from './AddChordSection';
 import BlurredPage from '../shared_components/BlurredPage';
 import HeaderMenu from '../shared_components/HeaderMenu';
 import ModalMenu from '../shared_components/ModalMenu';
+import Paragraph from '../shared_components/Paragraph';
 
 const ChordsMenu = (props) => {
     const deleteChord = (id) => {
@@ -37,8 +38,7 @@ const ChordsMenu = (props) => {
             <BlurredPage onClick={toggleMenu} />
             <ModalMenu className="ChordsMenu">
                 <HeaderMenu titleMenu={'Chords Lab'} toggleMenu={toggleMenu} />
-                <p>🎶 Insert, modify and delete the chords of the song</p>
-
+                <Paragraph text="🎶 Insert, modify and delete the chords of the song" />
                 <ChordsDnDSection
                     chords={props.chords}
                     handleOnDragEnd={handleOnDragEnd}

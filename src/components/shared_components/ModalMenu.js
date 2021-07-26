@@ -16,7 +16,7 @@ const StyledModalMenu = styled.div`
 
     border-radius: 15px;
     border: ${(props) => props.theme.border};
-    padding: 10px;
+    padding: 25px;
 `;
 
 const ModalMenu = (props) => {

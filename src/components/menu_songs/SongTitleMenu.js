@@ -4,15 +4,22 @@ import Form from '../shared_components/Form';
 import HeaderMenu from '../shared_components/HeaderMenu';
 import ModalMenu from '../shared_components/ModalMenu';
 import styled from 'styled-components';
+import Paragraph from '../shared_components/Paragraph';
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+`;
 
 const StyledSongSection = styled.div`
     display: flex;
     width: fit-content;
-    height: 200px;
     flex-wrap: wrap;
     align-content: flex-start;
     overflow: auto;
-    margin-top: 5px;
+    margin-top: 10px;
 `;
 
 const StyledSongName = styled.div`
@@ -52,44 +59,61 @@ const SongTitleMenu = (props) => {
                     titleMenu={'Song Selection'}
                     toggleMenu={toggleMenu}
                 />
-                <p>
-                    ✍🏼 Enter the name of the song you want to modify or create a
-                    new one
-                </p>
-                <Form
-                    onSubmit={props.onSubmit}
-                    onChange={(e) => setValue(e.target.value)}
-                    value={value}
-                    allSongs={props.allSongs}
-                    onDelete={() => {
-                        props.onDelete(value);
-                        setValue('');
-                    }}
-                />
-
-                <p>🧾 List of available songs</p>
-                <StyledSongSection>
-                    {props.allSongs
-                        .filter((song) => song !== 'default')
-                        .map((song, index) => (
-                            <StyledSongName
-                                key={index}
-                                onClick={(e) => {
-                                    setValue(e.target.innerText);
-                                }}
-                                style={{
-                                    background:
-                                        props.songName === song
-                                            ? props.color.hex
-                                            : null,
-                                    borderColor:
-                                        value === song ? props.color.hex : null,
-                                }}
-                            >
-                                {song}
-                            </StyledSongName>
-                        ))}
-                </StyledSongSection>
+                <Paragraph text="✍🏼 Enter the name of the song you want to modify or create a
+                    new one" />
+                <Container>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                    <Form
+                        onSubmit={props.onSubmit}
+                        onChange={(e) => setValue(e.target.value)}
+                        value={value}
+                        allSongs={props.allSongs}
+                        onDelete={() => {
+                            props.onDelete(value);
+                            setValue('');
+                        }}
+                    />
+                    </div>
+                </Container>
+                <Paragraph text="🧾 List of available songs" />
+                <Container>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                    <StyledSongSection>
+                        {props.allSongs
+                            .filter((song) => song !== 'default')
+                            .map((song, index) => (
+                                <StyledSongName
+                                    key={index}
+                                    onClick={(e) => {
+                                        setValue(e.target.innerText);
+                                    }}
+                                    style={{
+                                        background:
+                                            props.songName === song
+                                                ? props.color.hex
+                                                : null,
+                                        borderColor:
+                                            value === song ? props.color.hex : null,
+                                    }}
+                                >
+                                    {song}
+                                </StyledSongName>
+                            ))}
+                    </StyledSongSection>
+                    </div>
+                </Container>
             </ModalMenu>
         </div>
     ) : null;

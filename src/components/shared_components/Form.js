@@ -8,6 +8,9 @@ const StyledForm = styled.form`
 
     width: fit-content;
     height: fit-content;
+
+    margin-top: 10px;
+    margin-bottom: 25px;
 `;
 
 const SubmitButton = styled.button`

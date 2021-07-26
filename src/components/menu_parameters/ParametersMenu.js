@@ -5,6 +5,7 @@ import HeaderMenu from '../shared_components/HeaderMenu';
 import ModalMenu from '../shared_components/ModalMenu';
 import RadioButton from '../shared_components/RadioButton';
 import Slider from '../shared_components/Slider';
+import Paragraph from '../shared_components/Paragraph';
 
 const Container = styled.div`
     display: flex;
@@ -49,7 +50,7 @@ const ParametersMenu = (props) => {
                     titleMenu={'Parameters Lab'}
                     toggleMenu={toggleMenu}
                 />
-                <p>⏲ Select the BPM of the generated melody</p>
+                <Paragraph text="⏲ Select the BPM of the generated melody" />
                 <Container>
                     <Slider
                         color={props.color}
@@ -62,44 +63,37 @@ const ParametersMenu = (props) => {
                         }}
                     ></Slider>
                 </Container>
-                <p>
-                    🎼 Select the level of complexity | notes vs pauses balance
-                    for the generated melody
-                </p>
+                <Paragraph text="🎼 Select the balance between notes and pauses" />
                 <Container>
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexDirection: 'center',
-                            alignItems: 'center',
+                    <Slider
+                        color={props.color}
+                        title={'Pauses ↔ Notes'}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        value={props.parameters.notePause}
+                        onSlide={(value) => {
+                            props.changeNotePause(value);
                         }}
-                    >
-                        <RadioButton
-                            color={props.color}
-                            mode={props.parameters.complexityMode}
-                            buttons={props.complexityModes}
-                            buttonPressed={(button) => {
-                                props.changeComplexity(button);
-                            }}
-                        ></RadioButton>
-
-                        <Slider
-                            color={props.color}
-                            title={'Pauses ↔ Notes'}
-                            min={0}
-                            max={1}
-                            step={0.01}
-                            value={props.parameters.notePause}
-                            onSlide={(value) => {
-                                props.changeNotePause(value);
-                            }}
-                        ></Slider>
-                    </div>
+                    ></Slider>
+                </Container>
+                <Paragraph text="🎼 Select the level of complexity" />
+                <Container>
+                    <RadioButton
+                        color={props.color}
+                        mode={props.parameters.complexityMode}
+                        buttons={props.complexityModes}
+                        buttonPressed={(button) => {
+                            props.changeComplexity(button);
+                        }}
+                    ></RadioButton>
+                </Container>
+                <Paragraph text="🎼 Compute a new melody (old one will be overwritted)" />
+                <Container>
                     <Select
                         onClick={props.computeMelody}
                         style={{ background: props.color.hex }}
-                    >
-                        Compute New Melody
+                    > Compute New Melody
                     </Select>
                 </Container>
             </ModalMenu>

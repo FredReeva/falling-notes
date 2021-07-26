@@ -10,7 +10,7 @@ const StyledRadioButton = styled.div`
     width: fit-content;
     background: ${(props) => props.theme.panelColor};
     box-shadow: 0 8px 32px 0 rgba(75, 75, 75, 0.37);
-    margin: 10px;
+    margin: 20px;
     font-size: 1.1em;
     border-radius: 15px;
     border: ${(props) => props.theme.border};

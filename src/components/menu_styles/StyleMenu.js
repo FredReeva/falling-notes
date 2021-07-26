@@ -5,6 +5,7 @@ import HeaderMenu from '../shared_components/HeaderMenu';
 import ModalMenu from '../shared_components/ModalMenu';
 import { HuePicker } from 'react-color';
 import RadioButton from '../shared_components/RadioButton';
+import Paragraph from '../shared_components/Paragraph';
 
 const Container = styled.div`
     display: flex;
@@ -16,15 +17,15 @@ const Container = styled.div`
 const StyledColorPicker = styled(HuePicker)`
     display: flex;
     flex-direction: row;
-    margin: 10px;
+    margin: 25px;
 
     cursor: pointer;
 `;
 
 const StyledPointer = styled.div`
-    width: 40px;
-    height: 40px;
-    transform: translate(-50%, -5px);
+    width: 25px;
+    height: 25px;
+    transform: translate(0, -7px);
     border-radius: 50%;
     background: ${(props) => props.theme.buttonColor};
 `;
@@ -40,10 +41,10 @@ const StyleMenu = (props) => {
             <BlurredPage onClick={toggleMenu} />
             <ModalMenu className="StyleMenu">
                 <HeaderMenu titleMenu={'Style Lab'} toggleMenu={toggleMenu} />
-                <p>🎨 Select the accent color of the application</p>
+                <Paragraph text="🎨 Select the accent color of the application" />
                 <Container>
                     <StyledColorPicker
-                        height={30}
+                        height={10}
                         pointer={StyledPointer}
                         color={props.color}
                         onChangeComplete={(color) => {
@@ -51,10 +52,8 @@ const StyleMenu = (props) => {
                         }}
                     ></StyledColorPicker>
                 </Container>
-                <p>
-                    🎹 Select the sound of the chord instrument and the melodic
-                    instrument
-                </p>
+                <Paragraph text="🎹 Select the sound of the chord instrument and the melodic
+                    instrument" />
                 <Container>
                     <div
                         style={{

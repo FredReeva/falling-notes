@@ -10,6 +10,7 @@ import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 import ParametersMenu from './components/menu_parameters/ParametersMenu';
+import VolumeCtrl from './components/Volume Ctrl';
 
 import * as Tone from 'tone';
 import Sound from './components/Sound';
@@ -21,6 +22,7 @@ function App() {
     const [allSongs, updateAllSongs] = useState([]);
     const [chords, updateChords] = useState([]);
     const [melody, updateMelody] = useState([]);
+
     // const [color, setColor] = useState({
     //     hsl: {
     //         h: 0,
@@ -293,8 +295,8 @@ function App() {
                     style={{
                         color: 'white',
                         position: 'fixed',
-                        top: '20px',
-                        right: '20px',
+                        top: '5vh',
+                        right: '2vw',
                         zIndex: '100',
                     }}
                 >

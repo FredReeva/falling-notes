@@ -335,7 +335,6 @@ let audioCtx = sound.context;
 
 let analyserLeft = audioCtx.createAnalyser();
 let analyserRight = audioCtx.createAnalyser();
-let analyserSplitter = audioCtx.createChannelSplitter(2);
 
 analyserLeft.fftSize = 256;
 analyserLeft.smoothingTimeConstant = 0.7;
@@ -349,9 +348,6 @@ analyserRight.maxDecibels = -10;
 
 let bufferLength = analyserLeft.frequencyBinCount;
 
-//Tone.connect(sound.bus, analyserSplitter);
-// analyserSplitter.connect(analyserLeft, 0);
-// analyserSplitter.connect(analyserRight, 1);
 Tone.connect(sound.busLeft, analyserLeft);
 Tone.connect(sound.busRight, analyserRight);
 
