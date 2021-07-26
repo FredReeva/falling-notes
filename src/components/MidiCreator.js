@@ -1,4 +1,3 @@
-import { IoPause } from 'react-icons/io5';
 import { convert, chordNotes } from '../libraries/melodygen/utils.js';
 import { MidiWriter } from 'midi-writer-js';
 
