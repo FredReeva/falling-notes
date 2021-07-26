@@ -54,7 +54,7 @@ const ParametersMenu = (props) => {
                     <Slider
                         color={props.color}
                         title={'BPM'}
-                        min={60}
+                        min={40}
                         max={200}
                         value={props.parameters.tempo}
                         onSlide={(value) => {

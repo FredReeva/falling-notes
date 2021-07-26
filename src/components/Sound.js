@@ -10,7 +10,6 @@ import { convert, chordNotes } from '../libraries/melodygen/utils.js';
 
 const analyserBus = new Tone.Channel(0, 0);
 let baseVolume = -15.0;
-Tone.Transport.bpm.value = 60;
 
 function connectEffectsChain(chain) {
     for (let i = 0; i < chain.length - 1; i += 1) {
@@ -44,6 +43,8 @@ function createSynthParams(chain) {
     };
 }
 
+let songTempo = 120;
+
 let melodyInstrument = [];
 let melodyLoop = [];
 let melodySequence = [];
@@ -59,8 +60,8 @@ function createChordLoop(instrument) {
             chordSequence.forEach((chord) => {
                 instrument['synth'].triggerAttackRelease(
                     chord.notes,
-                    parseInt(chord.duration),
-                    time+chord.time,
+                    parseInt(chord.duration)*(120/songTempo),
+                    time+chord.time*(120/songTempo),
                     1
                 );
             });
@@ -81,15 +82,15 @@ function createMelodyLoop(instrument) {
                     let f = Math.pow( 2, (m-69)/12 ) * 440;
                     instrument['synth'].triggerAttackRelease(
                         f,
-                        note.duration,
-                        time+note.onsetTime,
+                        note.duration*(120/songTempo),
+                        time+note.onsetTime*(120/songTempo),
                         1
                     );
                 } else { //pause = note with 0 velocity and random pitch
                     instrument['synth'].triggerAttackRelease(
                         60,
-                        note.duration,
-                        time+note.onsetTime,
+                        note.duration*(120/songTempo),
+                        time+note.onsetTime*(120/songTempo),
                         0
                     );
                 }
@@ -102,43 +103,9 @@ function createMelodyLoop(instrument) {
     }
 }
 
-
-
 // INSTRUMENTS
 
 function createSynthPiano() {
-
-    // let synth = new Tone.DuoSynth();
-    // synth.set({
-    //     volume: baseVolume - 10.0,
-    //     portamento: 0.7,
-    //     harmonicity: 1.5,
-    //     vibratoAmount: 0.1,
-    //     vibratoRate: '4n',
-
-    //     voice0: {
-    //         oscillator: {
-    //             type: 'fatsawtooth8',
-    //         },
-    //         envelope: {
-    //             attack: 2,
-    //             decay: 1,
-    //             sustain: 0.8,
-    //             release: 0,
-    //         },
-    //     },
-    //     voice1: {
-    //         oscillator: {
-    //             type: 'fatsawtooth10',
-    //         },
-    //         envelope: {
-    //             attack: 2,
-    //             decay: 1,
-    //             sustain: 0.8,
-    //             release: 0,
-    //         },
-    //     }
-    // });
 
     let polySynthPiano = new Tone.PolySynth();
     polySynthPiano.set({
@@ -155,6 +122,7 @@ function createSynthPiano() {
             release: 0.1,
         }
     });
+    //polySynthPiano.sync();
 
     let eq = new Tone.EQ3(-3, 0, 0);
     let tremolo = new Tone.Tremolo(10, 1).start();
@@ -190,6 +158,7 @@ function createSynthPad() {
             release: 0.9,
         }
     });
+    //polySynthPad.sync();
 
     let eq = new Tone.EQ3(4, 0, 0);
     let vibrato = new Tone.Vibrato(20, 0.07);
@@ -300,9 +269,12 @@ var lead = createSynthLead();
 var bell = createSynthBell();
 
 const Sound = (props) => {
-    // useEffect(() => {
 
-    // }, []); // never update
+    useEffect(() => {
+
+        songTempo = props.parameters.tempo;
+
+    }, [props.parameters.tempo]); // update when prop changes
 
     useEffect(() => {
 
