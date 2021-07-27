@@ -1,5 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import Tooltip from '@material-ui/core/Tooltip';
+import Fade from '@material-ui/core/Fade';
+import {
+    createMuiTheme,
+    MuiThemeProvider,
+  } from "@material-ui/core/styles";
 
 import {
     IoMusicalNotes,
@@ -10,8 +16,30 @@ import {
     IoDice,
     IoText,
 } from 'react-icons/io5';
-import generateSounds from './Sound.js';
+import {BsGearFill} from "react-icons/bs";
 import { createMidi } from './MidiCreator.js';
+
+const defaultTheme = createMuiTheme();
+const theme = createMuiTheme({
+  overrides: {
+    MuiTooltip: {
+        popper: {
+            marginTop: "15px",
+        },
+        tooltip: {
+            fontSize: "0.8em",
+            fontWeight: 'bold',
+            color: "black",
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
+            borderStyle: 'none'
+        },
+        arrow: {
+            color: 'rgba(255, 255, 255, 0.85)',
+            borderStyle: 'none'
+        }
+    }
+  }
+});
 
 const StyledMainMenu = styled.div`
     display: flex;
@@ -55,89 +83,185 @@ const MenuButton = styled.button`
 const MainMenu = (props) => {
 
     return (
-        <StyledMainMenu className={props.className}>
-            <MenuButton
-                onClick={() => {
-                    props.toggleMenu(0);
-                    props.stopContext();
-                }}
-            >
-                <IoText className="Icon" />
-            </MenuButton>
-            <MenuButton
-                onClick={() => {
-                    props.toggleMenu(1);
-                    props.stopContext();
-                }}
-            >
-                <IoMusicalNotes className="Icon" />
-            </MenuButton>
+        <MuiThemeProvider theme={defaultTheme}>
+            <StyledMainMenu className={props.className}>
+                <MuiThemeProvider theme={theme}>
+                    <Tooltip 
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                        placement="bottom"
+                        enterDelay={200}
+                        title="Song Selection"
+                        arrow
+                    >
+                        <MenuButton
+                            onClick={() => {
+                                props.toggleMenu(0);
+                                props.stopContext();
+                            }}
+                        >
+                            <IoText className="Icon" />
+                        </MenuButton>
+                    </Tooltip>
+                </MuiThemeProvider>
 
-            <MenuButton
-                onClick={() => {
-                    props.toggleMenu(2);
-                }}
-            >
-                <IoColorPalette className="Icon" />
-            </MenuButton>
+                <MuiThemeProvider theme={theme}>
+                    <Tooltip 
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                        placement="bottom"
+                        enterDelay={200}
+                        title="Chords Lab"
+                        arrow
+                    >
+                        <MenuButton
+                            onClick={() => {
+                                props.toggleMenu(1);
+                                props.stopContext();
+                            }}
+                        >
+                            <IoMusicalNotes className="Icon" />
+                        </MenuButton>
+                    </Tooltip>
+                </MuiThemeProvider>
 
-            <MenuButton
-                onClick={() => {
-                    props.toggleMenu(3);
-                    props.stopContext();
-                }}
-                style={{
-                    background:
-                        props.chords.length === 0 ? 'rgb(130,130,130)' : null,
-                    pointerEvents: props.chords.length === 0 ? 'none' : null,
-                }}
-            >
-                <IoDice className="Icon" />
-            </MenuButton>
+                <MuiThemeProvider theme={theme}>
+                    <Tooltip 
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                        placement="bottom"
+                        enterDelay={200}
+                        title="Compute random melody"
+                        arrow
+                    >
+                        <MenuButton
+                            onClick={() => {
+                                props.stopContext();
+                                props.computeMelody();
+                            }}
+                            style={{
+                                background:
+                                    props.chords.length === 0 ? 'rgb(130,130,130)' : null,
+                                pointerEvents: props.chords.length === 0 ? 'none' : null,
+                            }}
+                        >
+                            <IoDice className="Icon" />
+                        </MenuButton>
+                    </Tooltip>
+                </MuiThemeProvider>
 
-            <MenuButton
-                onClick={() => {
-                    createMidi(
-                        props.melody,
-                        props.chords,
-                        props.tempo,
-                        props.songName
-                    );
-                }}
-                style={{
-                    background:
-                        props.melody.length === 0 || props.chords.length === 0
-                            ? 'rgb(130,130,130)'
-                            : null,
-                    pointerEvents:
-                        props.melody.length === 0 || props.chords.length === 0
-                            ? 'none'
-                            : null,
-                }}
-            >
-                <IoDownloadOutline className="Icon" />
-            </MenuButton>
+                <MuiThemeProvider theme={theme}>
+                    <Tooltip 
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                        placement="bottom"
+                        enterDelay={200}
+                        title="Style Lab"
+                        arrow
+                    >
+                        <MenuButton
+                            onClick={() => {
+                                props.toggleMenu(2);
+                            }}
+                        >
+                            <IoColorPalette className="Icon" />
+                        </MenuButton>
+                    </Tooltip>
+                </MuiThemeProvider>
 
-            <MenuButton
-                onClick={props.startStopContext}
-                style={{
-                    background:
-                        props.melody.length === 0 || props.chords.length === 0
-                            ? 'rgb(130,130,130)'
-                            : null,
-                    pointerEvents:
-                        props.melody.length === 0 || props.chords.length === 0
-                            ? 'none'
-                            : null,
-                }}
-            >
-                {!props.isPlaying ? (
-                    <IoPlayCircle className="Icon" />
-                ) : (
-                    <IoStopCircle className="Icon" />
-                )}
-            </MenuButton>
-        </StyledMainMenu>
+                <MuiThemeProvider theme={theme}>
+                    <Tooltip 
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                        placement="bottom"
+                        enterDelay={200}
+                        title="Parameters Lab"
+                        arrow
+                    >
+                        <MenuButton
+                            onClick={() => {
+                                props.toggleMenu(3);
+                                props.stopContext();
+                            }}
+                            style={{
+                                background:
+                                    props.chords.length === 0 ? 'rgb(130,130,130)' : null,
+                                pointerEvents: props.chords.length === 0 ? 'none' : null,
+                            }}
+                        >
+                            <BsGearFill className="Icon" />
+                        </MenuButton>
+                    </Tooltip>
+                </MuiThemeProvider>
+
+                <MuiThemeProvider theme={theme}>
+                    <Tooltip 
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                        placement="bottom"
+                        enterDelay={200}
+                        title="Download MIDI"
+                        arrow
+                    >
+                        <MenuButton
+                            onClick={() => {
+                                createMidi(
+                                    props.melody,
+                                    props.chords,
+                                    props.tempo,
+                                    props.songName
+                                );
+                            }}
+                            style={{
+                                background:
+                                    props.melody.length === 0 || props.chords.length === 0
+                                        ? 'rgb(130,130,130)'
+                                        : null,
+                                pointerEvents:
+                                    props.melody.length === 0 || props.chords.length === 0
+                                        ? 'none'
+                                        : null,
+                            }}
+                        >
+                            <IoDownloadOutline className="Icon" />
+                        </MenuButton>
+                    </Tooltip>
+                </MuiThemeProvider>
+
+
+                <MuiThemeProvider theme={theme}>
+                    <Tooltip 
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 600 }}
+                        placement="bottom"
+                        enterDelay={200}
+                        title="Start/Stop"
+                        arrow
+                    >
+                        <MenuButton
+                            onClick={props.startStopContext}
+                            style={{
+                                background:
+                                    props.melody.length === 0 || props.chords.length === 0
+                                        ? 'rgb(130,130,130)'
+                                        : null,
+                                pointerEvents:
+                                    props.melody.length === 0 || props.chords.length === 0
+                                        ? 'none'
+                                        : null,
+                            }}
+                        >
+                            {!props.isPlaying ? (
+                                <IoPlayCircle className="Icon" />
+                            ) : (
+                                <IoStopCircle className="Icon" />
+                            )}
+                        </MenuButton>
+                    </Tooltip>
+                </MuiThemeProvider>
+            </StyledMainMenu>
+        </MuiThemeProvider>
+        
     );
 };
 

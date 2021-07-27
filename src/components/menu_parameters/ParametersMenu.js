@@ -63,11 +63,9 @@ const ParametersMenu = (props) => {
                     ></Slider>
                 </Container>
                 <p>
-                    🎼 Select the balance between notes and pauses... and the
-                    level of complexity
+                    🎼 Select the balance between notes and pauses 
                 </p>
-
-                <Container style={{ flexDirection: 'row' }}>
+                <Container>
                     <Slider
                         color={props.color}
                         title={'Pauses ↔ Notes'}
@@ -79,7 +77,11 @@ const ParametersMenu = (props) => {
                             props.changeNotePause(value);
                         }}
                     ></Slider>
-
+                </Container>
+                <p>
+                    🤯 Select the level of complexity
+                </p>
+                <Container>
                     <RadioButton
                         color={props.color}
                         mode={props.parameters.complexityMode}
@@ -88,16 +90,6 @@ const ParametersMenu = (props) => {
                             props.changeComplexity(button);
                         }}
                     ></RadioButton>
-                </Container>
-                <p>💻 Compute a new melody (the old one will be overwritten)</p>
-                <Container>
-                    <Select
-                        onClick={props.computeMelody}
-                        style={{ background: props.color.hex }}
-                    >
-                        {' '}
-                        Compute New Melody
-                    </Select>
                 </Container>
             </ModalMenu>
         </div>

@@ -61,6 +61,21 @@ export const GlobalStyles = createGlobalStyle`
     }
 }
 
+  h1 {
+      
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+    font-size: 2em;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+    
+  }
+
   h2 {
     
     display: block;
@@ -83,6 +98,13 @@ export const GlobalStyles = createGlobalStyle`
     left: 50%;
     transform: translate(-50%, -50%);
 
+  }
+
+  h4{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    font-size: 1.1em;
   }
 
 input{

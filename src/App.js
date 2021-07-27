@@ -10,7 +10,7 @@ import firebase from './components/firebase';
 import StyleMenu from './components/menu_styles/StyleMenu';
 import SongTitleMenu from './components/menu_songs/SongTitleMenu';
 import ParametersMenu from './components/menu_parameters/ParametersMenu';
-import HelpMenu from './components/HelpMenu';
+import HelpMenu from './components/help page/HelpMenu';
 import { IoInformationCircle } from 'react-icons/io5';
 
 import * as Tone from 'tone';
@@ -280,8 +280,8 @@ function App() {
                     style={{
                         color: 'white',
                         position: 'fixed',
-                        bottom: '15px',
-                        right: '15px',
+                        bottom: '25px',
+                        right: '25px',
                         zIndex: '100',
                     }}
                 >
@@ -297,6 +297,7 @@ function App() {
                     isPlaying={isPlaying}
                     startStopContext={startStopContext}
                     stopContext={stopContext}
+                    computeMelody={computeMelody}
                 />
                 <HelpMenu toggleMenu={toggleMenu} showMenu={showMenu[4]} />
                 <IoInformationCircle
@@ -358,7 +359,6 @@ function App() {
                 />
                 <ParametersMenu
                     showMenu={showMenu[3]}
-                    computeMelody={computeMelody}
                     toggleMenu={toggleMenu}
                     parameters={parameters}
                     color={parameters.color}
