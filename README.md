@@ -11,13 +11,13 @@ Overview of the main interface of the app [foto]
 The main menu consists of 6 interactive buttons that provide access to the main functionality of the app
 ![Main Menu](./documentation/MainMenuEx.png)
 
-1. Song Title Selection
-2. Chords Menu
-3. Generate a random melody
-4. Style Menu
-5. Parameters menu
-6. Download MIDI
-7. Start/Stop transport
+1. [Song Title Selection](#song-title-menu)
+2. [Chords Menu](#chords-menu-)
+3. [Melody Generator](#random-melody-generator-)
+4. [Style Menu](#style-menu-)
+5. [Parameters menu](#parameters-menu-)
+6. [Download MIDI](#midi-downloader-)
+7. [Start/Stop transport](#play-)
 
 #### Song Title Menu 🔡
 
@@ -33,10 +33,10 @@ Here you can add, delete and modify the chords in your song. Every change will b
 
 \*opening this menu will also stop the reproduction of the song
 
-#### Random Melody Generator
+#### Random Melody Generator 🎲
 
 Pressing this button will generate a new melody based on the current chords the parameters' selection. Careful! The old melody will be overwritten. If you wnt to save the melody in a file please refer to
-[Midi Downloader](#Midi-Downloader-⬇)
+[Midi Downloader](#midi-downloader-)
 
 \*pressing this button will also stop the reproduction of the current song
 
@@ -48,7 +48,7 @@ Here you can express your artistic side. You can modify the main color of the in
 
 #### Parameters Menu ⚙
 
-This is the brain of the melody computation. Select the tempo of your song, the balance beetween pauses and notes and the complexity of the generated melody. If you modify this parameters and you want to listen to the result, remember to [recompute the melody](#Random-Melody-Generator) before play.
+This is the brain of the melody computation. Select the tempo of your song, the balance beetween pauses and notes and the complexity of the generated melody. If you modify this parameters and you want to listen to the result, remember to [recompute the melody](#random-melody-generator-) before play.
 ![Parameters Menu](./documentation/ParametersLabEx.png)
 \*opening this menu will also stop the reproduction of the song
 
