@@ -322,7 +322,7 @@ const Sound = (props) => {
         let melody = createMelodyLoop(melodyInstrument, transpose);
         melodyLoop.push(melody);
         
-    }, [props.melody, props.parameters.melodySound, props.parameters.chordSound]); // update when melody or parameters change
+    }, [props.melody, props.parameters.melodySound, props.parameters.chordSound, props.parameters.tempo]); // update when melody or parameters change
     
     return <></>;
 };
