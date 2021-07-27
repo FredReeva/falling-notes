@@ -246,11 +246,19 @@ function App() {
 
             chordList = [...chordList, readChord];
         });
+        var classic = false;
+        var balance = Math.abs(1 - parameters.notePause);
+
+        if (parameters.complexityMode === 'Classical') classic = true;
 
         // if there are chords, generate the melody
         if (chordList.length > 0) {
             let generator = new MelodyGen();
-            let generatedMelody = generator.generate(chordList);
+            let generatedMelody = generator.generate(
+                chordList,
+                balance,
+                classic
+            );
             updateMelody(generatedMelody);
         }
     };
