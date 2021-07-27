@@ -11,7 +11,7 @@ Overview of the main interface of the app [foto]
 The main menu consists of 6 interactive buttons that provide access to the main functionality of the app
 ![Main Menu](./documentation/MainMenuEx.png)
 
-1. [Song Title Selection](#song-title-menu)
+1. [Song Title Selection](#song-title-menu-)
 2. [Chords Menu](#chords-menu-)
 3. [Melody Generator](#random-melody-generator-)
 4. [Style Menu](#style-menu-)
