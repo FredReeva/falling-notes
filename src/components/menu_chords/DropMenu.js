@@ -9,7 +9,7 @@ const StyledDropMenu = styled.div`
     justify-content: space-evenly;
 
     position: absolute;
-    top: 100px;
+    top: 115px;
 
     border: ${(props) => props.theme.border};
     border-radius: 15px;
