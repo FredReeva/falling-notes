@@ -22,23 +22,23 @@ The main menu consists of 6 interactive buttons that provide access to the main 
 #### Song Title Menu 🔡
 
 Start from here if you want to create your beautiful song. You can select a title from the list (and modify an existing song) or you can create a new one by typing a new title (make sure it is different from other titles!).
-If you don't want to create a song, don't worry! You can still use the app with a 'default' song. Finally, you can delete the selected song from the database.
+If you have writer's block, don't worry! You can still use the app with a 'default' song. Finally, you can also delete the selected song from the database.
 ![Song Selection Menu](./documentation/SongSelectionEx.gif)
-\*opening this menu will also stop the reproduction of the song
+\*opening this menu will also stop the reproduction of the song as soon as the transport ends
 
 #### Chords Menu 🎵
 
 Here you can add, delete and modify the chords in your song. Every change will be saved when you exit the menu.
 ![Chords Menu](./documentation/ChordLabEx.gif)
 
-\*opening this menu will also stop the reproduction of the song
+\*opening this menu will also stop the reproduction of the song as soon as the transport ends
 
 #### Random Melody Generator 🎲
 
 Pressing this button will generate a new melody based on the current chords the parameters' selection. Careful! The old melody will be overwritten. If you wnt to save the melody in a file please refer to
 [Midi Downloader](#midi-downloader-)
 
-\*pressing this button will also stop the reproduction of the current song
+\*pressing this button will also stop the reproduction of the current song as soon as the transport ends
 
 #### Style Menu 🎨
 
@@ -50,7 +50,7 @@ Here you can express your artistic side. You can modify the main color of the in
 
 This is the brain of the melody computation. Select the tempo of your song, the balance beetween pauses and notes and the complexity of the generated melody. If you modify this parameters and you want to listen to the result, remember to [recompute the melody](#random-melody-generator-) before play.
 ![Parameters Menu](./documentation/ParametersLabEx.png)
-\*opening this menu will also stop the reproduction of the song
+\*opening this menu will also stop the reproduction of the song as soon as the transport ends
 
 #### Midi Downloader ⬇
 
