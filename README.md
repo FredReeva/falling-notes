@@ -8,35 +8,57 @@ Overview of the main interface of the app [foto]
 
 ### Main Menu
 
-The main menu consists of 6 interactive buttons that provide access to the main functionality of the app [foto]
+The main menu consists of 6 interactive buttons that provide access to the main functionality of the app
+![Main Menu](./documentation/MainMenuEx.png)
+
+1. Song Title Selection
+2. Chords Menu
+3. Generate a random melody
+4. Style Menu
+5. Parameters menu
+6. Download MIDI
+7. Start/Stop transport
 
 #### Song Title Menu 🔡
 
-Select the song [gif]
-\*opening this menu will stop the reproduction of the song
+Start from here if you want to create your beautiful song. You can select a title from the list (and modify an existing song) or you can create a new one by typing a new title (make sure it is different from other titles!).
+If you don't want to create a song, don't worry! You can still use the app with a 'default' song. Finally, you can delete the selected song from the database.
+![Song Selection Menu](./documentation/SongSelectionEx.gif)
+\*opening this menu will also stop the reproduction of the song
 
 #### Chords Menu 🎵
 
-![Chords modification example](https://github.com/FredReeva/falling-notes/blob/master/documentation/ChordModAnimation.gif?raw=true)
-\*opening this menu will stop the reproduction of the song
+Here you can add, delete and modify the chords in your song. Every change will be saved when you exit the menu.
+![Chords Menu](./documentation/ChordLabEx.gif)
+
+\*opening this menu will also stop the reproduction of the song
+
+#### Random Melody Generator
+
+Pressing this button will generate a new melody based on the current chords the parameters' selection. Careful! The old melody will be overwritten. If you wnt to save the melody in a file please refer to
+[Midi Downloader](#Midi-Downloader-⬇)
+
+\*pressing this button will also stop the reproduction of the current song
 
 #### Style Menu 🎨
 
-[gif]
+Here you can express your artistic side. You can modify the main color of the interface but also the type of sound used by the app to reproduce your song.
 
-#### Parameters Menu 🎲
+![Style Menu](./documentation/StyleLabEx.png)
 
-\*opening this menu will stop the reproduction of the song
-[gif]
+#### Parameters Menu ⚙
 
-#### Midi Downloader [⬇]
+This is the brain of the melody computation. Select the tempo of your song, the balance beetween pauses and notes and the complexity of the generated melody. If you modify this parameters and you want to listen to the result, remember to [recompute the melody](#Random-Melody-Generator) before play.
+![Parameters Menu](./documentation/ParametersLabEx.png)
+\*opening this menu will also stop the reproduction of the song
 
-This button generates and downloads a midi file containing the chords and the latest melody (in two separate tracks) of the currently selected song.
-[gif]
+#### Midi Downloader ⬇
+
+This button generates and downloads a midi file containing the chords and the latest melody (in two separate tracks) of the currently selected song. Of course the melody is yours, and you can use it in your favourite DAW.
 
 #### Play! ⏯
 
-You can press this button to start/stop the transport.
+Press this button to start/stop the transport and generate the animation. Enjoy some falling notes!
 
 ## Part 2: Technical Implementation
 
