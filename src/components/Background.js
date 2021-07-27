@@ -157,7 +157,7 @@ function generateStarField(num, radius) {
 
         // random color palette generator
         color = color.getHSL(color);
-        let hueOffset = (Math.random() - 0.5) * 0.05;
+        let hueOffset = (Math.random() - 0.5) * 0.01;
         if (color.h + hueOffset < 0) {
             hueOffset = -hueOffset;
         } else if (color.h + hueOffset > 1) {
@@ -183,7 +183,7 @@ function generateStarField(num, radius) {
     geom.computeBoundingBox();
 
     let starFieldMaterial = new THREE.PointsMaterial({
-        size: 0.3,
+        size: 0.2,
         vertexColors: true,
     });
 
@@ -293,8 +293,8 @@ function resetStar(star, timer, radius) {
     position[5] = position[2];
 
     // fixed target with random offset to determine trajectory and velocity
-    let targetX = (Math.random() - 0.5) * 100;
-    let targetY = (Math.random() + 0.5) * 5;
+    let targetX = (Math.random() - 0.5) * 250;
+    let targetY = (Math.random() + 0.5) * 10;
     let targetZ = (Math.random() + 0.5) * 100;
 
     let directionX = targetX - position[0];
@@ -335,7 +335,7 @@ function updateStar(star, timer, radius) {
     let color = mainColor.clone();
     let deathColor = mainColor.clone();
     deathColor = deathColor.getHSL(deathColor);
-    deathColor = deathColor.setHSL(deathColor.h, 1, 0.8);
+    deathColor = deathColor.setHSL(deathColor.h, 1, 0);
     color = color.lerp(deathColor, progress);
     star.material.color = color;
 
@@ -448,7 +448,7 @@ const Background = (props) => {
 
         // STAR FIELD
 
-        let numField = 250;
+        let numField = 1500;
         let starFieldRadius = 300;
 
         let starField = generateStarField(numField, starFieldRadius);
@@ -469,6 +469,14 @@ const Background = (props) => {
         let starFall3 = generateStar(starFallRadius);
         let star3 = starFall3[0];
         let timer3 = starFall3[1];
+
+        let starFall4 = generateStar(starFallRadius);
+        let star4 = starFall4[0];
+        let timer4 = starFall4[1];
+
+        let starFall5 = generateStar(starFallRadius);
+        let star5 = starFall5[0];
+        let timer5 = starFall5[1];
 
         // FLOOR
 
@@ -500,12 +508,18 @@ const Background = (props) => {
                 async function startStarFall() {
                     timer1.start();
                     scene.add(star1);
-                    await sleep(1200);
+                    await sleep(500);
                     timer2.start();
                     scene.add(star2);
-                    await sleep(1800);
+                    await sleep(500);
                     timer3.start();
                     scene.add(star3);
+                    await sleep(500);
+                    timer4.start();
+                    scene.add(star4);
+                    await sleep(500);
+                    timer5.start();
+                    scene.add(star5);
                 }
                 startStarFall();
                 triggerStarFall = 0;
@@ -515,20 +529,28 @@ const Background = (props) => {
                     scene.remove(star1);
                     scene.remove(star2);
                     scene.remove(star3);
+                    scene.remove(star4);
+                    scene.remove(star5);
                     resetStar(star1, timer1, starFallRadius);
                     resetStar(star2, timer2, starFallRadius);
                     resetStar(star3, timer3, starFallRadius);
+                    resetStar(star4, timer4, starFallRadius);
+                    resetStar(star5, timer5, starFallRadius);
                 }
                 endStarFall();
 
                 timer1.stop();
                 timer2.stop();
                 timer3.stop();
+                timer4.stop();
+                timer5.stop();
                 triggerStarFall = 0;
             } else {
                 updateStar(star1, timer1, starFallRadius);
                 updateStar(star2, timer2, starFallRadius);
                 updateStar(star3, timer3, starFallRadius);
+                updateStar(star4, timer4, starFallRadius);
+                updateStar(star5, timer5, starFallRadius);
             }
 
             // color update handler
@@ -574,6 +596,14 @@ const Background = (props) => {
             star3.geometry.attributes.position.needsUpdate = true;
             star3.geometry.attributes.velocity.needsUpdate = true;
             star3.material.color.needsUpdate = true;
+
+            star4.geometry.attributes.position.needsUpdate = true;
+            star4.geometry.attributes.velocity.needsUpdate = true;
+            star4.material.color.needsUpdate = true;
+
+            star5.geometry.attributes.position.needsUpdate = true;
+            star5.geometry.attributes.velocity.needsUpdate = true;
+            star5.material.color.needsUpdate = true;
 
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
