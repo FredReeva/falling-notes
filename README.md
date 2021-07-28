@@ -1,7 +1,11 @@
 # Falling Notes 🌠
 
 Welcome to Falling Notes! The aim of this musical-app is to provide a functional and beautiful melody generator. You can insert the chords you want and we will do our best to compute a melody that fits the progression. You can tweak some parameters and listen to the result on the fly with a couple of sounds that we provide. In the meantime, the background will display a visual and musical landscape that evolves according to the chord progression and the melody. If you like the result and want to experiment more, you can download a MIDI file containing both the melody and the chords.
-If you have any doubt you can find an "info" section on the top right, which briefly resumes the content of this documentation. Enjoy!
+If you have any doubt you can find an "info" section on the top right, which briefly resumes the content of this documentation. 
+
+Enjoy!
+
+PS: Here we provide a short [demo](https://youtu.be/KQRXkWLWtYU) of the app.
 
 ## Part 1: Graphical User Interface
 
