@@ -1,10 +1,13 @@
 # Falling Notes 🌠
 
-Abstract: what the app does in 4 lines
+Welcome to Falling Notes! The aim of this musical-app is to provide a functional and beautiful melody generator. You can insert the chords you want and we will do our best to compute a melody that fits the progression. You can tweak some parameters and listen to the result on the fly with a couple of sounds that we provide. In the meantime, the background will display a visual and musical landscape that evolves according to the chord progression and the melody. If you like the result and want to experiment more, you can download a MIDI file containing both the melody and the chords.
+If you have any doubt you can find an "info" section on the top right, which briefly resumes the content of this documentation. Enjoy!
 
 ## Part 1: Graphical User Interface
 
-Overview of the main interface of the app [foto]
+This is how the main screen of the app looks like when reproducing a song:
+![Interface](./documentation/MainInterface.gif)
+In the next sections we will describe in detail the functions of every button.
 
 ### Main Menu
 
@@ -13,7 +16,7 @@ The main menu consists of 6 interactive buttons that provide access to the main 
 
 1. [Song Title Selection](#song-title-menu-)
 2. [Chords Menu](#chords-menu-)
-3. [Melody Generator](#random-melody-generator-)
+3. [Melody Generator](#melody-generator-)
 4. [Style Menu](#style-menu-)
 5. [Parameters menu](#parameters-menu-)
 6. [Download MIDI](#midi-downloader-)
@@ -33,7 +36,7 @@ Here you can add, delete and modify the chords in your song. Every change will b
 
 \*opening this menu will also stop the reproduction of the song as soon as the transport ends
 
-### Random Melody Generator 🎲
+### Melody Generator 🎲
 
 Pressing this button will generate a new melody based on the current chords the parameters' selection. Careful! The old melody will be overwritten. If you wnt to save the melody in a file please refer to
 [Midi Downloader](#midi-downloader-)
@@ -58,7 +61,7 @@ This button generates and downloads a midi file containing the chords and the la
 
 ### Play! ⏯
 
-Press this button to start/stop the transport and generate the animation. Enjoy some falling notes!
+Press this button to start/stop the transport and generate the animation. Wooow!
 
 ## Part 2: Technical Implementation
 
