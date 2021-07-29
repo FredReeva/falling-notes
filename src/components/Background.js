@@ -613,7 +613,6 @@ const Background = (props) => {
 
     // COLOR PALETTE MANAGEMENT
     useEffect(() => {
-        prevColor = mainColor;
         mainColor = mainColor.getHSL(mainColor);
         mainColor = mainColor.setHSL((props.color + 0.1) / 360, 0.7, 0.5);
         colorNeedsUpdate = 1;
