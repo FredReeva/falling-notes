@@ -195,7 +195,7 @@ If the "Delete" button is pressed, the song is deleted from the databese and you
 ### Melody Generation
 
 ### Sound Generation (Tone)
-The sound engine is located in the Sound module, where the instance of Tone Context is declared and exported towards the other modules.
+The sound engine is located in the Sound module, where an instance of Tone Js Context is declared and exported towards the other modules.
 
 ```javascript
 // exports to make the visualizer work
@@ -449,9 +449,6 @@ useEffect(() => {
     }
 }, [props.isPlaying]); // update when prop change
 ```
-
-
-
 
 ### Midi Writer
 
