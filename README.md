@@ -113,7 +113,26 @@ export default Component;
 
 This is the root component which contains the basic logic of the app, the global state and all the other nested components.
 
--   State: it includes the chords, melody and parameters objects, but also arrays to manage the open/close state of the menus or the play/stop of the reproduction...
+-   State: it includes the chords, melody (which are stored in arrays of objects) and the parameters object, but also other arrays to manage the open/close state of the menus or booleans like the play/stop state of the transport...
+
+```javascript
+chords = [
+    {
+        tonic: 'C',
+        quality: 'minor',
+        duration: '2'
+
+    },
+    {
+        tonic: 'G',
+        quality: 'Major',
+        duration: '4'
+
+    },
+    ...
+]
+```
+
 -   All the functions that need to access directly the state are placed here (for example the DB management or the computation of the melody).
 -   Effects: side functions called when a given state changes; we used it to initialize the app (empty dependency array).
 -   Nested components: the organized structure of the whole app, as well as the props passed to every children.
@@ -172,8 +191,6 @@ refSongs
 ```
 
 If the "Delete" button is pressed, the song is deleted from the databese and you won't be able to recover it.
-
-### Drag&Drop Chords Functionality
 
 ### Melody Generation
 
