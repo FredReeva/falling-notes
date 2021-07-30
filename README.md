@@ -9,8 +9,8 @@ PS: Here we provide a short [demo](https://youtu.be/KQRXkWLWtYU) of the app.
 
 ## Part 1: Graphical User Interface
 
-This is how the main screen of the app looks like when reproducing a song:
-![Interface](./documentation/MainInterface.gif)
+This is how the main screen of the app looks like when reproducing a song (click for the demo):
+[![nterface](./documentation/MainInterface.gif)](https://youtu.be/KQRXkWLWtYU)
 In the next sections we will describe in detail the functions of every button.
 
 ### Main Menu
