@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/falling-notes/static/css/main.0f7d9664.chunk.css",
+    "main.js": "/falling-notes/static/js/main.9d4f8e3e.chunk.js",
+    "main.js.map": "/falling-notes/static/js/main.9d4f8e3e.chunk.js.map",
+    "runtime-main.js": "/falling-notes/static/js/runtime-main.9a652db2.js",
+    "runtime-main.js.map": "/falling-notes/static/js/runtime-main.9a652db2.js.map",
+    "static/js/2.29369ca5.chunk.js": "/falling-notes/static/js/2.29369ca5.chunk.js",
+    "static/js/2.29369ca5.chunk.js.map": "/falling-notes/static/js/2.29369ca5.chunk.js.map",
+    "static/js/3.26ce542a.chunk.js": "/falling-notes/static/js/3.26ce542a.chunk.js",
+    "static/js/3.26ce542a.chunk.js.map": "/falling-notes/static/js/3.26ce542a.chunk.js.map",
+    "index.html": "/falling-notes/index.html",
+    "static/css/main.0f7d9664.chunk.css.map": "/falling-notes/static/css/main.0f7d9664.chunk.css.map",
+    "static/js/2.29369ca5.chunk.js.LICENSE.txt": "/falling-notes/static/js/2.29369ca5.chunk.js.LICENSE.txt",
+    "static/js/main.9d4f8e3e.chunk.js.LICENSE.txt": "/falling-notes/static/js/main.9d4f8e3e.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9a652db2.js",
+    "static/js/2.29369ca5.chunk.js",
+    "static/css/main.0f7d9664.chunk.css",
+    "static/js/main.9d4f8e3e.chunk.js"
+  ]
+}
