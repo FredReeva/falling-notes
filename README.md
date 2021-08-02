@@ -5,7 +5,7 @@ If you have any doubt you can find an "info" section on the top right, which bri
 
 Enjoy!
 
-PS: Here we provide a short [demo](https://youtu.be/KQRXkWLWtYU) of the app.
+PS: Here we provide a short [demo](https://youtu.be/KQRXkWLWtYU) of the app, or you can try [Falling Notes](https://fredreeva.github.io/falling-notes/) yourself!
 
 ## Part 1: Graphical User Interface
 
@@ -194,7 +194,7 @@ If the "Delete" button is pressed, the song is deleted from the databese and you
 
 ### Melody Generation
 
-he structure of the Melody Gen can be described by the following scheme:
+The structure of the Melody Gen can be described by the following scheme:
 ![Melody generator scheme](./documentation/Melody.jpg)
 
 ### Sound Generation (Tone)
